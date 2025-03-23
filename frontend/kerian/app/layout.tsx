@@ -1,13 +1,11 @@
-
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CssBaseline,  ThemeProvider } from "@mui/material";
-import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import theme from "@/theme"
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import theme from "@/theme";
 import Navbar from "./components/navbar/navbar";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,12 +27,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
-
   return (
     <html lang="en" suppressHydrationWarning>
-      
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -44,10 +38,9 @@ export default function RootLayout({
             <CssBaseline />
             <Navbar></Navbar>
             {children}
-            </ThemeProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
-      
     </html>
   );
 }

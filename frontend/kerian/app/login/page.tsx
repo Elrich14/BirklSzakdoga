@@ -22,9 +22,9 @@ const Root = styled("div")(() => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
-    alignItems: "center", // This centers horizontally
-    justifyContent: "center", // This centers vertically
-    height: "70vh", // Ensure it takes up the full height of the screen
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "100px",
 
     "& .MuiTypography-root": {
       fontSize: "50px",

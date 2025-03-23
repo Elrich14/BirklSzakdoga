@@ -1,4 +1,3 @@
-// src/colors.ts
 export const colors = {
   kerian_main: "#039c82",
   kerian_main_button_hover: "#00cfac",

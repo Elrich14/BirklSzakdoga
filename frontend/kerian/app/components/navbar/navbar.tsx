@@ -15,6 +15,7 @@ const Root = styled("div")(() => ({
       display: "flex",
       flexDirection: "row",
       gap: "10px",
+      backgroundColor: "#3d3d3d",
     },
     "& .MuiTypography-root": {
       display: "flex",

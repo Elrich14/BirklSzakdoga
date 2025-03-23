@@ -24,7 +24,7 @@ const Root = styled("div")(() => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "70vh",
+    marginTop: "100px",
 
     "& .MuiTypography-root": {
       fontSize: "50px",
