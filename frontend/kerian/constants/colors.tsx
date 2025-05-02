@@ -1,6 +1,7 @@
 export const colors = {
   kerian_main: "#039c82",
   kerian_main_button_hover: "#00cfac",
+  kerian_navbar: "#3d3d3d",
 };
 
 export const boxShadows = {

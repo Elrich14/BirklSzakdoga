@@ -1,12 +1,17 @@
 "use client";
-import { boxShadows } from "@/constants/colors";
-import { AppBar, Button, Link, styled, Toolbar } from "@mui/material";
+import { AppBar, Button, Toolbar, Box } from "@mui/material";
+import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { boxShadows, colors } from "@/constants/colors";
 
 const PREFIX = "Navbar";
 
 const classes = {
   root: `${PREFIX}-root`,
+  toolbar: `${PREFIX}-toolbar`,
+  leftBox: `${PREFIX}-leftBox`,
+  rightBox: `${PREFIX}-rightBox`,
 };
 
 const Root = styled("div")(() => ({
@@ -15,16 +20,11 @@ const Root = styled("div")(() => ({
       display: "flex",
       flexDirection: "row",
       gap: "10px",
-      backgroundColor: "#3d3d3d",
-    },
-    "& .MuiTypography-root": {
-      display: "flex",
-      justifyContent: "center",
-      fontFamily: "serif",
-      textDecoration: "none",
+      backgroundColor: colors.kerian_navbar,
     },
     "& .MuiButton-root": {
       color: "white",
+      textTransform: "none",
     },
     "& .MuiButton-root:hover": {
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
@@ -33,64 +33,65 @@ const Root = styled("div")(() => ({
       display: "flex",
     },
   },
+  [`& .${classes.toolbar}`]: {
+    width: "100%",
+  },
+  [`& .${classes.leftBox}`]: {
+    display: "flex",
+    gap: 1,
+  },
+  [`& .${classes.rightBox}`]: {
+    marginLeft: "auto",
+    display: "flex",
+    gap: 1,
+  },
 }));
 
 export default function Navbar() {
-  const [user, setUser] = useState<string | null>(null);
-
-  const routes = [
-    {
-      path: "/",
-      name: "Home",
-    },
-    {
-      path: "/login",
-      name: "Login",
-      if: "loggedOut",
-    },
-    {
-      path: "/register",
-      name: "Register",
-      if: "loggedOut",
-    },
-    {
-      path: "/logout",
-      name: "Logout",
-      if: "loggedIn",
-    },
-  ];
+  const [user, setUser] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const handleCustomEvent = () => {
-        const user = localStorage.getItem("user");
-        if (user) {
-          setUser(user);
-        }
-      };
-      handleCustomEvent();
-
-      window.addEventListener("userChanged", handleCustomEvent);
-
-      return () => {
-        window.removeEventListener("userChanged", handleCustomEvent);
-      };
-    }
+    const handleUser = () => {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser);
+    };
+    handleUser();
+    window.addEventListener("userChanged", handleUser);
+    return () => window.removeEventListener("userChanged", handleUser);
   }, []);
+
+  const isLoggedIn = Boolean(user);
+
+  const routes = [
+    { path: "/", name: "Home", if: "loggedOut", align: "left" },
+    { path: "/login", name: "Login", if: "loggedOut", align: "left" },
+    { path: "/register", name: "Register", if: "loggedOut", align: "left" },
+    { path: "/products", name: "Products", if: "loggedIn", align: "left" },
+    { path: "/logout", name: "Logout", if: "loggedIn", align: "right" },
+  ];
+
+  const filteredRoutes = routes.filter((r) => {
+    if (r.if === "loggedIn") return isLoggedIn;
+    if (r.if === "loggedOut") return !isLoggedIn;
+    return true;
+  });
+
+  const leftRoutes = filteredRoutes.filter((r) => r.align === "left");
+  const rightRoutes = filteredRoutes.filter((r) => r.align === "right");
+
+  const renderRoutes = (routeArray: typeof routes) =>
+    routeArray.map((route, index) => (
+      <Link href={route.path} key={index}>
+        <Button>{route.name}</Button>
+      </Link>
+    ));
 
   return (
     <Root className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
-          {routes
-            .filter((r) =>
-              r.if ? r.if === (user ? "loggedIn" : "loggedOut") : true
-            )
-            .map((route, index) => (
-              <Link href={route.path} key={index}>
-                <Button>{route.name}</Button>
-              </Link>
-            ))}
+        <Toolbar className={classes.toolbar}>
+          <Box className={classes.leftBox}>{renderRoutes(leftRoutes)}</Box>
+          <Box className={classes.rightBox}>{renderRoutes(rightRoutes)}</Box>
         </Toolbar>
       </AppBar>
     </Root>

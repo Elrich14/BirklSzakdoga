@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { boxShadows, colors } from "../../constants/colors";
+import { useRouter } from "next/navigation";
 
 const PREFIX = "LoginPage";
 
@@ -61,6 +62,7 @@ const Root = styled("div")(() => ({
 }));
 
 export default function Login() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -99,6 +101,7 @@ export default function Login() {
           localStorage.setItem("user", user.username);
           window.dispatchEvent(new Event("userChanged"));
         }
+        router.push("/");
       } else {
         const data = await response.json();
         setError(data.message || "An error occurred while logging in.");
@@ -108,6 +111,10 @@ export default function Login() {
       setError("An error occurred while logging in.");
     }
   };
+
+  // useEffect(() => {
+  //   redirect("/");
+  // }, []);
   return (
     <Root className={classes.root}>
       <Box className={classes.box}>

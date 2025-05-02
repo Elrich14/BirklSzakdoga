@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
+    "seed": "node seedProducts.js",
     "startWatch": "nodemon --signal SIGINT index.js",
     "create:db": "cross-env NODE_ENV=development sequelize-cli db:create",
     "drop:db": "cross-env NODE_ENV=development sequelize-cli db:drop",
