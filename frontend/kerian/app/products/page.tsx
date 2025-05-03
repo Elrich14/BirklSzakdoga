@@ -63,7 +63,7 @@ export default function ProductsPage() {
       {/* Sidebar hely (később ide jön a szűrő) */}
       <Box className={classes.sidebar}>
         <Typography variant="h6" gutterBottom>
-          Szűrés
+          Filter
         </Typography>
         {/* Itt jönnek majd a szűrő elemek */}
       </Box>
@@ -71,7 +71,7 @@ export default function ProductsPage() {
       {/* Fő tartalom */}
       <Box className={classes.content}>
         <Typography variant="h4" gutterBottom>
-          Termékek
+          Products
         </Typography>
         <Box className={classes.productGrid}>
           {products.map((product, index) => (

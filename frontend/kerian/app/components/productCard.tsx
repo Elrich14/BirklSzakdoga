@@ -10,6 +10,8 @@ import {
   Divider,
 } from "@mui/material";
 import { boxShadows } from "@/constants/colors";
+import { useState } from "react";
+import ProductPopup from "./productPopup";
 
 type ProductCardProps = {
   name: string;
@@ -79,7 +81,7 @@ const Root = styled(Card)(() => ({
   [`& .${classes.addToCardButton}`]: {
     fontFamily: "monospace",
     fontWeight: "normal",
-    fontSize: "25px",
+    fontSize: "20px",
   },
   [`& .${classes.cardFooterBox}`]: {
     display: "flex",
@@ -94,33 +96,45 @@ export default function ProductCard({
   imageUrl,
   price,
 }: ProductCardProps) {
+  const [openDialog, setOpenDialog] = useState(false);
   return (
-    <Root className={classes.root}>
-      <CardMedia
-        className={classes.productImg}
-        component="img"
-        image={imageUrl}
-        alt={name}
-      />
-      <CardContent>
-        <Typography className={classes.productName}>{name}</Typography>
-        <Divider sx={{ my: 1 }} />
-        <Typography className={classes.productDescription} variant="body2">
-          {description}
-        </Typography>
-        <Box className={classes.cardFooterBox}>
-          <Typography className={classes.price} fontWeight="bold">
-            {price} Ft
+    <>
+      <Root className={classes.root} onClick={() => setOpenDialog(true)}>
+        <CardMedia
+          className={classes.productImg}
+          component="img"
+          image={imageUrl}
+          alt={name}
+        />
+        <CardContent>
+          <Typography className={classes.productName}>{name}</Typography>
+          <Divider sx={{ my: 1 }} />
+          <Typography className={classes.productDescription} variant="body2">
+            {description}
           </Typography>
-          <Button
-            className={classes.addToCardButton}
-            variant="contained"
-            size="small"
-          >
-            Kosárba
-          </Button>
-        </Box>
-      </CardContent>
-    </Root>
+          <Box className={classes.cardFooterBox}>
+            <Typography className={classes.price} fontWeight="bold">
+              {price} Ft
+            </Typography>
+            <Button
+              className={classes.addToCardButton}
+              variant="contained"
+              size="small"
+            >
+              Add To Cart
+            </Button>
+          </Box>
+        </CardContent>
+      </Root>
+
+      <ProductPopup
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        name={name}
+        description={description}
+        imageUrl={imageUrl}
+        price={price}
+      />
+    </>
   );
 }
