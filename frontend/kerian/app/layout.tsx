@@ -7,6 +7,10 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import theme from "@/theme";
 import Navbar from "./components/navbar/navbar";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,9 +39,11 @@ export default function RootLayout({
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Navbar></Navbar>
-            {children}
+            <QueryClientProvider client={queryClient}>
+              <CssBaseline />
+              <Navbar />
+              {children}
+            </QueryClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

@@ -1,8 +1,8 @@
 "use client";
 import ProductCard from "../components/productCard";
-import { Typography, styled, Box } from "@mui/material";
+import { Typography, styled, Box, CircularProgress } from "@mui/material";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts } from "@/api";
-import { useEffect, useState } from "react";
 
 const PREFIX = "ProductsPage";
 
@@ -41,38 +41,43 @@ const Root = styled("div")(() => ({
   },
 }));
 
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  category: string;
+}
+
 export default function ProductsPage() {
-  type Product = {
-    name: string;
-    description: string;
-    imageUrl: string;
-    price: number;
-    category: string;
-  };
-
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    fetchAllProducts()
-      .then(setProducts)
-      .catch((err) => console.error("Error:", err));
-  }, []);
+  const {
+    data: products = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchAllProducts,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
+  } as UseQueryOptions<Product[], Error>);
 
   return (
     <Root className={classes.root}>
-      {/* Sidebar hely (később ide jön a szűrő) */}
       <Box className={classes.sidebar}>
         <Typography variant="h6" gutterBottom>
           Filter
         </Typography>
-        {/* Itt jönnek majd a szűrő elemek */}
       </Box>
 
-      {/* Fő tartalom */}
       <Box className={classes.content}>
         <Typography variant="h4" gutterBottom>
           Products
         </Typography>
+
+        {isLoading && <CircularProgress />}
+        {error && <Typography>Error loading products</Typography>}
+
         <Box className={classes.productGrid}>
           {products.map((product, index) => (
             <ProductCard key={index} {...product} />
