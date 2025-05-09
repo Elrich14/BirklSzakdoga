@@ -40,9 +40,11 @@ const Root = styled(Card)(() => ({
     height: "100%",
     borderRadius: "6px",
     transition: "transform 0.2s ease",
+    overflow: "hidden",
     "&:hover": {
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
       transform: "scale(1.05)",
+      zIndex: 0,
     },
     "& img": {
       objectFit: "cover",

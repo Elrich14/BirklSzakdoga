@@ -6,10 +6,7 @@ import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import theme from "@/theme";
 import Navbar from "./components/navbar/navbar";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,11 +36,11 @@ export default function RootLayout({
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <QueryClientProvider client={queryClient}>
+            <Providers>
               <CssBaseline />
               <Navbar />
               {children}
-            </QueryClientProvider>
+            </Providers>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

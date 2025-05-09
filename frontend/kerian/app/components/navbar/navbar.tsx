@@ -16,6 +16,10 @@ const classes = {
 
 const Root = styled("div")(() => ({
   [`&.${classes.root}`]: {
+    position: "sticky",
+    top: 0,
+    zIndex: 1,
+
     "& .MuiPaper-root": {
       display: "flex",
       flexDirection: "row",
