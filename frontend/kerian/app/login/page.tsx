@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { boxShadows, colors } from "../../constants/colors";
 import { useRouter } from "next/navigation";
+import { loginUser } from "@/api";
 
 const PREFIX = "LoginPage";
 
@@ -70,51 +71,38 @@ export default function Login() {
   const [error, setError] = useState<string | null>();
   const [success, setSuccess] = useState(false);
 
-  // TODO: anyt kicserélni
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  //TODO: anyt kicserélni
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const user = await loginUser(formData);
 
-      if (response.status === 200) {
-        setSuccess(true);
-        setFormData({ email: "", password: "" });
-        if (response.body) {
-          const user = await response.json();
-          localStorage.setItem("user", user.username);
-          window.dispatchEvent(new Event("userChanged"));
-        }
-        router.push("/");
-      } else {
-        const data = await response.json();
-        setError(data.message || "An error occurred while logging in.");
-      }
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          username: user.username,
+          role: user.role,
+          loginAt: Date.now(),
+        })
+      );
+      window.dispatchEvent(new Event("userChanged"));
+
+      setSuccess(true);
+      setFormData({ email: "", password: "" });
+      router.push("/");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError("An error occurred while logging in.");
     }
   };
 
-  // useEffect(() => {
-  //   redirect("/");
-  // }, []);
   return (
     <Root className={classes.root}>
       <Box className={classes.box}>

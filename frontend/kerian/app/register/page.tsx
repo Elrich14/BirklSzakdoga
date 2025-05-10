@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { registerUser } from "@/api";
 
 const PREFIX = "RegisterPage";
 
@@ -82,24 +83,12 @@ export default function Register() {
     setSuccess(false);
 
     try {
-      const response = await fetch("http://localhost:3000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.status === 200) {
-        setSuccess(true);
-        setFormData({ username: "", email: "", password: "" });
-      } else {
-        const data = await response.json();
-        setError(data.message || "An error occurred while registering.");
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setError("An error occurred while registering.");
+      await registerUser(formData);
+      setSuccess(true);
+      setFormData({ username: "", email: "", password: "" });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setError(err.message || "An error occurred while registering.");
     }
   };
 

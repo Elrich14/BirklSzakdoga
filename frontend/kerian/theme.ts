@@ -24,7 +24,7 @@ const theme = createTheme({
           width: "100%",
           margin: 0,
           padding: 0,
-          backgroundColor: "#000000",
+          backgroundColor: "#141414",
           color: "#ffffff",
         },
         "*": {

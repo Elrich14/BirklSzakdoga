@@ -140,7 +140,7 @@ export default function ProductPopup({
   price,
 }: ProductPopupProps) {
   const [gender, setGender] = useState<"Male" | "Female">("Female");
-  const [size, setSize] = useState<string[]>([]);
+  const [size, setSize] = useState<string>("");
 
   const [color, setColor] = useState("Black");
 
@@ -151,11 +151,8 @@ export default function ProductPopup({
     }
   };
 
-  const changeSize = (event: SelectChangeEvent<typeof size>) => {
-    const {
-      target: { value },
-    } = event;
-    setSize(typeof value === "string" ? value.split(",") : value);
+  const changeSize = (event: SelectChangeEvent<string>) => {
+    setSize(event.target.value);
   };
 
   return (
