@@ -11,7 +11,6 @@
     "create:db": "cross-env NODE_ENV=development sequelize-cli db:create",
     "drop:db": "cross-env NODE_ENV=development sequelize-cli db:drop",
     "killPortProcess": "npx kill-port 3000"
-    
   },
   "keywords": [],
   "author": "",

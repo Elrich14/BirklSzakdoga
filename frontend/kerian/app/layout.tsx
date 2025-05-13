@@ -7,6 +7,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import theme from "@/theme";
 import Navbar from "./components/navbar/navbar";
 import { Providers } from "./providers";
+import InactivityHelper from "./components/inactivityHelper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
             <Providers>
               <CssBaseline />
               <Navbar />
+              <InactivityHelper />
               {children}
             </Providers>
           </ThemeProvider>

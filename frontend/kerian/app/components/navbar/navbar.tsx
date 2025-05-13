@@ -1,9 +1,11 @@
 "use client";
+
 import { AppBar, Button, Toolbar, Box } from "@mui/material";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { boxShadows, colors } from "@/constants/colors";
+import { getUserRole } from "../../utils/auth";
 
 const PREFIX = "Navbar";
 
@@ -19,7 +21,6 @@ const Root = styled("div")(() => ({
     position: "sticky",
     top: 0,
     zIndex: 1,
-
     "& .MuiPaper-root": {
       display: "flex",
       flexDirection: "row",
@@ -53,52 +54,33 @@ const Root = styled("div")(() => ({
 }));
 
 export default function Navbar() {
-  const [user, setUser] = useState<string | null | undefined>(undefined);
+  const [role, setRole] = useState<"guest" | "user" | "admin">("guest");
 
   useEffect(() => {
-    const handleUser = () => {
-      const storedUser = localStorage.getItem("user");
-
-      if (storedUser) {
-        try {
-          const parsed = JSON.parse(storedUser);
-          const loginAt = parsed.loginAt;
-          const MAX_DURATION = 60 * 60 * 1000; // 1 óra
-
-          if (Date.now() - loginAt > MAX_DURATION) {
-            localStorage.removeItem("user");
-            setUser(null);
-            window.dispatchEvent(new Event("userChanged"));
-          } else {
-            setUser(parsed.username);
-          }
-        } catch {
-          localStorage.removeItem("user");
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
+    const updateRole = () => {
+      setRole(getUserRole());
     };
 
-    handleUser();
-    window.addEventListener("userChanged", handleUser);
-    return () => window.removeEventListener("userChanged", handleUser);
-  }, []);
+    updateRole();
+    window.addEventListener("userChanged", updateRole);
 
-  const isLoggedIn = Boolean(user);
+    return () => window.removeEventListener("userChanged", updateRole);
+  }, [role]);
+
+  const isLoggedIn = role !== "guest";
 
   const routes = [
-    { path: "/", name: "Home", if: "loggedOut", align: "left" },
+    { path: "/", name: "Home", if: "always", align: "left" },
+    { path: "/products", name: "Products", if: "always", align: "left" },
     { path: "/login", name: "Login", if: "loggedOut", align: "right" },
     { path: "/register", name: "Register", if: "loggedOut", align: "right" },
-    { path: "/products", name: "Products", if: "always", align: "left" },
     { path: "/logout", name: "Logout", if: "loggedIn", align: "right" },
   ];
 
   const filteredRoutes = routes.filter((r) => {
     if (r.if === "loggedIn") return isLoggedIn;
     if (r.if === "loggedOut") return !isLoggedIn;
+    if (r.if === "admin") return role === "admin";
     return true;
   });
 

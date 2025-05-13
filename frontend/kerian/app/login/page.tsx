@@ -12,6 +12,15 @@ import { useState } from "react";
 import { boxShadows, colors } from "../../constants/colors";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/api";
+import { jwtDecode } from "jwt-decode";
+
+type TokenPayload = {
+  id: string;
+  email: string;
+  role: "admin" | "user";
+  username?: string;
+  exp: number;
+};
 
 const PREFIX = "LoginPage";
 
@@ -82,13 +91,15 @@ export default function Login() {
     setSuccess(false);
 
     try {
-      const user = await loginUser(formData);
+      const { token } = await loginUser(formData);
+      const decoded = jwtDecode<TokenPayload>(token);
 
+      localStorage.setItem("token", token);
       localStorage.setItem(
         "user",
         JSON.stringify({
-          username: user.username,
-          role: user.role,
+          email: decoded.email,
+          role: decoded.role,
           loginAt: Date.now(),
         })
       );

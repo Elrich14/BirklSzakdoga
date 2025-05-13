@@ -44,6 +44,16 @@ app.get("*", (req, res) => {
   res.status(404).json({ error: "Invalid endpoint" });
 });
 
+const authenticateToken = require("./authenticateToken");
+
+app.get("/api/admin/orders", authenticateToken, (req, res) => {
+  if (req.user.role === "admin") {
+    res.json({ message: "Welcome, admin!" });
+  } else {
+    res.status(403).json({ error: "Access denied" });
+  }
+});
+
 app.listen(PORT, async () => {
   try {
     require("./models");
