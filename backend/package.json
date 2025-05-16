@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "seed": "node seedProducts.js",
+    "seedProducts": "node dbSeeders/seedProducts.js",
+    "seedUsers": "node dbSeeders/seedUsers.js",    
     "startWatch": "nodemon --signal SIGINT index.js",
     "create:db": "cross-env NODE_ENV=development sequelize-cli db:create",
     "drop:db": "cross-env NODE_ENV=development sequelize-cli db:drop",
@@ -29,5 +30,8 @@
     "pg": "^8.13.1",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }

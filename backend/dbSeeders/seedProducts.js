@@ -1,5 +1,5 @@
-const { sequelize } = require("./dataBase");
-const Product = require("./models/products.js");
+const { sequelize } = require("../dataBase.js");
+const Product = require("../models/products.js");
 
 async function seedProducts() {
   await sequelize.sync(); // creates the table if it doesn't exist

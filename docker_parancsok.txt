@@ -1,0 +1,20 @@
+🔧 BIRKLSZAKDOGA DOCKER PARANCSOK
+
+▶️ INDÍTÁS ÉS BUILD
+docker compose up --build -d
+
+⛔ LEÁLLÍTÁS
+docker compose down
+
+🧨 LEÁLLÍTÁS + VOLUMEK TÖRLÉSE (pl. adatbázis resethez)
+docker compose down -v
+
+🌱 SEEDELÉS
+docker compose exec backend npm run seed        # Termékek feltöltése
+docker compose exec backend npm run seedUsers   # Felhasználók feltöltése
+
+🐚 BELÉPÉS A BACKEND KONZOLJÁBA
+docker compose exec backend sh
+
+🐘 BELÉPÉS A POSTGRES DB-BE
+docker exec -it birklszakdoga-db-1 psql -U postgres -d kerian

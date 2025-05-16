@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kerian
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    command: npm run startWatch
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    environment:
+      DB_NAME: kerian
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      JWT_SECRET: supersecret
+
+  frontend:
+    build: ./frontend/kerian
+    command: npm run dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend/kerian:/app
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

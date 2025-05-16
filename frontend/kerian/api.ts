@@ -8,14 +8,18 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
 }
+
 export interface RegisterRequest {
   username: string;
   email: string;
   password: string;
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
+// LOGIN
 export async function loginUser(data: LoginRequest): Promise<LoginResponse> {
-  const response = await fetch("http://localhost:3000/auth/login", {
+  const response = await fetch(`${API_BASE}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -31,9 +35,9 @@ export async function loginUser(data: LoginRequest): Promise<LoginResponse> {
   return await response.json();
 }
 
-
+// REGISTER
 export async function registerUser(data: RegisterRequest): Promise<void> {
-  const response = await fetch("http://localhost:3000/auth/register", {
+  const response = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -45,20 +49,18 @@ export async function registerUser(data: RegisterRequest): Promise<void> {
     const err = await response.json();
     throw new Error(err.message || "Registration failed");
   }
-
 }
 
-
-export async function fetchAllProducts() {
-    const res = await fetch("http://localhost:3000/api/products");
-    if (!res.ok) throw new Error("Failed to fetch products");
-    return res.json();
-  }
-  
-export async function fetchProductById(id: string | number): Promise<Product[]> {
-  const res = await fetch(`http://localhost:3000/api/products/${id}`);
-  if (!res.ok) throw new Error("Failed to fetch product details");
+// GET ALL PRODUCTS
+export async function fetchAllProducts(): Promise<Product[]> {
+  const res = await fetch(`${API_BASE}/api/products`);
+  if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
 }
 
-  
+// GET PRODUCT BY ID
+export async function fetchProductById(id: string | number): Promise<Product[]> {
+  const res = await fetch(`${API_BASE}/api/products/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch product details");
+  return res.json();
+}
