@@ -1,9 +1,10 @@
 const { sequelize } = require("../dataBase.js");
-const User = require("../models/user.js");
+const { User } = require("../models");
 
 async function seedUsers() {
   await sequelize.sync();
 
+  await User.destroy({ where: {}, force: true });
   await User.bulkCreate([
     {
       id: "134fc2b4-0d13-4fce-8d36-e87d32ac0978",
@@ -42,15 +43,6 @@ async function seedUsers() {
       updatedAt: new Date("2025-01-25T14:37:26.161Z"),
     },
     {
-      id: "61875eec-950a-4208-a245-3ad51f830749",
-      username: "Birkl",
-      email: "birkl@kerik.com",
-      password: "$2a$10$hLwRhC3pTOuGPah.XG.U3OhoDSezh/qj/YqRN6aS8gSlf1RjZqYeS",
-      role: "user",
-      createdAt: new Date("2025-01-26T10:50:44.884Z"),
-      updatedAt: new Date("2025-01-26T10:50:44.884Z"),
-    },
-    {
       id: "80525604-1f66-4775-9ce1-8a8b1f480775",
       username: "Elrich",
       email: "elrich.020114@gmail.com",
@@ -85,6 +77,15 @@ async function seedUsers() {
       role: "user",
       createdAt: new Date("2025-01-25T17:31:16.943Z"),
       updatedAt: new Date("2025-01-25T17:31:16.943Z"),
+    },
+    {
+      id: "61875eec-950a-4a08-a245-3ad518f30749",
+      username: "Birkl",
+      email: "birklerik@gmail.com",
+      password: "$2a$10$hLwRhC3pTOuGPah.XG.U3OhoDSezh/qj/YqRN6aS8gSlf1RjZqYeS",
+      role: "user",
+      createdAt: new Date("2025-03-22T16:50:04.484Z"),
+      updatedAt: new Date("2025-03-22T16:50:04.484Z"),
     },
   ]);
 

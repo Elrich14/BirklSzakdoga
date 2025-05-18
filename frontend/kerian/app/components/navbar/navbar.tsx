@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { boxShadows, colors } from "@/constants/colors";
 import { getUserRole } from "../../utils/auth";
+import { usePathname } from "next/navigation";
 
 const PREFIX = "Navbar";
 
@@ -33,6 +34,11 @@ const Root = styled("div")(() => ({
     },
     "& .MuiButton-root:hover": {
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    },
+    "& .MuiButton-root.active": {
+      color: colors.kerian_main,
+      fontWeight: "bold",
+      fontStyle: "italic",
     },
     "& .MuiToolbar-root": {
       display: "flex",
@@ -87,12 +93,17 @@ export default function Navbar() {
   const leftRoutes = filteredRoutes.filter((r) => r.align === "left");
   const rightRoutes = filteredRoutes.filter((r) => r.align === "right");
 
+  const pathname = usePathname();
+
   const renderRoutes = (routeArray: typeof routes) =>
-    routeArray.map((route, index) => (
-      <Link href={route.path} key={index}>
-        <Button>{route.name}</Button>
-      </Link>
-    ));
+    routeArray.map((route, index) => {
+      const isActive = pathname === route.path;
+      return (
+        <Link href={route.path} key={index}>
+          <Button className={isActive ? "active" : ""}>{route.name}</Button>
+        </Link>
+      );
+    });
 
   return (
     <Root className={classes.root}>
