@@ -24,10 +24,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import { useState } from "react";
 import { colors } from "../../constants/colors";
+import { getUserRole } from "../utils/auth";
+import { useCartStore } from "./store/cartStore";
 
 type ProductPopupProps = {
   open: boolean;
   onClose: () => void;
+  id: number;
   name: string;
   description: string;
   imageUrl: string;
@@ -134,6 +137,7 @@ const colorsList = ["black", "white"];
 export default function ProductPopup({
   open,
   onClose,
+  id,
   name,
   description,
   imageUrl,
@@ -144,6 +148,9 @@ export default function ProductPopup({
 
   const [color, setColor] = useState("Black");
 
+  const userRole = getUserRole();
+  const addItem = useCartStore((state) => state.addItem);
+
   const changeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (value === "Female" || value === "Male") {
@@ -153,6 +160,16 @@ export default function ProductPopup({
 
   const changeSize = (event: SelectChangeEvent<string>) => {
     setSize(event.target.value);
+  };
+
+  const submitAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      productId: id,
+      productName: name,
+      productPrice: price,
+      productQuantity: 1,
+    });
   };
 
   return (
@@ -267,13 +284,24 @@ export default function ProductPopup({
               <Typography className={classes.price} fontWeight="bold">
                 {price} Ft
               </Typography>
-              <Button
-                className={classes.addToCardButton}
-                variant="contained"
-                size="small"
-              >
-                Add To Cart
-              </Button>
+              {userRole == "user" && (
+                <Button
+                  className={classes.addToCardButton}
+                  variant="contained"
+                  size="small"
+                  onClick={submitAddToCart}
+                >
+                  Add To Cart
+                </Button>
+              )}
+              {userRole == "guest" && (
+                <Typography
+                  variant="body2"
+                  sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
+                >
+                  Login to buy
+                </Typography>
+              )}
             </Box>
           </Box>
         </Box>

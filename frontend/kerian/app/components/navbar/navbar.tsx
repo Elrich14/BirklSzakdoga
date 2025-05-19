@@ -7,6 +7,7 @@ import Link from "next/link";
 import { boxShadows, colors } from "@/constants/colors";
 import { getUserRole } from "../../utils/auth";
 import { usePathname } from "next/navigation";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 const PREFIX = "Navbar";
 
@@ -15,6 +16,15 @@ const classes = {
   toolbar: `${PREFIX}-toolbar`,
   leftBox: `${PREFIX}-leftBox`,
   rightBox: `${PREFIX}-rightBox`,
+  cartBox: `${PREFIX}-cartBox`,
+  cartBoxActive: `${PREFIX}-cartBoxActive`,
+};
+type Route = {
+  path: string;
+  name?: string;
+  icon?: React.ElementType;
+  if: "always" | "loggedIn" | "loggedOut" | "admin";
+  align: "left" | "right";
 };
 
 const Root = styled("div")(() => ({
@@ -50,12 +60,31 @@ const Root = styled("div")(() => ({
   },
   [`& .${classes.leftBox}`]: {
     display: "flex",
-    gap: 1,
+    gap: 10,
   },
   [`& .${classes.rightBox}`]: {
     marginLeft: "auto",
     display: "flex",
-    gap: 1,
+    gap: 10,
+  },
+  [`& .${classes.cartBox}`]: {
+    width: 20,
+    height: 20,
+    padding: "6px 8px",
+    marginRight: "15px",
+    cursor: "pointer",
+    color: "white",
+    "&:hover": {
+      color: colors.kerian_main,
+    },
+  },
+  [`& .${classes.cartBoxActive}`]: {
+    width: 20,
+    height: 20,
+    padding: "6px 8px",
+    marginRight: "15px",
+    cursor: "pointer",
+    color: colors.kerian_main,
   },
 }));
 
@@ -75,11 +104,17 @@ export default function Navbar() {
 
   const isLoggedIn = role !== "guest";
 
-  const routes = [
+  const routes: Route[] = [
     { path: "/", name: "Home", if: "always", align: "left" },
     { path: "/products", name: "Products", if: "always", align: "left" },
     { path: "/login", name: "Login", if: "loggedOut", align: "right" },
     { path: "/register", name: "Register", if: "loggedOut", align: "right" },
+    {
+      path: "/cart",
+      icon: ShoppingCartIcon,
+      if: "loggedIn",
+      align: "right",
+    },
     { path: "/logout", name: "Logout", if: "loggedIn", align: "right" },
   ];
 
@@ -95,12 +130,19 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
-  const renderRoutes = (routeArray: typeof routes) =>
+  const renderRoutes = (routeArray: Route[]) =>
     routeArray.map((route, index) => {
       const isActive = pathname === route.path;
+
       return (
         <Link href={route.path} key={index}>
-          <Button className={isActive ? "active" : ""}>{route.name}</Button>
+          {route.icon ? (
+            <Box className={isActive ? classes.cartBoxActive : classes.cartBox}>
+              <route.icon />
+            </Box>
+          ) : (
+            <Button className={isActive ? "active" : ""}>{route.name}</Button>
+          )}
         </Link>
       );
     });

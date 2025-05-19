@@ -12,8 +12,11 @@ import {
 import { boxShadows } from "@/constants/colors";
 import { useState } from "react";
 import ProductPopup from "./productPopup";
+import { getUserRole } from "../utils/auth";
+import { useCartStore } from "./store/cartStore";
 
 type ProductCardProps = {
+  id: number;
   name: string;
   description: string;
   imageUrl: string;
@@ -93,12 +96,27 @@ const Root = styled(Card)(() => ({
 }));
 
 export default function ProductCard({
+  id,
   name,
   description,
   imageUrl,
   price,
 }: ProductCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
+
+  const userRole = getUserRole();
+  const addItem = useCartStore((state) => state.addItem);
+
+  const submitAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      productId: id,
+      productName: name,
+      productPrice: price,
+      productQuantity: 1,
+    });
+  };
+
   return (
     <>
       <Root className={classes.root} onClick={() => setOpenDialog(true)}>
@@ -118,13 +136,24 @@ export default function ProductCard({
             <Typography className={classes.price} fontWeight="bold">
               {price} Ft
             </Typography>
-            <Button
-              className={classes.addToCardButton}
-              variant="contained"
-              size="small"
-            >
-              Add To Cart
-            </Button>
+            {userRole == "user" && (
+              <Button
+                className={classes.addToCardButton}
+                variant="contained"
+                size="small"
+                onClick={submitAddToCart}
+              >
+                Add To Cart
+              </Button>
+            )}
+            {userRole == "guest" && (
+              <Typography
+                variant="body2"
+                sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
+              >
+                Login to buy
+              </Typography>
+            )}
           </Box>
         </CardContent>
       </Root>
@@ -132,6 +161,7 @@ export default function ProductCard({
       <ProductPopup
         open={openDialog}
         onClose={() => setOpenDialog(false)}
+        id={id}
         name={name}
         description={description}
         imageUrl={imageUrl}
