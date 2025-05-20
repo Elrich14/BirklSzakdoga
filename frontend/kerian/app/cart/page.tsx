@@ -79,8 +79,8 @@ export default function CartPage() {
                 <Box className={classes.itemText}>
                   <Typography variant="body1">{item.productName}</Typography>
                   <Typography variant="body2">
-                    {item.productQuantity} ×{" "}
-                    {item.productPrice.toLocaleString()} Ft
+                    {item.size} / {item.color} / {item.gender} –{" "}
+                    {item.productQuantity} db
                   </Typography>
                 </Box>
                 <IconButton onClick={() => removeItem(item.productId)}>

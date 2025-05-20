@@ -144,7 +144,7 @@ export default function ProductPopup({
   price,
 }: ProductPopupProps) {
   const [gender, setGender] = useState<"Male" | "Female">("Female");
-  const [size, setSize] = useState<string>("");
+  const [size, setSize] = useState<string>("M");
 
   const [color, setColor] = useState("Black");
 
@@ -168,7 +168,10 @@ export default function ProductPopup({
       productId: id,
       productName: name,
       productPrice: price,
-      productQuantity: 1,
+      productQuantity: 1, //azert 1 mert meg nincs megcsinalva a mennyiseg valtoztato
+      gender,
+      size,
+      color,
     });
   };
 

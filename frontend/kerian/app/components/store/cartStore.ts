@@ -6,7 +6,11 @@ export type CartItem = {
   productName: string;
   productPrice: number;
   productQuantity: number;
+  gender: "Male" | "Female";
+  size: string;
+  color: string;
 };
+
 
 type CartState = {
   items: CartItem[];
