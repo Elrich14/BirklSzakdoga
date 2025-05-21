@@ -26,6 +26,7 @@ import { useState } from "react";
 import { colors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useCartStore } from "./store/cartStore";
+import QuantityInput from "./quantity";
 
 type ProductPopupProps = {
   open: boolean;
@@ -98,6 +99,7 @@ const Root = styled(Dialog)(() => ({
     display: "flex",
     flexDirection: "column",
     marginTop: "20px",
+    marginBottom: "20px",
     gap: "10px",
   },
   [`& .${classes.genderRadioGroup}`]: {
@@ -132,7 +134,7 @@ const Root = styled(Dialog)(() => ({
 }));
 
 const sizes = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"];
-const colorsList = ["black", "white"];
+const colorsList = ["Black", "White"];
 
 export default function ProductPopup({
   open,
@@ -145,8 +147,8 @@ export default function ProductPopup({
 }: ProductPopupProps) {
   const [gender, setGender] = useState<"Male" | "Female">("Female");
   const [size, setSize] = useState<string>("M");
-
   const [color, setColor] = useState("Black");
+  const [quantity, setQuantity] = useState(1);
 
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
@@ -167,8 +169,9 @@ export default function ProductPopup({
     addItem({
       productId: id,
       productName: name,
+      productImageUrl: imageUrl,
       productPrice: price,
-      productQuantity: 1, //azert 1 mert meg nincs megcsinalva a mennyiseg valtoztato
+      productQuantity: quantity,
       gender,
       size,
       color,
@@ -282,6 +285,12 @@ export default function ProductPopup({
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
+              {/*-----------------------------------color vege-----------------------------------*/}
+              <Typography variant="body2" fontWeight="bold">
+                Quantity:
+              </Typography>
+              <QuantityInput value={quantity} onChange={setQuantity} />
+              {/*-----------------------------------quantity vege-----------------------------------*/}
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">
