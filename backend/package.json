@@ -8,7 +8,7 @@
     "start": "node index.js",
     "seedProducts": "node dbSeeders/seedProducts.js",
     "seedUsers": "node dbSeeders/seedUsers.js",    
-    "startWatch": "nodemon --signal SIGINT index.js",
+"startWatch": "nodemon --legacy-watch --signal SIGINT index.js",
     "create:db": "cross-env NODE_ENV=development sequelize-cli db:create",
     "drop:db": "cross-env NODE_ENV=development sequelize-cli db:drop",
     "killPortProcess": "npx kill-port 3000"
