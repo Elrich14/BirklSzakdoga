@@ -112,8 +112,12 @@ export default function ProductCard({
     addItem({
       productId: id,
       productName: name,
+      productImageUrl: imageUrl,
       productPrice: price,
       productQuantity: 1,
+      gender: "Female",
+      size: "M",
+      color: "Black",
     });
   };
 
