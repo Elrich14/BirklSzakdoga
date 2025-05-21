@@ -4,6 +4,7 @@ import { Box, Typography, IconButton, Button, Divider } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material";
 import { useCartStore } from "../components/store/cartStore";
+import QuantityInput from "../components/quantity";
 
 const PREFIX = "CartPage";
 
@@ -59,6 +60,7 @@ export default function CartPage() {
   const cartItems = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const clearCart = useCartStore((state) => state.clearCart);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
 
   const total = cartItems.reduce(
     (sum, cartItem) => sum + cartItem.productPrice * cartItem.productQuantity,
@@ -75,7 +77,10 @@ export default function CartPage() {
         <>
           <Box className={classes.itemBox}>
             {cartItems.map((item) => (
-              <Box key={item.productId} className={classes.itemRow}>
+              <Box
+                key={`${item.productId}-${item.size}-${item.color}-${item.gender}`}
+                className={classes.itemRow}
+              >
                 <Box className={classes.itemText}>
                   <Typography variant="body1">{item.productName}</Typography>
                   <Typography variant="body2">
@@ -83,6 +88,12 @@ export default function CartPage() {
                     {item.productQuantity} db
                   </Typography>
                 </Box>
+                <QuantityInput
+                  value={item.productQuantity}
+                  onChange={(newQuantity) =>
+                    updateQuantity(item.productId, newQuantity)
+                  }
+                />
                 <IconButton onClick={() => removeItem(item.productId)}>
                   <DeleteIcon />
                 </IconButton>

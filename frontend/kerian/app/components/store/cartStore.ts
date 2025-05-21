@@ -9,6 +9,7 @@ export type CartItem = {
   gender: "Male" | "Female";
   size: string;
   color: string;
+  productImageUrl: string,
 };
 
 
@@ -24,22 +25,31 @@ export const useCartStore = create<CartState>((set) => ({
   items: [], //eddigi termékek
 
   addItem: (item) =>
-    set((state) => {
-      const existing = state.items.find((i) => i.productId === item.productId);
-      if (existing) {
-        return {
-          items: state.items.map((i) =>
-            i.productId === item.productId
-              ? { ...i, quantity: i.productQuantity + item.productQuantity }
-              : i
-          ),
-        };
-      } else {
-        return {
-          items: [...state.items, item],
-        };
-      }
-    }),
+  set((state) => {
+    const existing = state.items.find((i) =>
+      i.productId === item.productId &&
+      i.gender === item.gender &&
+      i.size === item.size &&
+      i.color === item.color
+    );
+
+    if (existing) {
+      return {
+        items: state.items.map((i) =>
+          i.productId === item.productId &&
+          i.gender === item.gender &&
+          i.size === item.size &&
+          i.color === item.color
+            ? { ...i, productQuantity: i.productQuantity + item.productQuantity }
+            : i
+        ),
+      };
+    } else {
+      return {
+        items: [...state.items, item],
+      };
+    }
+  }),
 
   removeItem: (productId) =>
     set((state) => ({
@@ -49,7 +59,7 @@ export const useCartStore = create<CartState>((set) => ({
   updateQuantity: (productId, quantity) =>
     set((state) => ({
       items: state.items.map((i) =>
-        i.productId === productId ? { ...i, quantity } : i
+        i.productId === productId ? { ...i,  productQuantity: quantity } : i
       ),
     })),
 
