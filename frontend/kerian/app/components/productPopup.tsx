@@ -36,6 +36,13 @@ type ProductPopupProps = {
   description: string;
   imageUrl: string;
   price: number;
+  defaultSize?: string;
+  defaultColor?: string;
+  defaultGender?: "Male" | "Female";
+  mode?: "edit" | "add";
+  originalGender?: "Male" | "Female";
+  originalSize?: string;
+  originalColor?: string;
 };
 
 const PREFIX = "ProductPopup";
@@ -144,14 +151,22 @@ export default function ProductPopup({
   description,
   imageUrl,
   price,
+  defaultGender = "Female",
+  defaultSize = "S",
+  defaultColor = "Black",
+  mode,
+  originalGender,
+  originalSize,
+  originalColor,
 }: ProductPopupProps) {
-  const [gender, setGender] = useState<"Male" | "Female">("Female");
-  const [size, setSize] = useState<string>("M");
-  const [color, setColor] = useState("Black");
-  const [quantity, setQuantity] = useState(1);
+  const [gender, setGender] = useState<"Male" | "Female">(defaultGender);
+  const [size, setSize] = useState<string>(defaultSize);
+  const [color, setColor] = useState<string>(defaultColor);
+  const [quantity, setQuantity] = useState<number>(1);
 
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
+  const updateItem = useCartStore((state) => state.updateItem);
 
   const changeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -169,6 +184,7 @@ export default function ProductPopup({
     addItem({
       productId: id,
       productName: name,
+      productDescription: description,
       productImageUrl: imageUrl,
       productPrice: price,
       productQuantity: quantity,
@@ -176,6 +192,26 @@ export default function ProductPopup({
       size,
       color,
     });
+  };
+
+  const submitModify = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    updateItem(
+      originalGender ?? gender,
+      originalSize ?? size,
+      originalColor ?? color,
+      {
+        productId: id,
+        productName: name,
+        productDescription: description,
+        productImageUrl: imageUrl,
+        productPrice: price,
+        productQuantity: quantity,
+        gender,
+        size,
+        color,
+      }
+    );
   };
 
   return (
@@ -294,16 +330,16 @@ export default function ProductPopup({
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">
-                {price} Ft
+                {price} Huf
               </Typography>
               {userRole == "user" && (
                 <Button
                   className={classes.addToCardButton}
                   variant="contained"
                   size="small"
-                  onClick={submitAddToCart}
+                  onClick={mode === "add" ? submitAddToCart : submitModify}
                 >
-                  Add To Cart
+                  {mode === "add" ? "Add To Cart" : "Modify"}
                 </Button>
               )}
               {userRole == "guest" && (

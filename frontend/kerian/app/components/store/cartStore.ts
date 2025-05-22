@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 export type CartItem = {
   productId: number;
+  productDescription: string;
   productName: string;
   productPrice: number;
   productQuantity: number;
@@ -14,7 +15,18 @@ export type CartItem = {
 type CartState = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (productId: number, gender: "Male" | "Female", size: string, color: string) => void;
+  updateItem: (
+    originalGender: "Male" | "Female",
+    originalSize: string,
+    originalColor: string,
+    updatedItem: CartItem
+  ) => void;
+   removeItem: (
+    productId: number,
+    gender: "Male" | "Female",
+    size: string,
+    color: string
+  ) => void;
   updateQuantity: (
     productId: number,
     gender: "Male" | "Female",
@@ -58,6 +70,23 @@ export const useCartStore = create<CartState>((set) => ({
         };
       }
     }),
+
+updateItem: (
+  originalGender,
+  originalSize,
+  originalColor,
+  updatedItem
+) =>
+  set((state) => ({
+    items: state.items.map((i) =>
+      i.gender === originalGender &&
+      i.size === originalSize &&
+      i.color === originalColor
+        ? updatedItem
+        : i
+    ),
+  })),
+
 
   removeItem: (productId, gender, size, color) =>
     set((state) => ({

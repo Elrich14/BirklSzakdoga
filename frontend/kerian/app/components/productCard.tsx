@@ -4,7 +4,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
   Box,
   styled,
   Divider,
@@ -13,7 +12,6 @@ import { boxShadows } from "@/constants/colors";
 import { useState } from "react";
 import ProductPopup from "./productPopup";
 import { getUserRole } from "../utils/auth";
-import { useCartStore } from "./store/cartStore";
 
 type ProductCardProps = {
   id: number;
@@ -105,21 +103,6 @@ export default function ProductCard({
   const [openDialog, setOpenDialog] = useState(false);
 
   const userRole = getUserRole();
-  const addItem = useCartStore((state) => state.addItem);
-
-  const submitAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    addItem({
-      productId: id,
-      productName: name,
-      productImageUrl: imageUrl,
-      productPrice: price,
-      productQuantity: 1,
-      gender: "Female",
-      size: "M",
-      color: "Black",
-    });
-  };
 
   return (
     <>
@@ -138,17 +121,15 @@ export default function ProductCard({
           </Typography>
           <Box className={classes.cardFooterBox}>
             <Typography className={classes.price} fontWeight="bold">
-              {price} Ft
+              {price} Huf
             </Typography>
             {userRole == "user" && (
-              <Button
-                className={classes.addToCardButton}
-                variant="contained"
-                size="small"
-                onClick={submitAddToCart}
+              <Typography
+                variant="body2"
+                sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
               >
-                Add To Cart
-              </Button>
+                Open to order
+              </Typography>
             )}
             {userRole == "guest" && (
               <Typography
@@ -170,6 +151,7 @@ export default function ProductCard({
         description={description}
         imageUrl={imageUrl}
         price={price}
+        mode="add"
       />
     </>
   );
