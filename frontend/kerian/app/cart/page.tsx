@@ -90,11 +90,26 @@ export default function CartPage() {
                 </Box>
                 <QuantityInput
                   value={item.productQuantity}
-                  onChange={(newQuantity) =>
-                    updateQuantity(item.productId, newQuantity)
-                  }
+                  onChange={(newQuantity) => {
+                    updateQuantity(
+                      item.productId,
+                      item.gender,
+                      item.size,
+                      item.color,
+                      newQuantity
+                    );
+                  }}
                 />
-                <IconButton onClick={() => removeItem(item.productId)}>
+                <IconButton
+                  onClick={() => {
+                    removeItem(
+                      item.productId,
+                      item.gender,
+                      item.size,
+                      item.color
+                    );
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Box>
