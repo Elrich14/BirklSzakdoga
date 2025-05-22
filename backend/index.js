@@ -4,6 +4,7 @@ const cors = require("cors");
 const { sequelize } = require("./dataBase");
 const auth = require("./auth");
 const Product = require("./models/products");
+const orderEmail = require("./orderEmail");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -51,6 +52,16 @@ app.get("/api/admin/orders", authenticateToken, (req, res) => {
     res.json({ message: "Welcome, admin!" });
   } else {
     res.status(403).json({ error: "Access denied" });
+  }
+});
+
+app.post("/api/orderEmail", async (req, res) => {
+  try {
+    await orderEmail(req.body);
+    res.json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
   }
 });
 

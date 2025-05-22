@@ -18,16 +18,9 @@ services:
       - "3000:3000"
     volumes:
       - ./backend:/app
-      - /app/node_modules
     depends_on:
       - db
-    environment:
-      DB_NAME: kerian
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: db
-      DB_PORT: 5432
-      JWT_SECRET: supersecret
+    env_file: ./backend/.env
 
   frontend:
     build: ./frontend/kerian
@@ -36,7 +29,6 @@ services:
       - "3001:3001"
     volumes:
       - ./frontend/kerian:/app
-      - /app/node_modules
     depends_on:
       - backend
 

@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "seedProducts": "node dbSeeders/seedProducts.js",
-    "seedUsers": "node dbSeeders/seedUsers.js",    
-"startWatch": "nodemon --legacy-watch --signal SIGINT index.js",
+    "seedUsers": "node dbSeeders/seedUsers.js",
+    "startWatch": "nodemon --legacy-watch --signal SIGINT index.js",
     "create:db": "cross-env NODE_ENV=development sequelize-cli db:create",
     "drop:db": "cross-env NODE_ENV=development sequelize-cli db:drop",
     "killPortProcess": "npx kill-port 3000"
@@ -27,6 +27,7 @@
     "graphql-http": "^1.22.4",
     "graphql-tools": "^9.0.11",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.3",
     "pg": "^8.13.1",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2"

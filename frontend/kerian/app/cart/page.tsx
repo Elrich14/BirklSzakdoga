@@ -7,6 +7,7 @@ import { useCartStore } from "../components/store/cartStore";
 import QuantityInput from "../components/quantity";
 import ProductPopup from "../components/productPopup";
 import { useState } from "react";
+import Link from "next/link";
 
 const PREFIX = "CartPage";
 
@@ -135,9 +136,11 @@ export default function CartPage() {
           </Box>
 
           <Box className={classes.actionButtons}>
-            <Button variant="contained" color="primary">
-              Checkout
-            </Button>
+            <Link href="/order">
+              <Button variant="contained" color="primary">
+                Checkout
+              </Button>
+            </Link>
             <Button variant="outlined" color="error" onClick={clearCart}>
               Clear cart
             </Button>
