@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function useInactivityLogout(timeout = 60 * 60 * 1000) {
+export default function useInactivityLogout(timeout = 30 * 60 * 1000) {
   const router = useRouter();
 
   useEffect(() => {

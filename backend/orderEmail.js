@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,
+    user: process.env.EMAIL_ADMIN,
     pass: process.env.EMAIL_PASS,
   },
 });
@@ -19,7 +19,7 @@ async function orderEmail(orderData) {
     .join("\n");
 
   const message = `
-New order received!:
+New order received!
 
 Name: ${name}
 Email: ${email}
@@ -32,8 +32,8 @@ ${itemLines}
 `;
 
   await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
+    from: process.env.EMAIL_ADMIN,
+    to: `${process.env.EMAIL_ADMIN}, ${email}`,
     subject: "New order received",
     text: message,
   });

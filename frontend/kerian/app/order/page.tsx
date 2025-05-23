@@ -1,5 +1,5 @@
-import ShippingForm from "../components/shippingDataForm";
+import ShippingDataForm from "../components/shippingDataForm";
 
 export default function OrderPage() {
-  return <ShippingForm />;
+  return <ShippingDataForm />;
 }

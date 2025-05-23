@@ -16,7 +16,7 @@ import { sendOrder } from "@/api";
 import { boxShadows } from "@/constants/colors";
 import { useCartStore } from "./store/cartStore";
 
-const PREFIX = "ShippingForm";
+const PREFIX = "ShippingDataForm";
 const classes = {
   root: `${PREFIX}-root`,
   textField: `${PREFIX}-textField`,
@@ -52,7 +52,7 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-export default function ShippingForm() {
+export default function ShippingDataForm() {
   const [sent, setSent] = useState(false);
   const cartItems = useCartStore((state) => state.items);
 
