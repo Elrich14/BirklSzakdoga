@@ -22,11 +22,14 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { colors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useCartStore } from "./store/cartStore";
 import QuantityInput from "./quantity";
+import { addToWishlist } from "@/api";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 type ProductPopupProps = {
   open: boolean;
@@ -43,6 +46,7 @@ type ProductPopupProps = {
   originalGender?: "Male" | "Female";
   originalSize?: string;
   originalColor?: string;
+  isWished?: boolean;
 };
 
 const PREFIX = "ProductPopup";
@@ -61,6 +65,8 @@ const classes = {
   colorButton: `${PREFIX}-colorButton`,
   colorButtonCircle: `${PREFIX}-colorButtonCircle`,
   colorButtonGroup: `${PREFIX}-colorButtonGroup`,
+  cardLeftSideBox: `${PREFIX}-cardLeftSideBox`,
+  addToWishlistButton: `${PREFIX}-addToWishlistButton`,
 };
 
 const Root = styled(Dialog)(() => ({
@@ -138,6 +144,25 @@ const Root = styled(Dialog)(() => ({
   [`& .${classes.colorButtonGroup}`]: {
     marginLeft: "auto",
   },
+
+  [`& .${classes.cardLeftSideBox}`]: {
+    position: "relative",
+  },
+  [`& .${classes.addToWishlistButton}`]: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    color: colors.kerian_main,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    borderRadius: "50%",
+    padding: "6px",
+    cursor: "pointer",
+    transition: "0.2s",
+    "&:hover": {
+      color: colors.kerian_main,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+  },
 }));
 
 const sizes = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"];
@@ -158,11 +183,13 @@ export default function ProductPopup({
   originalGender,
   originalSize,
   originalColor,
+  isWished,
 }: ProductPopupProps) {
   const [gender, setGender] = useState<"Male" | "Female">(defaultGender);
   const [size, setSize] = useState<string>(defaultSize);
   const [color, setColor] = useState<string>(defaultColor);
   const [quantity, setQuantity] = useState<number>(1);
+  const [isInWishlist, setIsInWishlist] = useState(isWished);
 
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
@@ -214,6 +241,10 @@ export default function ProductPopup({
     );
   };
 
+  useEffect(() => {
+    setIsInWishlist(isWished);
+  }, [isWished]);
+
   return (
     <Root
       className={classes.root}
@@ -236,13 +267,42 @@ export default function ProductPopup({
       </DialogTitle>
       <DialogContent dividers>
         <Box className={classes.container}>
-          <Image
-            src={imageUrl}
-            alt={name}
-            width={450}
-            height={500}
-            style={{ borderRadius: 4 }}
-          />
+          <Box className={classes.cardLeftSideBox}>
+            <Image
+              src={imageUrl}
+              alt={name}
+              width={450}
+              height={500}
+              style={{ borderRadius: 4 }}
+            />
+            {isInWishlist ? (
+              <FavoriteIcon
+                fontSize="large"
+                onClick={(e) => e.stopPropagation()}
+                className={classes.addToWishlistButton}
+              />
+            ) : (
+              <FavoriteBorderIcon
+                fontSize="large"
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await addToWishlist({
+                    productId: id,
+                    productName: name,
+                    description,
+                    imageUrl,
+                    price,
+                    color: color,
+                    size: size,
+                    gender: gender,
+                    quantity: quantity,
+                  });
+                  setIsInWishlist(true);
+                }}
+                className={classes.addToWishlistButton}
+              />
+            )}
+          </Box>
           <Box className={classes.dataContainer}>
             <Typography className={classes.productDescription} variant="body1">
               {description}

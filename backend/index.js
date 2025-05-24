@@ -36,13 +36,9 @@ app.get("/api/products/:id", async (req, res) => {
 
     res.json(product);
   } catch (err) {
-    console.error("❌ Error fetching product:", err);
+    console.error("Error fetching product:", err);
     res.status(500).json({ error: "Failed to fetch product" });
   }
-});
-
-app.get("*", (req, res) => {
-  res.status(404).json({ error: "Invalid endpoint" });
 });
 
 const authenticateToken = require("./authenticateToken");
@@ -55,6 +51,45 @@ app.get("/api/admin/orders", authenticateToken, (req, res) => {
   }
 });
 
+const Wishlist = require("./models/wishlist");
+
+app.get("/api/wishlist", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const items = await Wishlist.findAll({ where: { userId } });
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching wishlist:", error);
+    res.status(500).json({ error: "Failed to fetch wishlist" });
+  }
+});
+
+app.delete("/api/wishlist/:id", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const id = req.params.id;
+    const deleted = await Wishlist.destroy({ where: { id, userId } });
+    if (deleted === 0) {
+      return res.status(404).json({ error: "Item not found" });
+    }
+    res.status(204).end();
+  } catch (error) {
+    console.error("Error deleting wishlist item:", error);
+    res.status(500).json({ error: "Failed to delete item" });
+  }
+});
+
+app.post("/api/wishlist", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const item = await Wishlist.create({ ...req.body, userId });
+    res.status(201).json(item);
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    res.status(500).json({ error: "Failed to add item" });
+  }
+});
+
 app.post("/api/orderEmail", async (req, res) => {
   try {
     await orderEmail(req.body);
@@ -63,6 +98,10 @@ app.post("/api/orderEmail", async (req, res) => {
     console.error("Error sending email:", error);
     res.status(500).json({ error: "Failed to send email" });
   }
+});
+
+app.get("*", (req, res) => {
+  res.status(404).json({ error: "Invalid endpoint" });
 });
 
 app.listen(PORT, async () => {

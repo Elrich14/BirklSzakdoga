@@ -107,6 +107,7 @@ export default function Navbar() {
   const routes: Route[] = [
     { path: "/", name: "Home", if: "always", align: "left" },
     { path: "/products", name: "Products", if: "always", align: "left" },
+    { path: "/wishlist", name: "Wishlist", if: "loggedIn", align: "left" },
     { path: "/login", name: "Login", if: "loggedOut", align: "right" },
     { path: "/register", name: "Register", if: "loggedOut", align: "right" },
     {

@@ -8,10 +8,13 @@ import {
   styled,
   Divider,
 } from "@mui/material";
-import { boxShadows } from "@/constants/colors";
-import { useState } from "react";
+import { boxShadows, colors } from "@/constants/colors";
+import { useEffect, useState } from "react";
 import ProductPopup from "./productPopup";
 import { getUserRole } from "../utils/auth";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { addToWishlist } from "@/api";
 
 type ProductCardProps = {
   id: number;
@@ -19,6 +22,7 @@ type ProductCardProps = {
   description: string;
   imageUrl: string;
   price: number;
+  isWished?: boolean;
 };
 
 const PREFIX = "ProductCard";
@@ -31,6 +35,8 @@ const classes = {
   addToCardButton: `${PREFIX}-addToCardButton`,
   price: `${PREFIX}-price`,
   cardFooterBox: `${PREFIX}-cardFooterBox`,
+  cardUpperSideBox: `${PREFIX}-cardUpperSideBox`,
+  addToWishlistButton: `${PREFIX}-addToWishlistButton`,
 };
 
 const Root = styled(Card)(() => ({
@@ -91,6 +97,24 @@ const Root = styled(Card)(() => ({
     justifyContent: "space-between",
     marginTop: "auto",
   },
+  [`& .${classes.cardUpperSideBox}`]: {
+    position: "relative",
+  },
+  [`& .${classes.addToWishlistButton}`]: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    color: colors.kerian_main,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    borderRadius: "50%",
+    padding: "6px",
+    cursor: "pointer",
+    transition: "0.2s",
+    "&:hover": {
+      color: colors.kerian_main,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+  },
 }));
 
 export default function ProductCard({
@@ -99,20 +123,55 @@ export default function ProductCard({
   description,
   imageUrl,
   price,
+  isWished,
 }: ProductCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const userRole = getUserRole();
+  const [isInWishlist, setIsInWishlist] = useState(isWished);
+
+  useEffect(() => {
+    setIsInWishlist(isWished);
+  }, [isWished]);
 
   return (
     <>
       <Root className={classes.root} onClick={() => setOpenDialog(true)}>
-        <CardMedia
-          className={classes.productImg}
-          component="img"
-          image={imageUrl}
-          alt={name}
-        />
+        <Box className={classes.cardUpperSideBox}>
+          <CardMedia
+            className={classes.productImg}
+            component="img"
+            image={imageUrl}
+            alt={name}
+          />
+          {isInWishlist ? (
+            <FavoriteIcon
+              fontSize="large"
+              onClick={(e) => e.stopPropagation()}
+              className={classes.addToWishlistButton}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              fontSize="large"
+              onClick={async (e) => {
+                e.stopPropagation();
+                await addToWishlist({
+                  productId: id,
+                  productName: name,
+                  description,
+                  imageUrl,
+                  price,
+                  color: "Black",
+                  size: "S",
+                  gender: "Female",
+                  quantity: 1,
+                });
+                setIsInWishlist(true);
+              }}
+              className={classes.addToWishlistButton}
+            />
+          )}
+        </Box>
         <CardContent>
           <Typography className={classes.productName}>{name}</Typography>
           <Divider sx={{ my: 1 }} />
@@ -152,6 +211,7 @@ export default function ProductCard({
         imageUrl={imageUrl}
         price={price}
         mode="add"
+        isWished={isInWishlist}
       />
     </>
   );

@@ -2,7 +2,8 @@
 import ProductCard from "../components/productCard";
 import { Typography, styled, Box, CircularProgress } from "@mui/material";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { fetchAllProducts } from "@/api";
+import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
+import { colors } from "@/constants/colors";
 
 const PREFIX = "ProductsPage";
 
@@ -11,6 +12,7 @@ const classes = {
   sidebar: `${PREFIX}-sidebar`,
   content: `${PREFIX}-content`,
   productGrid: `${PREFIX}-productGrid`,
+  productsAndFilterTitle: `${PREFIX}-productsAndFilterTitle`,
 };
 
 const Root = styled("div")(() => ({
@@ -39,6 +41,15 @@ const Root = styled("div")(() => ({
     gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
     gap: "30px",
   },
+  [`& .${classes.productsAndFilterTitle}`]: {
+    display: "flex",
+    justifyContent: "left",
+    marginTop: "30px",
+    fontFamily: "monospace",
+    fontSize: "30px",
+    color: colors.kerian_main,
+    opacity: 0.6,
+  },
 }));
 
 export interface Product {
@@ -62,16 +73,21 @@ export default function ProductsPage() {
     cacheTime: 10 * 60 * 1000,
   } as UseQueryOptions<Product[], Error>);
 
+  const { data: wishlist = [] } = useQuery<WishlistItem[], Error>({
+    queryKey: ["wishlist"],
+    queryFn: getWishlist,
+  });
+
   return (
     <Root className={classes.root}>
       <Box className={classes.sidebar}>
-        <Typography variant="h6" gutterBottom>
+        <Typography className={classes.productsAndFilterTitle} gutterBottom>
           Filter
         </Typography>
       </Box>
 
       <Box className={classes.content}>
-        <Typography variant="h4" gutterBottom>
+        <Typography className={classes.productsAndFilterTitle} gutterBottom>
           Products
         </Typography>
 
@@ -79,9 +95,10 @@ export default function ProductsPage() {
         {error && <Typography>Error loading products</Typography>}
 
         <Box className={classes.productGrid}>
-          {products.map((product, index) => (
-            <ProductCard key={index} {...product} />
-          ))}
+          {products.map((product, index) => {
+            const isWished = wishlist.some((w) => w.productId === product.id);
+            return <ProductCard key={index} {...product} isWished={isWished} />;
+          })}
         </Box>
       </Box>
     </Root>

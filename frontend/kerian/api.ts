@@ -32,6 +32,18 @@ export interface OrderRequest {
   }[];
 }
 
+export interface WishlistItem {
+  id: number;
+  productId: number;
+  productName: string;
+  description: string;
+  imageUrl: string;
+  gender: "Male" | "Female";
+  price: number;
+  quantity: number;
+  color: string;
+  size: string;
+}
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
@@ -82,6 +94,75 @@ export async function fetchProductById(id: string | number): Promise<Product[]> 
   if (!res.ok) throw new Error("Failed to fetch product details");
   return res.json();
 }
+
+// GET WISHLIST
+export async function getWishlist(): Promise<WishlistItem[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/wishlist`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Wishlist fetch failed");
+  }
+
+  return response.json();
+}
+
+// REMOVE ITEM FROM WISHLIST
+export async function removeFromWishlist(productId: number): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_BASE}/api/wishlist/${productId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to remove item from wishlist");
+  }
+}
+
+
+// ADD TO WISHLIST
+export async function addToWishlist(item: {
+  productId: number;
+  productName: string;
+  description: string;
+  imageUrl: string;
+  price: number;
+  color: string;
+  size: string;
+  gender: "Male" | "Female";
+  quantity: number;
+}): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_BASE}/api/wishlist`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(item),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to add to wishlist");
+  }
+}
+
+
 
 // SEND ORDER
 export async function sendOrder(data: OrderRequest): Promise<void> {

@@ -102,17 +102,17 @@ async function seedProducts() {
 
     if (existing) {
       await existing.update(productData);
-      console.log(`🔄 Updated: ${productData.name}`);
+      console.log(`Updated: ${productData.name}`);
     } else {
       await Product.create(productData);
-      console.log(`➕ Created: ${productData.name}`);
+      console.log(`Created: ${productData.name}`);
     }
   }
 
-  console.log("✅ Products have been seeded.");
+  console.log("Products have been seeded.");
   await sequelize.close();
 }
 
 seedProducts().catch((err) => {
-  console.error("❌ Error seeding products:", err);
+  console.error("Error seeding products:", err);
 });

@@ -8,6 +8,7 @@ import QuantityInput from "../components/quantity";
 import ProductPopup from "../components/productPopup";
 import { useState } from "react";
 import Link from "next/link";
+import { colors } from "@/constants/colors";
 
 const PREFIX = "CartPage";
 
@@ -19,6 +20,7 @@ const classes = {
   itemText: `${PREFIX}-itemText`,
   totalBox: `${PREFIX}-totalBox`,
   actionButtons: `${PREFIX}-actionButtons`,
+  cartTitle: `${PREFIX}-cartTitle`,
 };
 
 const Root = styled("div")(() => ({
@@ -58,6 +60,15 @@ const Root = styled("div")(() => ({
     gap: "12px",
     marginTop: "16px",
   },
+  [`& .${classes.cartTitle}`]: {
+    display: "flex",
+    justifyContent: "left",
+    marginTop: "30px",
+    fontFamily: "monospace",
+    fontSize: "30px",
+    color: colors.kerian_main,
+    opacity: 0.6,
+  },
 }));
 
 export default function CartPage() {
@@ -76,7 +87,7 @@ export default function CartPage() {
 
   return (
     <Root className={classes.root}>
-      <Typography variant="h4">Cart</Typography>
+      <Typography className={classes.cartTitle}>Cart</Typography>
 
       {cartItems.length === 0 ? (
         <Typography variant="body1">Your cart is empty</Typography>
@@ -95,7 +106,7 @@ export default function CartPage() {
                   <Typography variant="body1">{item.productName}</Typography>
                   <Typography variant="body2">
                     {item.size} / {item.color} / {item.gender} –{" "}
-                    {item.productQuantity} db
+                    {item.productQuantity} x
                   </Typography>
                 </Box>
 
