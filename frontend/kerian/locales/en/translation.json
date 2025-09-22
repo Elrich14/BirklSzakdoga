@@ -1,0 +1,115 @@
+{
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "hungarian": "Hungarian",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhone": "Please enter a valid phone number"
+    }
+  },
+  "navbar": {
+    "home": "Home",
+    "products": "Products",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "welcome": "Welcome"
+  },
+  "login": {
+    "title": "Login",
+    "submit": "Sign In",
+    "registerLink": "Don't have an account? Register here",
+    "forgotPassword": "Forgot Password?",
+    "loginSuccessful": "Login successful!",
+    "loginError": "Invalid email or password"
+  },
+  "register": {
+    "title": "Register",
+    "confirmPassword": "Confirm Password",
+    "submit": "Register",
+    "loginLink": "Already have an account? Login here",
+    "passwordMismatch": "Passwords do not match",
+    "registerSuccess": "Registration successful!",
+    "registerError": "Registration failed"
+  },
+  "filter": {
+    "title": "Filters"
+  },
+  "card": {
+    "addToCart": "Add to Cart",
+    "addToWishlist": "Add to Wishlist",
+    "removeFromWishlist": "Remove from Wishlist",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "details": "View Details",
+    "quantity": "Quantity",
+    "currency": "Huf",
+    "loginToBuy": "Login to buy",
+    "openToOrder": "Open to order",
+    "modify": "Modify",
+    "fit": "Fit",
+    "size": "Size",
+    "color": "Color",
+    "colors": {
+      "black": "Black",
+      "white": "White"
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "aria": {
+      "addToWishlist": "Add to wishlist",
+      "removeFromWishlist": "Remove from wishlist",
+      "close": "Close dialog"
+    }
+  },
+  "products": {
+    "products": "Our Products"
+  },
+  "wishlist": {
+    "title": "My Wishlist",
+    "empty": "Your wishlist is empty"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "clear": "Clear Cart"
+  },
+  "orderingForm": {
+    "title": "Shipping Information",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "city": "City",
+    "zipCode": "ZIP/Postal Code",
+    "country": "Country",
+    "billingAddress": "Billing Address",
+    "shippingAddress": "Shipping address",
+    "streetAddress": "Street Address",
+    "submit": "Order",
+    "sameAsShipping": "Billing address different from shipping address",
+    "note": "Order Note (optional)"
+  },
+  "feedback": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information",
+    "orderSuccess": "Your order has been placed successfully!",
+    "orderError": "There was a problem with your order",
+    "errorLoadingProducts": "Error loading products",
+    "addedToCart": "Product added to cart",
+    "removedFromCart": "Product removed from cart",
+    "addedToWishlist": "Product added to wishlist",
+    "removedFromWishlist": "Product removed from wishlist"
+  }
+}

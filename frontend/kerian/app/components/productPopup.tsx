@@ -25,6 +25,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { colors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
+import { useTranslation } from "react-i18next";
 import { useCartStore } from "./store/cartStore";
 import QuantityInput from "./quantity";
 import { addToWishlist } from "@/api";
@@ -185,6 +186,7 @@ export default function ProductPopup({
   originalColor,
   isWished,
 }: ProductPopupProps) {
+  const { t } = useTranslation();
   const [gender, setGender] = useState<"Male" | "Female">(defaultGender);
   const [size, setSize] = useState<string>(defaultSize);
   const [color, setColor] = useState<string>(defaultColor);
@@ -262,7 +264,7 @@ export default function ProductPopup({
       >
         {name}
         <IconButton onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon aria-label={t("card.aria.close")} />
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
@@ -280,6 +282,7 @@ export default function ProductPopup({
                 fontSize="large"
                 onClick={(e) => e.stopPropagation()}
                 className={classes.addToWishlistButton}
+                aria-label={t("card.aria.removeFromWishlist")}
               />
             ) : (
               <FavoriteBorderIcon
@@ -300,6 +303,7 @@ export default function ProductPopup({
                   setIsInWishlist(true);
                 }}
                 className={classes.addToWishlistButton}
+                aria-label={t("card.aria.addToWishlist")}
               />
             )}
           </Box>
@@ -310,35 +314,35 @@ export default function ProductPopup({
 
             <Box className={classes.popupOrderDetailsBox}>
               <Typography variant="body2" fontWeight="bold">
-                Fit:
+                {t("card.fit")}:
               </Typography>
               <FormControl className={classes.genderRadioGroup}>
                 <RadioGroup row value={gender} onChange={changeGender}>
                   <FormControlLabel
                     value="Female"
                     control={<Radio />}
-                    label="Female"
+                    label={t("card.gender.female")}
                     labelPlacement="start"
                   />
                   <FormControlLabel
                     value="Male"
                     control={<Radio />}
-                    label="Male"
+                    label={t("card.gender.male")}
                     labelPlacement="start"
                   />
                 </RadioGroup>
               </FormControl>
               {/*-----------------------------------gender vege-----------------------------------*/}
               <Typography variant="body2" fontWeight="bold">
-                Size:
+                {t("card.size")}:
               </Typography>
               <FormControl className={classes.sizeSelect}>
-                <InputLabel>Size</InputLabel>
+                <InputLabel>{t("card.size")}</InputLabel>
                 <Select
                   // multiple
                   value={size}
                   onChange={changeSize}
-                  input={<OutlinedInput label="Size" />}
+                  input={<OutlinedInput label={t("card.size")} />}
                 >
                   {sizes.map((size) => (
                     <MenuItem key={size} value={size}>
@@ -350,7 +354,7 @@ export default function ProductPopup({
               {/*-----------------------------------size vege-----------------------------------*/}
 
               <Typography variant="body2" fontWeight="bold">
-                Color:
+                {t("card.color")}:
               </Typography>
 
               <ToggleButtonGroup
@@ -383,14 +387,14 @@ export default function ProductPopup({
               </ToggleButtonGroup>
               {/*-----------------------------------color vege-----------------------------------*/}
               <Typography variant="body2" fontWeight="bold">
-                Quantity:
+                {t("card.quantity")}:
               </Typography>
               <QuantityInput value={quantity} onChange={setQuantity} />
               {/*-----------------------------------quantity vege-----------------------------------*/}
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">
-                {price} Huf
+                {price} {t("card.currency")}
               </Typography>
               {userRole == "user" && (
                 <Button
@@ -399,7 +403,7 @@ export default function ProductPopup({
                   size="small"
                   onClick={mode === "add" ? submitAddToCart : submitModify}
                 >
-                  {mode === "add" ? "Add To Cart" : "Modify"}
+                  {mode === "add" ? t("card.addToCart") : t("card.modify")}
                 </Button>
               )}
               {userRole == "guest" && (
@@ -407,7 +411,7 @@ export default function ProductPopup({
                   variant="body2"
                   sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
                 >
-                  Login to buy
+                  {t("card.loginToBuy")}
                 </Typography>
               )}
             </Box>

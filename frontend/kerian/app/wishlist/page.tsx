@@ -17,6 +17,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { getWishlist, removeFromWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { useCartStore } from "../components/store/cartStore";
+import { useTranslation } from "react-i18next";
 
 const PREFIX = "Wishlist";
 
@@ -65,6 +66,7 @@ const Root = styled(List)(() => ({
 }));
 
 export default function Wishlist() {
+  const { t } = useTranslation();
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const addItem = useCartStore((state) => state.addItem);
 
@@ -111,12 +113,12 @@ export default function Wishlist() {
           opacity: 0.6,
         }}
       >
-        Wishlist
+        {t("wishlist.title")}
       </Typography>
       <Root className={classes.root}>
         {wishlist.length === 0 ? (
           <p style={{ color: "#ccc", marginTop: "2rem" }}>
-            Your wishlist is empty.
+            {t("wishlist.empty")}
           </p>
         ) : (
           wishlist.map((item) => (
@@ -138,7 +140,7 @@ export default function Wishlist() {
                     className={classes.addToCartButton}
                     onClick={(e) => submitAddToCart(e, item)}
                   >
-                    Add to Cart
+                    {t("card.addToCart")}
                   </Button>
                 </>
               }
@@ -151,7 +153,23 @@ export default function Wishlist() {
                 />
               </ListItemAvatar>
               <ListItemText
-                primary={`${item.productName} / ${item.size} / ${item.gender} / ${item.color} ${item.quantity}x - ${item.price.toLocaleString()} Huf`}
+                primary={
+                  <Typography component="div">
+                    {item.productName}
+                    {" / "}
+                    {item.size}
+                    {" / "}
+                    {item.gender === "Male"
+                      ? t("card.gender.male")
+                      : t("card.gender.female")}
+                    {" / "}
+                    {item.color === "Black"
+                      ? t("card.colors.black")
+                      : t("card.colors.white")}{" "}
+                    {item.quantity}x - {item.price.toLocaleString()}{" "}
+                    {t("card.currency")}
+                  </Typography>
+                }
                 secondary={item.description}
               />
             </ListItem>

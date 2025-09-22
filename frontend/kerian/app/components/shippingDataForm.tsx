@@ -15,6 +15,8 @@ import { styled } from "@mui/system";
 import { sendOrder } from "@/api";
 import { boxShadows } from "@/constants/colors";
 import { useCartStore } from "./store/cartStore";
+import { useTranslation } from "react-i18next";
+import { phoneRegExp } from "@/constants/constants";
 
 const PREFIX = "ShippingDataForm";
 const classes = {
@@ -38,9 +40,6 @@ const Root = styled(Box)(() => ({
   [`& .${classes.textField}`]: {
     marginBottom: "16px",
   },
-  [`& .${classes.defferentAddressCheckbox}`]: {
-    marginBottom: "12px",
-  },
   [`& .${classes.errorMsg}`]: {
     color: "red",
     fontSize: "0.875rem",
@@ -53,12 +52,15 @@ const Root = styled(Box)(() => ({
 }));
 
 export default function ShippingDataForm() {
+  const { t } = useTranslation();
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState(false);
   const cartItems = useCartStore((state) => state.items);
 
   const initialValues = {
     name: "",
     email: "",
+    phone: "",
     shippingAddress: "",
     billingAddress: "",
     note: "",
@@ -66,13 +68,17 @@ export default function ShippingDataForm() {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Required field"),
-    email: Yup.string().email("Wrong email format").required("Required field"),
-    shippingAddress: Yup.string().required("Required field"),
+    name: Yup.string().required(t("common.validation.required")),
+    email: Yup.string()
+      .email(t("common.validation.invalidEmail"))
+      .required(t("common.validation.required")),
+    phone: Yup.string()
+      .matches(phoneRegExp, t("common.validation.invalidPhone"))
+      .required(t("common.validation.required")),
+    shippingAddress: Yup.string().required(t("common.validation.required")),
     billingAddress: Yup.string().when("billingDifferent", {
       is: true,
-      then: (schema) =>
-        schema.required("Required, if different from shipping address"),
+      then: (schema) => schema.required(t("common.validation.required")),
       otherwise: (schema) => schema.notRequired(),
     }),
     note: Yup.string(),
@@ -81,22 +87,29 @@ export default function ShippingDataForm() {
 
   const onSubmit = async (values: typeof initialValues) => {
     try {
+      setError(false);
       await sendOrder({ ...values, cartItems });
-
       setSent(true);
     } catch (error) {
       console.error("Error when sending email", error);
+      setError(true);
+      setSent(false);
     }
   };
 
   return (
     <Root className={classes.root} sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
       <Typography variant="h5" mb={2}>
-        Shipping
+        {t("orderingForm.title")}
       </Typography>
 
+      {error && (
+        <Typography color="error" sx={{ mb: 2 }}>
+          {t("feedback.orderError")}
+        </Typography>
+      )}
       {sent ? (
-        <Typography color="green">Order sent</Typography>
+        <Typography color="green">{t("feedback.orderSuccess")}</Typography>
       ) : (
         <Formik
           initialValues={initialValues}
@@ -109,7 +122,7 @@ export default function ShippingDataForm() {
                 fullWidth
                 margin="normal"
                 name="name"
-                label="Name"
+                label={t("orderingForm.fullName")}
                 value={values.name}
                 onChange={handleChange}
                 className={classes.textField}
@@ -124,7 +137,7 @@ export default function ShippingDataForm() {
                 fullWidth
                 margin="normal"
                 name="email"
-                label="Email"
+                label={t("common.email")}
                 value={values.email}
                 onChange={handleChange}
                 className={classes.textField}
@@ -138,8 +151,24 @@ export default function ShippingDataForm() {
               <TextField
                 fullWidth
                 margin="normal"
+                name="phone"
+                label={t("orderingForm.phone")}
+                value={values.phone}
+                onChange={handleChange}
+                className={classes.textField}
+              />
+              <ErrorMessage
+                name="phone"
+                component="div"
+                className={classes.errorMsg}
+              />
+
+              <TextField
+                fullWidth
+                margin="normal"
                 name="shippingAddress"
-                label="Shipping Address"
+                label={t("orderingForm.shippingAddress")}
+                placeholder={`${t("orderingForm.country")}, ${t("orderingForm.zipCode")}, ${t("orderingForm.city")}, ${t("orderingForm.streetAddress")}`}
                 value={values.shippingAddress}
                 onChange={handleChange}
                 className={classes.textField}
@@ -159,7 +188,7 @@ export default function ShippingDataForm() {
                     className={classes.defferentAddressCheckbox}
                   />
                 }
-                label="Billing address different from shipping address"
+                label={t("orderingForm.sameAsShipping")}
               />
 
               {values.billingDifferent && (
@@ -168,7 +197,7 @@ export default function ShippingDataForm() {
                     fullWidth
                     margin="normal"
                     name="billingAddress"
-                    label="Billing Address"
+                    label={t("orderingForm.billingAddress")}
                     value={values.billingAddress}
                     onChange={handleChange}
                     className={classes.textField}
@@ -187,7 +216,7 @@ export default function ShippingDataForm() {
                 minRows={3}
                 margin="normal"
                 name="note"
-                label="Note"
+                label={t("orderingForm.note")}
                 value={values.note}
                 onChange={handleChange}
                 className={classes.textField}
@@ -199,7 +228,7 @@ export default function ShippingDataForm() {
                 color="primary"
                 className={classes.sendFromButton}
               >
-                Order
+                {t("orderingForm.submit")}
               </Button>
             </Form>
           )}

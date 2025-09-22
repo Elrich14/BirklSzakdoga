@@ -1,0 +1,128 @@
+{
+  "common": {
+    "language": "Nyelv",
+    "english": "Angol",
+    "hungarian": "Magyar",
+    "email": "Email",
+    "password": "Jelszó",
+    "submit": "Küldés",
+    "validation": {
+      "required": "Ez a mező kötelező",
+      "invalidEmail": "Kérjük, adjon meg egy érvényes email címet",
+      "invalidPhone": "Kérjük, adjon meg egy érvényes telefonszámot"
+    }
+  },
+  "navbar": {
+    "home": "Főoldal",
+    "products": "Termékek",
+    "cart": "Kosár",
+    "wishlist": "Kívánságlista",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "logout": "Kijelentkezés",
+    "welcome": "Üdvözöljük"
+  },
+  "login": {
+    "title": "Bejelentkezés",
+    "submit": "Bejelentkezés",
+    "registerLink": "Nincs még fiókja? Regisztráljon itt",
+    "forgotPassword": "Elfelejtett jelszó?",
+    "loginSuccessful": "Sikeres bejelentkezés!",
+    "loginError": "Érvénytelen email vagy jelszó"
+  },
+  "register": {
+    "title": "Regisztráció",
+    "confirmPassword": "Jelszó megerősítése",
+    "submit": "Regisztráció",
+    "loginLink": "Már van fiókja? Jelentkezzen be itt",
+    "passwordMismatch": "A jelszavak nem egyeznek",
+    "registerSuccess": "Sikeres regisztráció!",
+    "registerError": "A regisztráció sikertelen"
+  },
+  "filter": {
+    "title": "Szűrők",
+    "price": "Ár",
+    "minPrice": "Minimum ár",
+    "maxPrice": "Maximum ár",
+    "category": "Kategória",
+    "sort": "Rendezés",
+    "sortOptions": {
+      "priceAsc": "Ár: Növekvő",
+      "priceDesc": "Ár: Csökkenő",
+      "nameAsc": "Név: A-Z",
+      "nameDesc": "Név: Z-A"
+    },
+    "apply": "Szűrők alkalmazása",
+    "clear": "Szűrők törlése"
+  },
+  "card": {
+    "addToCart": "Kosárba",
+    "addToWishlist": "Kívánságlistára",
+    "removeFromWishlist": "Törlés a kívánságlistáról",
+    "outOfStock": "Nincs készleten",
+    "inStock": "Készleten",
+    "details": "Részletek",
+    "quantity": "Mennyiség",
+    "currency": "Ft",
+    "loginToBuy": "Jelentkezzen be a vásárláshoz",
+    "openToOrder": "Kattintson a rendeléshez",
+    "modify": "Módosítás",
+    "fit": "Szabás",
+    "size": "Méret",
+    "color": "Szín",
+    "colors": {
+      "black": "Fekete",
+      "white": "Fehér"
+    },
+    "gender": {
+      "male": "Férfi",
+      "female": "Női"
+    },
+    "aria": {
+      "addToWishlist": "Hozzáadás a kívánságlistához",
+      "removeFromWishlist": "Eltávolítás a kívánságlistából",
+      "close": "Bezárás"
+    }
+  },
+  "products": {
+    "products": "Termékeink"
+  },
+  "wishlist": {
+    "title": "Kívánságlistám",
+    "empty": "A kívánságlistája üres"
+  },
+  "cart": {
+    "title": "Bevásárlókosár",
+    "empty": "A kosár üres",
+    "total": "Végösszeg",
+    "checkout": "Fizetés",
+    "clear": "Kosár törlése"
+  },
+  "orderingForm": {
+    "title": "Szállítási információk",
+    "fullName": "Teljes név",
+    "phone": "Telefonszám",
+    "city": "Város",
+    "zipCode": "Irányítószám",
+    "country": "Ország",
+    "billingAddress": "Számlázási cím",
+    "shippingAddress": "Szállítási cím",
+    "streetAddress": "Cím, házszám",
+    "submit": "Rendelés leadása",
+    "sameAsShipping": "A szállítási címtől eltérő számlázási cím",
+    "note": "Megjegyzés (opcionális)"
+  },
+  "feedback": {
+    "success": "Siker",
+    "error": "Hiba",
+    "warning": "Figyelmeztetés",
+    "info": "Információ",
+    "orderSuccess": "Rendelését sikeresen rögzítettük!",
+    "orderError": "Hiba történt a rendelés során",
+    "errorLoadingProducts": "Hiba történt a termékek betöltése közben",
+    "addedToCart": "Termék a kosárba helyezve",
+    "removedFromCart": "Termék eltávolítva a kosárból",
+    "addedToWishlist": "Termék hozzáadva a kívánságlistához",
+    "removedFromWishlist": "Termék eltávolítva a kívánságlistáról"
+  }
+}

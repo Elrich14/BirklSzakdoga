@@ -9,6 +9,7 @@ import ProductPopup from "../components/productPopup";
 import { useState } from "react";
 import Link from "next/link";
 import { colors } from "@/constants/colors";
+import { useTranslation } from "react-i18next";
 
 const PREFIX = "CartPage";
 
@@ -72,6 +73,7 @@ const Root = styled("div")(() => ({
 }));
 
 export default function CartPage() {
+  const { t } = useTranslation();
   const cartItems = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -87,10 +89,10 @@ export default function CartPage() {
 
   return (
     <Root className={classes.root}>
-      <Typography className={classes.cartTitle}>Cart</Typography>
+      <Typography className={classes.cartTitle}>{t("cart.title")}</Typography>
 
       {cartItems.length === 0 ? (
-        <Typography variant="body1">Your cart is empty</Typography>
+        <Typography variant="body1">{t("cart.empty")}</Typography>
       ) : (
         <>
           <Box className={classes.itemBox}>
@@ -142,18 +144,18 @@ export default function CartPage() {
           <Divider sx={{ my: 2 }} />
 
           <Box className={classes.totalBox}>
-            <Typography>Total:</Typography>
+            <Typography>{t("cart.total")}:</Typography>
             <Typography>{total.toLocaleString()} Huf</Typography>
           </Box>
 
           <Box className={classes.actionButtons}>
             <Link href="/order">
               <Button variant="contained" color="primary">
-                Checkout
+                {t("cart.checkout")}
               </Button>
             </Link>
             <Button variant="outlined" color="error" onClick={clearCart}>
-              Clear cart
+              {t("cart.clear")}
             </Button>
           </Box>
         </>

@@ -15,6 +15,7 @@ import { getUserRole } from "../utils/auth";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { addToWishlist } from "@/api";
+import { useTranslation } from "react-i18next";
 
 type ProductCardProps = {
   id: number;
@@ -125,6 +126,7 @@ export default function ProductCard({
   price,
   isWished,
 }: ProductCardProps) {
+  const { t } = useTranslation();
   const [openDialog, setOpenDialog] = useState(false);
 
   const userRole = getUserRole();
@@ -149,6 +151,7 @@ export default function ProductCard({
               fontSize="large"
               onClick={(e) => e.stopPropagation()}
               className={classes.addToWishlistButton}
+              aria-label={t("card.aria.removeFromWishlist")}
             />
           ) : (
             <FavoriteBorderIcon
@@ -169,6 +172,7 @@ export default function ProductCard({
                 setIsInWishlist(true);
               }}
               className={classes.addToWishlistButton}
+              aria-label={t("card.aria.addToWishlist")}
             />
           )}
         </Box>
@@ -180,14 +184,14 @@ export default function ProductCard({
           </Typography>
           <Box className={classes.cardFooterBox}>
             <Typography className={classes.price} fontWeight="bold">
-              {price} Huf
+              {price} {t("card.currency")}
             </Typography>
             {userRole == "user" && (
               <Typography
                 variant="body2"
                 sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
               >
-                Open to order
+                {t("card.openToOrder")}
               </Typography>
             )}
             {userRole == "guest" && (
@@ -195,7 +199,7 @@ export default function ProductCard({
                 variant="body2"
                 sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
               >
-                Login to buy
+                {t("card.loginToBuy")}
               </Typography>
             )}
           </Box>

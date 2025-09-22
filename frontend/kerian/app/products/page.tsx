@@ -4,6 +4,7 @@ import { Typography, styled, Box, CircularProgress } from "@mui/material";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
+import { useTranslation } from "react-i18next";
 
 const PREFIX = "ProductsPage";
 
@@ -62,6 +63,7 @@ export interface Product {
 }
 
 export default function ProductsPage() {
+  const { t } = useTranslation();
   const {
     data: products = [],
     isLoading,
@@ -82,17 +84,17 @@ export default function ProductsPage() {
     <Root className={classes.root}>
       <Box className={classes.sidebar}>
         <Typography className={classes.productsAndFilterTitle} gutterBottom>
-          Filter
+          {t("filter.title")}
         </Typography>
       </Box>
 
       <Box className={classes.content}>
         <Typography className={classes.productsAndFilterTitle} gutterBottom>
-          Products
+          {t("products.products")}
         </Typography>
 
         {isLoading && <CircularProgress />}
-        {error && <Typography>Error loading products</Typography>}
+        {error && <Typography>{t("feedback.errorLoadingProducts")}</Typography>}
 
         <Box className={classes.productGrid}>
           {products.map((product, index) => {

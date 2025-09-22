@@ -8,6 +8,7 @@ import { boxShadows, colors } from "@/constants/colors";
 import { getUserRole } from "../../utils/auth";
 import { usePathname } from "next/navigation";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useTranslation } from "react-i18next";
 
 const PREFIX = "Navbar";
 
@@ -104,19 +105,46 @@ export default function Navbar() {
 
   const isLoggedIn = role !== "guest";
 
+  const { t } = useTranslation();
+
   const routes: Route[] = [
-    { path: "/", name: "Home", if: "always", align: "left" },
-    { path: "/products", name: "Products", if: "always", align: "left" },
-    { path: "/wishlist", name: "Wishlist", if: "loggedIn", align: "left" },
-    { path: "/login", name: "Login", if: "loggedOut", align: "right" },
-    { path: "/register", name: "Register", if: "loggedOut", align: "right" },
+    { path: "/", name: t("navbar.home"), if: "always", align: "left" },
+    {
+      path: "/products",
+      name: t("navbar.products"),
+      if: "always",
+      align: "left",
+    },
+    {
+      path: "/wishlist",
+      name: t("navbar.wishlist"),
+      if: "loggedIn",
+      align: "left",
+    },
+    {
+      path: "/login",
+      name: t("navbar.login"),
+      if: "loggedOut",
+      align: "right",
+    },
+    {
+      path: "/register",
+      name: t("navbar.register"),
+      if: "loggedOut",
+      align: "right",
+    },
     {
       path: "/cart",
       icon: ShoppingCartIcon,
       if: "loggedIn",
       align: "right",
     },
-    { path: "/logout", name: "Logout", if: "loggedIn", align: "right" },
+    {
+      path: "/logout",
+      name: t("navbar.logout"),
+      if: "loggedIn",
+      align: "right",
+    },
   ];
 
   const filteredRoutes = routes.filter((r) => {
