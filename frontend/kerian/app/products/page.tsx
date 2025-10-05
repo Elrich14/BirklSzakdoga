@@ -60,6 +60,9 @@ export interface Product {
   price: number;
   imageUrl: string;
   category: string;
+  color?: string;
+  size?: string;
+  gender?: "Male" | "Female" | "Unisex";
 }
 
 export default function ProductsPage() {
