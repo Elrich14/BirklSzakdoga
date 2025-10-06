@@ -71,13 +71,13 @@ export default function Register() {
   const [success, setSuccess] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleChange = (e: any) => {
+  const onChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSubmit = async (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
@@ -110,13 +110,13 @@ export default function Register() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <FormGroup>
             <TextField
               label="Username"
               name="username"
               value={formData.username}
-              onChange={handleChange}
+              onChange={onChange}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -127,7 +127,7 @@ export default function Register() {
               label="Email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={onChange}
               variant="outlined"
               margin="normal"
               type="email"
@@ -139,7 +139,7 @@ export default function Register() {
               label="Password"
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={onChange}
               variant="outlined"
               margin="normal"
               type="password"

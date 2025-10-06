@@ -23,6 +23,8 @@ type ProductCardProps = {
   description: string;
   imageUrl: string;
   price: number;
+  color: string[];
+  size: string[];
   isWished?: boolean;
 };
 
@@ -124,6 +126,8 @@ export default function ProductCard({
   description,
   imageUrl,
   price,
+  color,
+  size,
   isWished,
 }: ProductCardProps) {
   const { t } = useTranslation();
@@ -164,8 +168,8 @@ export default function ProductCard({
                   description,
                   imageUrl,
                   price,
-                  color: "Black",
-                  size: "S",
+                  color: color[0] || "Black",
+                  size: size[0] || "S",
                   gender: "Female",
                   quantity: 1,
                 });
@@ -214,6 +218,8 @@ export default function ProductCard({
         description={description}
         imageUrl={imageUrl}
         price={price}
+        color={color}
+        size={size}
         mode="add"
         isWished={isInWishlist}
       />

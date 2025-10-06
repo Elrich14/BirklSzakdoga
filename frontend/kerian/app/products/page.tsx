@@ -5,6 +5,8 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
+import { useState, useMemo } from "react";
+import ProductFilter from "../components/Filtering/productFilter";
 
 const PREFIX = "ProductsPage";
 
@@ -60,13 +62,24 @@ export interface Product {
   price: number;
   imageUrl: string;
   category: string;
-  color?: string;
-  size?: string;
+  color: string[];
+  size: string[];
   gender?: "Male" | "Female" | "Unisex";
 }
 
 export default function ProductsPage() {
   const { t } = useTranslation();
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL",
+  ]);
+
   const {
     data: products = [],
     isLoading,
@@ -83,12 +96,19 @@ export default function ProductsPage() {
     queryFn: getWishlist,
   });
 
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) =>
+      selectedSizes.some((size) => product.size.includes(size))
+    );
+  }, [products, selectedSizes]);
+
   return (
     <Root className={classes.root}>
       <Box className={classes.sidebar}>
-        <Typography className={classes.productsAndFilterTitle} gutterBottom>
-          {t("filter.title")}
-        </Typography>
+        <ProductFilter
+          selectedSizes={selectedSizes}
+          onSizeChange={setSelectedSizes}
+        />
       </Box>
 
       <Box className={classes.content}>
@@ -100,7 +120,7 @@ export default function ProductsPage() {
         {error && <Typography>{t("feedback.errorLoadingProducts")}</Typography>}
 
         <Box className={classes.productGrid}>
-          {products.map((product, index) => {
+          {filteredProducts.map((product, index) => {
             const isWished = wishlist.some((w) => w.productId === product.id);
             return <ProductCard key={index} {...product} isWished={isWished} />;
           })}

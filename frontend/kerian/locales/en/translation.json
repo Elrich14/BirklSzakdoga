@@ -40,7 +40,10 @@
     "registerError": "Registration failed"
   },
   "filter": {
-    "title": "Filters"
+    "title": "Filters",
+    "size": "Size",
+    "selectAll": "Select All",
+    "clear": "Clear Filters"
   },
   "card": {
     "addToCart": "Add to Cart",

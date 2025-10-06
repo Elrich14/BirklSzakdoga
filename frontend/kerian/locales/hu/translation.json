@@ -41,6 +41,9 @@
   },
   "filter": {
     "title": "Szűrők",
+    "size": "Méret",
+    "selectAll": "Összes kiválasztása",
+    "clear": "Szűrők törlése",
     "price": "Ár",
     "minPrice": "Minimum ár",
     "maxPrice": "Maximum ár",

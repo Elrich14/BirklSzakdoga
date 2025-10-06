@@ -89,16 +89,16 @@ export default function Login() {
   const [error, setError] = useState<string | null>();
   const [success, setSuccess] = useState(false);
 
-  const handleLanguageChange = (event: SelectChangeEvent) => {
+  const onLanguageChange = (event: SelectChangeEvent) => {
     changeLanguage(event.target.value);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
@@ -134,7 +134,7 @@ export default function Login() {
           <InputLabel>{t("common.language")}</InputLabel>
           <Select
             value={language}
-            onChange={handleLanguageChange}
+            onChange={onLanguageChange}
             label={t("common.language")}
           >
             <MenuItem value="en">{t("common.english")}</MenuItem>
@@ -157,13 +157,13 @@ export default function Login() {
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <FormGroup>
             <TextField
               label={t("common.email")}
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={onChange}
               variant="outlined"
               margin="normal"
               type="email"
@@ -175,7 +175,7 @@ export default function Login() {
               label={t("common.password")}
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={onChange}
               variant="outlined"
               margin="normal"
               type="password"

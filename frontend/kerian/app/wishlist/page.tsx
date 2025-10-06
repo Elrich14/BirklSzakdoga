@@ -79,7 +79,7 @@ export default function Wishlist() {
     fetchWishlist();
   }, []);
 
-  const handleRemove = async (id: number) => {
+  const onRemove = async (id: number) => {
     await removeFromWishlist(id);
     setWishlist((prev) => prev.filter((item) => item.id !== id));
   };
@@ -130,7 +130,7 @@ export default function Wishlist() {
                   <IconButton
                     edge="end"
                     aria-label="delete"
-                    onClick={() => handleRemove(item.id)}
+                    onClick={() => onRemove(item.id)}
                   >
                     <DeleteIcon className={classes.deleteIcon} />
                   </IconButton>

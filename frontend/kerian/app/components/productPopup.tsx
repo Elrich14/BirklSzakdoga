@@ -23,7 +23,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { colors } from "../../constants/colors";
+import { colors as themeColors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "./store/cartStore";
@@ -40,6 +40,8 @@ type ProductPopupProps = {
   description: string;
   imageUrl: string;
   price: number;
+  color: string[];
+  size: string[];
   defaultSize?: string;
   defaultColor?: string;
   defaultGender?: "Male" | "Female";
@@ -153,21 +155,18 @@ const Root = styled(Dialog)(() => ({
     position: "absolute",
     top: 8,
     right: 8,
-    color: colors.kerian_main,
+    color: themeColors.kerian_main,
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     borderRadius: "50%",
     padding: "6px",
     cursor: "pointer",
     transition: "0.2s",
     "&:hover": {
-      color: colors.kerian_main,
+      color: themeColors.kerian_main,
       backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
   },
 }));
-
-const sizes = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"];
-const colorsList = ["Black", "White"];
 
 export default function ProductPopup({
   open,
@@ -177,6 +176,8 @@ export default function ProductPopup({
   description,
   imageUrl,
   price,
+  color: colors,
+  size: sizes,
   defaultGender = "Female",
   defaultSize = "S",
   defaultColor = "Black",
@@ -339,8 +340,7 @@ export default function ProductPopup({
               <FormControl className={classes.sizeSelect}>
                 <InputLabel>{t("card.size")}</InputLabel>
                 <Select
-                  // multiple
-                  value={size}
+                  value={sizes[0]}
                   onChange={changeSize}
                   input={<OutlinedInput label={t("card.size")} />}
                 >
@@ -365,7 +365,7 @@ export default function ProductPopup({
                 }}
                 className={classes.colorButtonGroup}
               >
-                {colorsList.map((col) => (
+                {colors.map((col: string) => (
                   <ToggleButton
                     key={col}
                     value={col}
@@ -378,7 +378,7 @@ export default function ProductPopup({
                         backgroundColor: col,
                         outline:
                           color === col
-                            ? `3px solid ${colors.kerian_main}`
+                            ? `3px solid ${themeColors.kerian_main}`
                             : "none ",
                       }}
                     />
