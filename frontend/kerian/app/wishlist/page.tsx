@@ -69,14 +69,19 @@ export default function Wishlist() {
   const { t } = useTranslation();
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const addItem = useCartStore((state) => state.addItem);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const fetchWishlist = async () => {
-      const data = await getWishlist();
-      setWishlist(data);
-    };
-
-    fetchWishlist();
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    setIsAuthenticated(!!token);
+    if (token) {
+      const fetchWishlist = async () => {
+        const data = await getWishlist();
+        setWishlist(data);
+      };
+      fetchWishlist();
+    }
   }, []);
 
   const onRemove = async (id: number) => {
@@ -117,67 +122,69 @@ export default function Wishlist() {
       >
         {t("wishlist.title")}
       </Typography>
-      <Root className={classes.root}>
-        {wishlist.length === 0 ? (
-          <p style={{ color: "#ccc", marginTop: "2rem" }}>
-            {t("wishlist.empty")}
-          </p>
-        ) : (
-          wishlist.map((item) => (
-            <ListItem
-              key={item.id}
-              className={classes.listItem}
-              secondaryAction={
-                <>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => onRemove(item.id)}
-                  >
-                    <DeleteIcon className={classes.deleteIcon} />
-                  </IconButton>
-                  <Button
-                    variant="text"
-                    startIcon={<ShoppingCartIcon />}
-                    className={classes.addToCartButton}
-                    onClick={(e) => submitAddToCart(e, item)}
-                  >
-                    {t("card.addToCart")}
-                  </Button>
-                </>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar
-                  src={item.imageUrl}
-                  alt={item.description || item.color}
-                  className={classes.avatar}
-                />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography component="div">
-                    {item.productName}
-                    {" / "}
-                    {item.size}
-                    {" / "}
-                    {item.gender === "Male"
-                      ? t("card.gender.male")
-                      : t("card.gender.female")}
-                    {" / "}
-                    {item.color === "Black"
-                      ? t("card.colors.black")
-                      : t("card.colors.white")}{" "}
-                    {item.quantity}x - {item.price.toLocaleString()}{" "}
-                    {t("card.currency")}
-                  </Typography>
+      {isAuthenticated && (
+        <Root className={classes.root}>
+          {wishlist.length === 0 ? (
+            <p style={{ color: "#ccc", marginTop: "2rem" }}>
+              {t("wishlist.empty")}
+            </p>
+          ) : (
+            wishlist.map((item) => (
+              <ListItem
+                key={item.id}
+                className={classes.listItem}
+                secondaryAction={
+                  <>
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => onRemove(item.id)}
+                    >
+                      <DeleteIcon className={classes.deleteIcon} />
+                    </IconButton>
+                    <Button
+                      variant="text"
+                      startIcon={<ShoppingCartIcon />}
+                      className={classes.addToCartButton}
+                      onClick={(e) => submitAddToCart(e, item)}
+                    >
+                      {t("card.addToCart")}
+                    </Button>
+                  </>
                 }
-                secondary={item.description}
-              />
-            </ListItem>
-          ))
-        )}
-      </Root>
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    src={item.imageUrl}
+                    alt={item.description || item.color}
+                    className={classes.avatar}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography component="div">
+                      {item.productName}
+                      {" / "}
+                      {item.size}
+                      {" / "}
+                      {item.gender === "Male"
+                        ? t("card.gender.male")
+                        : t("card.gender.female")}
+                      {" / "}
+                      {item.color === "Black"
+                        ? t("card.colors.black")
+                        : t("card.colors.white")}{" "}
+                      {item.quantity}x - {item.price.toLocaleString()}{" "}
+                      {t("card.currency")}
+                    </Typography>
+                  }
+                  secondary={item.description}
+                />
+              </ListItem>
+            ))
+          )}
+        </Root>
+      )}
     </>
   );
 }
