@@ -178,7 +178,7 @@ export default function ProductPopup({
   color: colors,
   size: sizes,
   defaultGender = "Female",
-  defaultSize = "S",
+  defaultSize = sizes[0],
   defaultColor = "Black",
   mode,
   originalGender,

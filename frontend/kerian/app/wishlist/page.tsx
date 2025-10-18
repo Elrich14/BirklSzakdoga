@@ -96,6 +96,8 @@ export default function Wishlist() {
       gender: item.gender,
       size: item.size,
       color: item.color,
+      availableSizes: [],
+      availableColors: [],
     });
   };
 
