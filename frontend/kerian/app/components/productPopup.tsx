@@ -248,6 +248,25 @@ export default function ProductPopup({
   };
 
   useEffect(() => {
+    if (!open) return;
+
+    if (mode === "edit") {
+      setGender(originalGender ?? defaultGender);
+      setSize(originalSize ?? defaultSize);
+      setColor(originalColor ?? defaultColor);
+    }
+  }, [
+    open,
+    mode,
+    originalGender,
+    originalSize,
+    originalColor,
+    defaultGender,
+    defaultSize,
+    defaultColor,
+  ]);
+
+  useEffect(() => {
     setIsInWishlist(isWished);
   }, [isWished]);
 
