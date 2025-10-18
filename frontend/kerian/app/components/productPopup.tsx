@@ -147,7 +147,6 @@ const Root = styled(Dialog)(() => ({
   [`& .${classes.colorButtonGroup}`]: {
     marginLeft: "auto",
   },
-
   [`& .${classes.cardLeftSideBox}`]: {
     position: "relative",
   },
@@ -221,6 +220,8 @@ export default function ProductPopup({
       gender,
       size,
       color,
+      availableSizes: sizes,
+      availableColors: colors,
     });
   };
 
@@ -240,6 +241,8 @@ export default function ProductPopup({
         gender,
         size,
         color,
+        availableSizes: sizes,
+        availableColors: colors,
       }
     );
   };
@@ -340,13 +343,13 @@ export default function ProductPopup({
               <FormControl className={classes.sizeSelect}>
                 <InputLabel>{t("card.size")}</InputLabel>
                 <Select
-                  value={sizes[0]}
+                  value={size}
                   onChange={changeSize}
                   input={<OutlinedInput label={t("card.size")} />}
                 >
-                  {sizes.map((size) => (
-                    <MenuItem key={size} value={size}>
-                      {size}
+                  {sizes?.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {s}
                     </MenuItem>
                   ))}
                 </Select>
@@ -365,7 +368,7 @@ export default function ProductPopup({
                 }}
                 className={classes.colorButtonGroup}
               >
-                {colors.map((col: string) => (
+                {colors?.map((col) => (
                   <ToggleButton
                     key={col}
                     value={col}
@@ -379,7 +382,7 @@ export default function ProductPopup({
                         outline:
                           color === col
                             ? `3px solid ${themeColors.kerian_main}`
-                            : "none ",
+                            : "none",
                       }}
                     />
                   </ToggleButton>

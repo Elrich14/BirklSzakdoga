@@ -176,6 +176,8 @@ export default function CartPage() {
           originalGender={selectedItem.gender}
           originalColor={selectedItem.color}
           originalSize={selectedItem.size}
+          color={selectedItem.availableColors}
+          size={selectedItem.availableSizes}
           mode="edit"
         />
       )}

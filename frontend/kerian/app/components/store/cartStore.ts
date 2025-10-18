@@ -10,6 +10,8 @@ export type CartItem = {
   size: string;
   color: string;
   productImageUrl: string;
+  availableSizes: string[];
+  availableColors: string[];
 };
 
 type CartState = {

@@ -6,7 +6,7 @@ import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
-import ProductFilter from "../components/Filtering/productFilter";
+import ProductFilter from "../components/filtering/productFilter";
 
 const PREFIX = "ProductsPage";
 
