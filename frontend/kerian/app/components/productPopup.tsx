@@ -23,6 +23,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { fetchProductById } from "@/api";
 import { colors as themeColors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useTranslation } from "react-i18next";
@@ -31,6 +32,7 @@ import QuantityInput from "./quantity";
 import { addToWishlist } from "@/api";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { Product } from "../products/page";
 
 type ProductPopupProps = {
   open: boolean;
@@ -175,10 +177,10 @@ export default function ProductPopup({
   description,
   imageUrl,
   price,
-  color: colors,
-  size: sizes,
+  color: initialColors,
+  size: initialSizes,
   defaultGender = "Female",
-  defaultSize = sizes[0],
+  defaultSize = initialSizes[0],
   defaultColor = "Black",
   mode,
   originalGender,
@@ -192,6 +194,17 @@ export default function ProductPopup({
   const [color, setColor] = useState<string>(defaultColor);
   const [quantity, setQuantity] = useState<number>(1);
   const [isInWishlist, setIsInWishlist] = useState(isWished);
+  const [dbProduct, setDbProduct] = useState<Product | null>(null);
+
+  const colors = dbProduct?.color || initialColors;
+  const sizes = dbProduct?.size || initialSizes;
+
+  useEffect(() => {
+    if (!open) return;
+    fetchProductById(id).then((data) => {
+      setDbProduct(Array.isArray(data) ? data[0] : data);
+    });
+  }, [id, open]);
 
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
@@ -248,27 +261,14 @@ export default function ProductPopup({
   };
 
   useEffect(() => {
-    if (!open) return;
-
-    if (mode === "edit") {
-      setGender(originalGender ?? defaultGender);
-      setSize(originalSize ?? defaultSize);
-      setColor(originalColor ?? defaultColor);
-    }
-  }, [
-    open,
-    mode,
-    originalGender,
-    originalSize,
-    originalColor,
-    defaultGender,
-    defaultSize,
-    defaultColor,
-  ]);
-
-  useEffect(() => {
     setIsInWishlist(isWished);
   }, [isWished]);
+
+  useEffect(() => {
+    if (!dbProduct) return;
+    if (!sizes.includes(size)) setSize(originalSize as string);
+    if (!colors.includes(color)) setColor(originalColor as string);
+  }, [dbProduct, sizes, colors, size, color, originalSize, originalColor]);
 
   return (
     <Root
@@ -366,7 +366,7 @@ export default function ProductPopup({
                   onChange={changeSize}
                   input={<OutlinedInput label={t("card.size")} />}
                 >
-                  {sizes?.map((s) => (
+                  {sizes?.map((s: string) => (
                     <MenuItem key={s} value={s}>
                       {s}
                     </MenuItem>
@@ -387,7 +387,7 @@ export default function ProductPopup({
                 }}
                 className={classes.colorButtonGroup}
               >
-                {colors?.map((col) => (
+                {colors?.map((col: string) => (
                   <ToggleButton
                     key={col}
                     value={col}
