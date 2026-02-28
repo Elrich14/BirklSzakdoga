@@ -18,6 +18,7 @@ import {
   OutlinedInput,
   ToggleButtonGroup,
   ToggleButton,
+  Tooltip,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
@@ -336,7 +337,16 @@ export default function ProductPopup({
               height={500}
               style={{ borderRadius: 4 }}
             />
-            {isInWishlist ? (
+            {userRole === "guest" ? (
+              <Tooltip title={t("card.loginToWishlist")} arrow>
+                <FavoriteBorderIcon
+                  fontSize="large"
+                  onClick={(e) => e.stopPropagation()}
+                  className={classes.addToWishlistButton}
+                  aria-label={t("card.loginToWishlist")}
+                />
+              </Tooltip>
+            ) : isInWishlist ? (
               <FavoriteIcon
                 fontSize="large"
                 onClick={(e) => e.stopPropagation()}

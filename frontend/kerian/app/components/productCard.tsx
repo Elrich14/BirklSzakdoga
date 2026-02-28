@@ -7,6 +7,7 @@ import {
   Box,
   styled,
   Divider,
+  Tooltip,
 } from "@mui/material";
 import { boxShadows, colors } from "@/constants/colors";
 import { useEffect, useState } from "react";
@@ -150,7 +151,16 @@ export default function ProductCard({
             image={imageUrl}
             alt={name}
           />
-          {isInWishlist ? (
+          {userRole === "guest" ? (
+            <Tooltip title={t("card.loginToWishlist")} arrow>
+              <FavoriteBorderIcon
+                fontSize="large"
+                onClick={(e) => e.stopPropagation()}
+                className={classes.addToWishlistButton}
+                aria-label={t("card.loginToWishlist")}
+              />
+            </Tooltip>
+          ) : isInWishlist ? (
             <FavoriteIcon
               fontSize="large"
               onClick={(e) => e.stopPropagation()}

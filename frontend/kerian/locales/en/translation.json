@@ -73,6 +73,7 @@
       "black": "Black",
       "white": "White"
     },
+    "loginToWishlist": "Log in to add to wishlist",
     "aria": {
       "addToWishlist": "Add to wishlist",
       "removeFromWishlist": "Remove from wishlist",

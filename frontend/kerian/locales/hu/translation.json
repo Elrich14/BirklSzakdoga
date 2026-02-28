@@ -80,6 +80,7 @@
       "black": "Fekete",
       "white": "Fehér"
     },
+    "loginToWishlist": "Jelentkezzen be a kívánságlistához adáshoz",
     "aria": {
       "addToWishlist": "Hozzáadás a kívánságlistához",
       "removeFromWishlist": "Eltávolítás a kívánságlistából",
