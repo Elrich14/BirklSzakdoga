@@ -33,6 +33,7 @@ import { addToWishlist } from "@/api";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Product } from "../products/page";
+import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 
 type ProductPopupProps = {
   open: boolean;
@@ -189,7 +190,9 @@ export default function ProductPopup({
   isWished,
 }: ProductPopupProps) {
   const { t } = useTranslation();
-  const [gender, setGender] = useState<"Male" | "Female">(defaultGender);
+  const [gender, setGender] = useState<"Male" | "Female">(
+    defaultGender as "Male" | "Female"
+  );
   const [size, setSize] = useState<string>(defaultSize);
   const [color, setColor] = useState<string>(defaultColor);
   const [quantity, setQuantity] = useState<number>(1);
@@ -199,6 +202,13 @@ export default function ProductPopup({
   const colors = dbProduct?.color || initialColors;
   const sizes = dbProduct?.size || initialSizes;
 
+  // Get available genders from the product
+  const availableGenders = dbProduct?.gender
+    ? Array.isArray(dbProduct.gender)
+      ? dbProduct.gender
+      : [dbProduct.gender]
+    : [PRODUCT_GENDERS.FEMALE, PRODUCT_GENDERS.MALE];
+
   useEffect(() => {
     if (!open) return;
     fetchProductById(id).then((data) => {
@@ -206,14 +216,26 @@ export default function ProductPopup({
     });
   }, [id, open]);
 
+  // when product data arrives, if it has gender options, auto-select the first one if needed
+  useEffect(() => {
+    if (!dbProduct || !dbProduct.gender) return;
+    const genderArray = Array.isArray(dbProduct.gender)
+      ? dbProduct.gender
+      : [dbProduct.gender];
+    // If current gender is not in available genders, select the first available
+    if (!genderArray.includes(gender)) {
+      setGender(genderArray[0] as "Male" | "Female");
+    }
+  }, [dbProduct, gender]);
+
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
   const updateItem = useCartStore((state) => state.updateItem);
 
   const changeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    if (value === "Female" || value === "Male") {
-      setGender(value);
+    if (value === PRODUCT_GENDERS.FEMALE || value === PRODUCT_GENDERS.MALE) {
+      setGender(value as "Male" | "Female");
     }
   };
 
@@ -266,8 +288,22 @@ export default function ProductPopup({
 
   useEffect(() => {
     if (!dbProduct) return;
-    if (!sizes.includes(size)) setSize(originalSize as string);
-    if (!colors.includes(color)) setColor(originalColor as string);
+    // If current size is not in the new sizes array, use first available size
+    if (!sizes.includes(size)) {
+      setSize(
+        originalSize && sizes.includes(originalSize as string)
+          ? (originalSize as string)
+          : sizes[0]
+      );
+    }
+    // If current color is not in the new colors array, use first available color
+    if (!colors.includes(color)) {
+      setColor(
+        originalColor && colors.includes(originalColor as string)
+          ? (originalColor as string)
+          : colors[0]
+      );
+    }
   }, [dbProduct, sizes, colors, size, color, originalSize, originalColor]);
 
   return (
@@ -342,15 +378,19 @@ export default function ProductPopup({
               <FormControl className={classes.genderRadioGroup}>
                 <RadioGroup row value={gender} onChange={changeGender}>
                   <FormControlLabel
-                    value="Female"
+                    value={PRODUCT_GENDERS.MALE}
+                    disabled={!availableGenders.includes(PRODUCT_GENDERS.MALE)}
                     control={<Radio />}
-                    label={t("card.gender.female")}
+                    label={t("filter.genderOptions.Male")}
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    value="Male"
+                    value={PRODUCT_GENDERS.FEMALE}
+                    disabled={
+                      !availableGenders.includes(PRODUCT_GENDERS.FEMALE)
+                    }
                     control={<Radio />}
-                    label={t("card.gender.male")}
+                    label={t("filter.genderOptions.Female")}
                     labelPlacement="start"
                   />
                 </RadioGroup>

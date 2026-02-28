@@ -1,70 +1,76 @@
 "use strict";
 
+const {
+  AVAILABLE_SIZES,
+  PRODUCT_GENDERS,
+  PRODUCT_COLORS,
+} = require("../constants/filterConstants");
+
 module.exports = {
   async up(queryInterface) {
     const now = new Date();
-    const FULL_SIZES = ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL"];
+    const FULL_SIZES = AVAILABLE_SIZES;
 
     const rows = [
       {
         name: "MonoSkull",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: FULL_SIZES,
-        gender: "Unisex",
+        gender: [PRODUCT_GENDERS.MALE, PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Muse Tee",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["S", "M", "L", "XL"],
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
       {
         name: "Secrets of the Lily",
-        color: ["white"],
+        color: [PRODUCT_COLORS.WHITE],
         size: ["M", "L"],
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
       {
         name: "Whispers of Grace",
-        color: ["white"],
+        color: [PRODUCT_COLORS.WHITE],
         size: ["S", "M"],
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
       {
         name: "Velvet Silence",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: FULL_SIZES,
-        gender: "Unisex",
+        gender: PRODUCT_GENDERS.MALE,
       },
       {
         name: "Shadows of Bloom",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["M", "L", "XL", "2XL"],
-        gender: "Female",
+        gender: [PRODUCT_GENDERS.MALE, PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Ivory Bloom",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["L", "XL", "2XL", "3XL"],
-        gender: "Male",
+        gender: PRODUCT_GENDERS.MALE,
       },
       {
         name: "White Eclipse",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: FULL_SIZES,
-        gender: "Unisex",
+        gender: [PRODUCT_GENDERS.MALE, PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Lily Veins",
-        color: ["black"],
+        color: [PRODUCT_COLORS.BLACK],
         size: ["S", "M", "L"],
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
       {
         name: "Monochrome Muse",
-        color: ["black", "white"],
+        color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["M", "L", "XL"],
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
     ];
 

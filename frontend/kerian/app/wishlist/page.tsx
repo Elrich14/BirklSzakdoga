@@ -16,6 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { getWishlist, removeFromWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
+import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import { useCartStore } from "../components/store/cartStore";
 import { useTranslation } from "react-i18next";
 
@@ -167,9 +168,9 @@ export default function Wishlist() {
                       {" / "}
                       {item.size}
                       {" / "}
-                      {item.gender === "Male"
-                        ? t("card.gender.male")
-                        : t("card.gender.female")}
+                      {item.gender === PRODUCT_GENDERS.MALE
+                        ? t("filter.genderOptions.Male")
+                        : t("filter.genderOptions.Female")}
                       {" / "}
                       {item.color === "Black"
                         ? t("card.colors.black")

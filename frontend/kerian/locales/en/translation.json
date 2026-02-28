@@ -42,8 +42,17 @@
   "filter": {
     "title": "Filters",
     "size": "Size",
+    "gender": "Gender",
+    "color": "Color",
+    "price": "Price",
+    "minPrice": "Minimum Price",
+    "maxPrice": "Maximum Price",
     "selectAll": "Select All",
-    "clear": "Clear Filters"
+    "clear": "Clear Filters",
+    "genderOptions": {
+      "Male": "Male",
+      "Female": "Female"
+    }
   },
   "card": {
     "addToCart": "Add to Cart",
@@ -63,10 +72,6 @@
     "colors": {
       "black": "Black",
       "white": "White"
-    },
-    "gender": {
-      "male": "Male",
-      "female": "Female"
     },
     "aria": {
       "addToWishlist": "Add to wishlist",

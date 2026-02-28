@@ -35,7 +35,7 @@ const Product = sequelize.define(
       allowNull: true,
     },
     gender: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.TEXT),
       allowNull: true,
     },
   },

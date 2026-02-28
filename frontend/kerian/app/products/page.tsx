@@ -5,8 +5,11 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
-import { useState, useMemo } from "react";
-import ProductFilter from "../components/filtering/productFilter";
+import { useState, useMemo, useEffect } from "react";
+import ProductFilter, {
+  FilterState,
+} from "../components/filtering/ProductFilter";
+import { AVAILABLE_SIZES } from "@/constants/filterConstants";
 
 const PREFIX = "ProductsPage";
 
@@ -64,21 +67,18 @@ export interface Product {
   category: string;
   color: string[];
   size: string[];
-  gender?: "Male" | "Female" | "Unisex";
+  gender?: string | string[];
 }
 
 export default function ProductsPage() {
   const { t } = useTranslation();
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([
-    "XS",
-    "S",
-    "M",
-    "L",
-    "XL",
-    "2XL",
-    "3XL",
-    "4XL",
-  ]);
+  const [filters, setFilters] = useState<FilterState>({
+    sizes: AVAILABLE_SIZES,
+    gender: [],
+    colors: [],
+    priceMin: 0,
+    priceMax: 0,
+  });
 
   const {
     data: products = [],
@@ -96,18 +96,71 @@ export default function ProductsPage() {
     queryFn: getWishlist,
   });
 
+  const highestPrice = products.length
+    ? Math.max(...products.map((p) => p.price))
+    : 0;
+
+  // if products load or highestPrice changes, ensure default priceMax is set sensibly
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      priceMax: highestPrice,
+    }));
+  }, [highestPrice]);
+
   const filteredProducts = useMemo(() => {
-    return products.filter((product) =>
-      selectedSizes.some((size) => product.size.includes(size))
-    );
-  }, [products, selectedSizes]);
+    return products.filter((product) => {
+      if (product.price < filters.priceMin || product.price > filters.priceMax)
+        return false;
+
+      if (!filters.sizes.some((size) => product.size.includes(size)))
+        return false;
+
+      if (filters.colors.length > 0) {
+        if (filters.colors.length === 2) {
+          const hasAllColors = filters.colors.every((c) =>
+            product.color.includes(c)
+          );
+          if (!hasAllColors) return false;
+        } else {
+          const hasColor = filters.colors.some((c) =>
+            product.color.includes(c)
+          );
+          if (!hasColor) return false;
+        }
+      }
+
+      if (filters.gender.length > 0) {
+        // Product gender is already capitalized (Male, Female) or array of them
+        const productGenders = Array.isArray(product.gender)
+          ? product.gender
+          : product.gender
+            ? [product.gender]
+            : [];
+
+        if (filters.gender.length === 2) {
+          const hasAllGenders = filters.gender.every((g) =>
+            productGenders.includes(g)
+          );
+          if (!hasAllGenders) return false;
+        } else {
+          const hasMatchingGender = productGenders.some((g) =>
+            filters.gender.includes(g)
+          );
+          if (!hasMatchingGender) return false;
+        }
+      }
+
+      return true;
+    });
+  }, [products, filters]);
 
   return (
     <Root className={classes.root}>
       <Box className={classes.sidebar}>
         <ProductFilter
-          selectedSizes={selectedSizes}
-          onSizeChange={setSelectedSizes}
+          maxPrice={highestPrice}
+          onFiltersChange={(f) => setFilters(f)}
         />
       </Box>
 

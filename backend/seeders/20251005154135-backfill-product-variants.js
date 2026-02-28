@@ -1,30 +1,75 @@
 "use strict";
 
+const {
+  PRODUCT_COLORS,
+  PRODUCT_GENDERS,
+} = require("../constants/filterConstants");
+
 module.exports = {
   async up(queryInterface) {
     const now = new Date();
 
     const rows = [
-      { name: "MonoSkull", color: "black", size: "L", gender: "Unisex" },
-      { name: "Muse Tee", color: "black", size: "M", gender: "Female" },
+      {
+        name: "MonoSkull",
+        color: PRODUCT_COLORS.BLACK,
+        size: "L",
+        gender: PRODUCT_GENDERS.MALE,
+      },
+      {
+        name: "Muse Tee",
+        color: PRODUCT_COLORS.BLACK,
+        size: "M",
+        gender: PRODUCT_GENDERS.FEMALE,
+      },
       {
         name: "Secrets of the Lily",
-        color: "white",
+        color: PRODUCT_COLORS.WHITE,
         size: "M",
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
       {
         name: "Whispers of Grace",
-        color: "white",
+        color: PRODUCT_COLORS.WHITE,
         size: "S",
-        gender: "Female",
+        gender: PRODUCT_GENDERS.FEMALE,
       },
-      { name: "Velvet Silence", color: "black", size: "L", gender: "Unisex" },
-      { name: "Shadows of Bloom", color: "black", size: "M", gender: "Female" },
-      { name: "Ivory Bloom", color: "white", size: "L", gender: "Male" },
-      { name: "White Eclipse", color: "white", size: "XL", gender: "Unisex" },
-      { name: "Lily Veins", color: "black", size: "S", gender: "Female" },
-      { name: "Monochrome Muse", color: "black", size: "M", gender: "Female" },
+      {
+        name: "Velvet Silence",
+        color: PRODUCT_COLORS.BLACK,
+        size: "L",
+        gender: PRODUCT_GENDERS.MALE,
+      },
+      {
+        name: "Shadows of Bloom",
+        color: PRODUCT_COLORS.BLACK,
+        size: "M",
+        gender: PRODUCT_GENDERS.FEMALE,
+      },
+      {
+        name: "Ivory Bloom",
+        color: PRODUCT_COLORS.WHITE,
+        size: "L",
+        gender: PRODUCT_GENDERS.MALE,
+      },
+      {
+        name: "White Eclipse",
+        color: PRODUCT_COLORS.WHITE,
+        size: "XL",
+        gender: PRODUCT_GENDERS.MALE,
+      },
+      {
+        name: "Lily Veins",
+        color: PRODUCT_COLORS.BLACK,
+        size: "S",
+        gender: PRODUCT_GENDERS.FEMALE,
+      },
+      {
+        name: "Monochrome Muse",
+        color: PRODUCT_COLORS.BLACK,
+        size: "M",
+        gender: PRODUCT_GENDERS.FEMALE,
+      },
     ];
 
     for (const r of rows) {

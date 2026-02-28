@@ -42,13 +42,12 @@
   "filter": {
     "title": "Szűrők",
     "size": "Méret",
-    "selectAll": "Összes kiválasztása",
-    "clear": "Szűrők törlése",
+    "gender": "Nem",
+    "color": "Szín",
     "price": "Ár",
     "minPrice": "Minimum ár",
     "maxPrice": "Maximum ár",
-    "category": "Kategória",
-    "sort": "Rendezés",
+    "selectAll": "Összes kiválasztása",
     "sortOptions": {
       "priceAsc": "Ár: Növekvő",
       "priceDesc": "Ár: Csökkenő",
@@ -56,7 +55,11 @@
       "nameDesc": "Név: Z-A"
     },
     "apply": "Szűrők alkalmazása",
-    "clear": "Szűrők törlése"
+    "clear": "Szűrők törlése",
+    "genderOptions": {
+      "Male": "Férfi",
+      "Female": "Női"
+    }
   },
   "card": {
     "addToCart": "Kosárba",
@@ -76,10 +79,6 @@
     "colors": {
       "black": "Fekete",
       "white": "Fehér"
-    },
-    "gender": {
-      "male": "Férfi",
-      "female": "Női"
     },
     "aria": {
       "addToWishlist": "Hozzáadás a kívánságlistához",
