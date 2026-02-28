@@ -22,25 +22,25 @@ module.exports = {
         name: "Muse Tee",
         color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["S", "M", "L", "XL"],
-        gender: PRODUCT_GENDERS.FEMALE,
+        gender: [PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Secrets of the Lily",
         color: [PRODUCT_COLORS.WHITE],
         size: ["M", "L"],
-        gender: PRODUCT_GENDERS.FEMALE,
+        gender: [PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Whispers of Grace",
         color: [PRODUCT_COLORS.WHITE],
         size: ["S", "M"],
-        gender: PRODUCT_GENDERS.FEMALE,
+        gender: [PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Velvet Silence",
         color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: FULL_SIZES,
-        gender: PRODUCT_GENDERS.MALE,
+        gender: [PRODUCT_GENDERS.MALE],
       },
       {
         name: "Shadows of Bloom",
@@ -52,7 +52,7 @@ module.exports = {
         name: "Ivory Bloom",
         color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["L", "XL", "2XL", "3XL"],
-        gender: PRODUCT_GENDERS.MALE,
+        gender: [PRODUCT_GENDERS.MALE],
       },
       {
         name: "White Eclipse",
@@ -64,13 +64,13 @@ module.exports = {
         name: "Lily Veins",
         color: [PRODUCT_COLORS.BLACK],
         size: ["S", "M", "L"],
-        gender: PRODUCT_GENDERS.FEMALE,
+        gender: [PRODUCT_GENDERS.FEMALE],
       },
       {
         name: "Monochrome Muse",
         color: [PRODUCT_COLORS.BLACK, PRODUCT_COLORS.WHITE],
         size: ["M", "L", "XL"],
-        gender: PRODUCT_GENDERS.FEMALE,
+        gender: [PRODUCT_GENDERS.FEMALE],
       },
     ];
 
