@@ -11,7 +11,7 @@ import {
   Slider,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   AVAILABLE_COLORS,
   AVAILABLE_SIZES,
@@ -193,25 +193,36 @@ export default function ProductFilterNew({
     }
   };
 
-  const commitMinFromInput = () => {
-    const numValue = parseInt(localMinInput);
-    if (isNaN(numValue)) {
-      // restore previous
-      setLocalMinInput(String(filters.priceMin));
-      return;
-    }
-    const clamped = Math.max(0, Math.min(numValue, filters.priceMax));
-    updateFilters({ ...filters, priceMin: clamped });
+  const debounceMinRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceMaxRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (debounceMinRef.current) clearTimeout(debounceMinRef.current);
+      if (debounceMaxRef.current) clearTimeout(debounceMaxRef.current);
+    };
+  }, []);
+
+  const onMinInputChange = (value: string) => {
+    setLocalMinInput(value);
+    if (debounceMinRef.current) clearTimeout(debounceMinRef.current);
+    debounceMinRef.current = setTimeout(() => {
+      const numValue = parseInt(value);
+      if (isNaN(numValue)) return;
+      const clamped = Math.max(0, Math.min(numValue, filters.priceMax));
+      updateFilters({ ...filters, priceMin: clamped });
+    }, 500);
   };
 
-  const commitMaxFromInput = () => {
-    const numValue = parseInt(localMaxInput);
-    if (isNaN(numValue)) {
-      setLocalMaxInput(String(filters.priceMax));
-      return;
-    }
-    const clamped = Math.min(Math.max(numValue, filters.priceMin), maxPrice);
-    updateFilters({ ...filters, priceMax: clamped });
+  const onMaxInputChange = (value: string) => {
+    setLocalMaxInput(value);
+    if (debounceMaxRef.current) clearTimeout(debounceMaxRef.current);
+    debounceMaxRef.current = setTimeout(() => {
+      const numValue = parseInt(value);
+      if (isNaN(numValue)) return;
+      const clamped = Math.min(Math.max(numValue, filters.priceMin), maxPrice);
+      updateFilters({ ...filters, priceMax: clamped });
+    }, 500);
   };
 
   // Clear all filters
@@ -240,9 +251,7 @@ export default function ProductFilterNew({
             size="small"
             label={t("filter.minPrice") || "Min"}
             value={localMinInput}
-            onFocus={() => setLocalMinInput("")}
-            onChange={(e) => setLocalMinInput(e.target.value)}
-            onBlur={commitMinFromInput}
+            onChange={(e) => onMinInputChange(e.target.value)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 0 }}
             sx={{ flex: 1 }}
           />
@@ -251,9 +260,7 @@ export default function ProductFilterNew({
             size="small"
             label={t("filter.maxPrice") || "Max"}
             value={localMaxInput}
-            onFocus={() => setLocalMaxInput("")}
-            onChange={(e) => setLocalMaxInput(e.target.value)}
-            onBlur={commitMaxFromInput}
+            onChange={(e) => onMaxInputChange(e.target.value)}
             inputProps={{
               inputMode: "numeric",
               pattern: "[0-9]*",
