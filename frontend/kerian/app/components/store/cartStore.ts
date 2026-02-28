@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type CartItem = {
   productId: number;
@@ -39,7 +40,7 @@ type CartState = {
   clearCart: () => void;
 };
 
-export const useCartStore = create<CartState>((set) => ({
+export const useCartStore = create<CartState>()(persist((set) => ({
   items: [],
 
   addItem: (item) =>
@@ -116,4 +117,4 @@ updateItem: (
     })),
 
   clearCart: () => set({ items: [] }),
-}));
+}), { name: "cart-storage" }));
