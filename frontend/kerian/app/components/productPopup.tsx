@@ -48,9 +48,9 @@ type ProductPopupProps = {
   size: string[];
   defaultSize?: string;
   defaultColor?: string;
-  defaultGender?: "Male" | "Female";
+  defaultGender?: (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS];
   mode?: "edit" | "add";
-  originalGender?: "Male" | "Female";
+  originalGender?: (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS];
   originalSize?: string;
   originalColor?: string;
   isWished?: boolean;
@@ -191,9 +191,9 @@ export default function ProductPopup({
   isWished,
 }: ProductPopupProps) {
   const { t } = useTranslation();
-  const [gender, setGender] = useState<"Male" | "Female">(
-    defaultGender as "Male" | "Female"
-  );
+  const [gender, setGender] = useState<
+    (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
+  >(defaultGender as (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]);
   const [size, setSize] = useState<string>(defaultSize);
   const [color, setColor] = useState<string>(defaultColor);
   const [quantity, setQuantity] = useState<number>(1);
@@ -225,7 +225,9 @@ export default function ProductPopup({
       : [dbProduct.gender];
     // If current gender is not in available genders, select the first available
     if (!genderArray.includes(gender)) {
-      setGender(genderArray[0] as "Male" | "Female");
+      setGender(
+        genderArray[0] as (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
+      );
     }
   }, [dbProduct, gender]);
 
@@ -236,7 +238,9 @@ export default function ProductPopup({
   const changeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (value === PRODUCT_GENDERS.FEMALE || value === PRODUCT_GENDERS.MALE) {
-      setGender(value as "Male" | "Female");
+      setGender(
+        value as (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
+      );
     }
   };
 

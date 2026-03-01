@@ -1,3 +1,4 @@
+import { PRODUCT_GENDERS } from '@/constants/filterConstants';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -7,7 +8,7 @@ export type CartItem = {
   productName: string;
   productPrice: number;
   productQuantity: number;
-  gender: "Male" | "Female";
+  gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
   size: string;
   color: string;
   productImageUrl: string;
@@ -19,20 +20,20 @@ type CartState = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
   updateItem: (
-    originalGender: "Male" | "Female",
+    originalGender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS],
     originalSize: string,
     originalColor: string,
     updatedItem: CartItem
   ) => void;
    removeItem: (
     productId: number,
-    gender: "Male" | "Female",
+    gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS],
     size: string,
     color: string
   ) => void;
   updateQuantity: (
     productId: number,
-    gender: "Male" | "Female",
+    gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS],
     size: string,
     color: string,
     quantity: number

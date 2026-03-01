@@ -1,4 +1,5 @@
 import { Product } from "../kerian/app/products/page";
+import { PRODUCT_GENDERS } from "./constants/filterConstants";
 
 export interface LoginRequest {
   email: string;
@@ -26,7 +27,7 @@ export interface OrderRequest {
     productName: string;
     productPrice: number;
     productQuantity: number;
-    gender: "Male" | "Female";
+    gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
     size: string;
     color: string;
   }[];
@@ -38,7 +39,7 @@ export interface WishlistItem {
   productName: string;
   description: string;
   imageUrl: string;
-  gender: "Male" | "Female";
+  gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
   price: number;
   quantity: number;
   color: string;
@@ -142,7 +143,7 @@ export async function addToWishlist(item: {
   price: number;
   color: string;
   size: string;
-  gender: "Male" | "Female";
+  gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
   quantity: number;
 }): Promise<void> {
   const token = localStorage.getItem("token");
