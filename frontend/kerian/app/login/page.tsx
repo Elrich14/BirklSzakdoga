@@ -7,11 +7,6 @@ import {
   styled,
   TextField,
   Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  SelectChangeEvent,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
@@ -19,7 +14,6 @@ import { boxShadows, colors } from "../../constants/colors";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/api";
 import { jwtDecode } from "jwt-decode";
-import { useLanguage } from "../providers/languageProvider";
 
 type TokenPayload = {
   id: string;
@@ -81,17 +75,12 @@ const Root = styled("div")(() => ({
 export default function Login() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { language, changeLanguage } = useLanguage();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState<string | null>();
   const [success, setSuccess] = useState(false);
-
-  const onLanguageChange = (event: SelectChangeEvent) => {
-    changeLanguage(event.target.value);
-  };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -130,18 +119,6 @@ export default function Login() {
   return (
     <Root className={classes.root}>
       <Box className={classes.box}>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>{t("common.language")}</InputLabel>
-          <Select
-            value={language}
-            onChange={onLanguageChange}
-            label={t("common.language")}
-          >
-            <MenuItem value="en">{t("common.english")}</MenuItem>
-            <MenuItem value="hu">{t("common.hungarian")}</MenuItem>
-          </Select>
-        </FormControl>
-
         <Typography variant="h4" component="h1" gutterBottom>
           {t("login.title")}
         </Typography>

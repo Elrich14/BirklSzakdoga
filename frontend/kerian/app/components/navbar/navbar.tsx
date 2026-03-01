@@ -1,6 +1,14 @@
 "use client";
 
-import { AppBar, Button, Toolbar, Box } from "@mui/material";
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Box,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -9,6 +17,7 @@ import { getUserRole } from "../../utils/auth";
 import { usePathname } from "next/navigation";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "../../providers/languageProvider";
 
 const PREFIX = "Navbar";
 
@@ -19,6 +28,7 @@ const classes = {
   rightBox: `${PREFIX}-rightBox`,
   cartBox: `${PREFIX}-cartBox`,
   cartBoxActive: `${PREFIX}-cartBoxActive`,
+  langSelect: `${PREFIX}-langSelect`,
 };
 type Route = {
   path: string;
@@ -87,6 +97,23 @@ const Root = styled("div")(() => ({
     cursor: "pointer",
     color: colors.kerian_main,
   },
+  [`& .${classes.langSelect}`]: {
+    color: "white",
+    fontSize: "14px",
+    minWidth: "50px",
+    "& .MuiSelect-select": {
+      padding: "4px 24px 4px 8px",
+    },
+    "& .MuiSelect-icon": {
+      color: "white",
+    },
+    "&:hover": {
+      color: colors.kerian_main,
+      "& .MuiSelect-icon": {
+        color: colors.kerian_main,
+      },
+    },
+  },
 }));
 
 export default function Navbar() {
@@ -106,6 +133,11 @@ export default function Navbar() {
   const isLoggedIn = role !== "guest";
 
   const { t } = useTranslation();
+  const { language, changeLanguage } = useLanguage();
+
+  const onLanguageChange = (event: SelectChangeEvent) => {
+    changeLanguage(event.target.value);
+  };
 
   const routes: Route[] = [
     { path: "/", name: t("navbar.home"), if: "always", align: "left" },
@@ -181,7 +213,20 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
           <Box className={classes.leftBox}>{renderRoutes(leftRoutes)}</Box>
-          <Box className={classes.rightBox}>{renderRoutes(rightRoutes)}</Box>
+          <Box className={classes.rightBox}>
+            {renderRoutes(rightRoutes)}
+            <Select
+              value={language}
+              onChange={onLanguageChange}
+              variant="standard"
+              disableUnderline
+              className={classes.langSelect}
+              renderValue={(value) => (value === "en" ? "EN" : "HU")}
+            >
+              <MenuItem value="en">{t("common.english")}</MenuItem>
+              <MenuItem value="hu">{t("common.hungarian")}</MenuItem>
+            </Select>
+          </Box>
         </Toolbar>
       </AppBar>
     </Root>
