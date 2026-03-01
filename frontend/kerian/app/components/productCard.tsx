@@ -43,6 +43,7 @@ const classes = {
   cardFooterBox: `${PREFIX}-cardFooterBox`,
   cardUpperSideBox: `${PREFIX}-cardUpperSideBox`,
   addToWishlistButton: `${PREFIX}-addToWishlistButton`,
+  loginToBuyText: `${PREFIX}-loginToBuyText`,
 };
 
 const Root = styled(Card)(() => ({
@@ -120,6 +121,13 @@ const Root = styled(Card)(() => ({
       color: colors.kerian_main,
       backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
+  },
+  [`& .${classes.loginToBuyText}`]: {
+    fontStyle: "italic",
+    opacity: 0.6,
+    marginTop: "20px",
+    fontSize: "0.7rem",
+    textAlign: "right",
   },
 }));
 
@@ -210,18 +218,12 @@ export default function ProductCard({
               {price} {t("card.currency")}
             </Typography>
             {userRole == "user" && (
-              <Typography
-                variant="body2"
-                sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
-              >
+              <Typography className={classes.loginToBuyText} variant="body2">
                 {t("card.openToOrder")}
               </Typography>
             )}
             {userRole == "guest" && (
-              <Typography
-                variant="body2"
-                sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
-              >
+              <Typography className={classes.loginToBuyText} variant="body2">
                 {t("card.loginToBuy")}
               </Typography>
             )}
