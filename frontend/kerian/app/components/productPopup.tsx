@@ -30,11 +30,12 @@ import { getUserRole } from "../utils/auth";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "./store/cartStore";
 import QuantityInput from "./quantity";
-import { addToWishlist } from "@/api";
+import { addToWishlist, removeFromWishlistByProductId } from "@/api";
+import { useQueryClient } from "@tanstack/react-query";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Product } from "../products/page";
-import { PRODUCT_GENDERS } from "@/constants/filterConstants";
+import { PRODUCT_COLORS, PRODUCT_GENDERS } from "@/constants/filterConstants";
 
 type ProductPopupProps = {
   open: boolean;
@@ -183,7 +184,7 @@ export default function ProductPopup({
   size: initialSizes,
   defaultGender = "Female",
   defaultSize = initialSizes[0],
-  defaultColor = "Black",
+  defaultColor = PRODUCT_COLORS.BLACK,
   mode,
   originalGender,
   originalSize,
@@ -191,6 +192,7 @@ export default function ProductPopup({
   isWished,
 }: ProductPopupProps) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [gender, setGender] = useState<
     (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
   >(defaultGender as (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]);
@@ -353,7 +355,12 @@ export default function ProductPopup({
             ) : isInWishlist ? (
               <FavoriteIcon
                 fontSize="large"
-                onClick={(e) => e.stopPropagation()}
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  await removeFromWishlistByProductId(id);
+                  setIsInWishlist(false);
+                  queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+                }}
                 className={classes.addToWishlistButton}
                 aria-label={t("card.aria.removeFromWishlist")}
               />
@@ -374,6 +381,7 @@ export default function ProductPopup({
                     quantity: quantity,
                   });
                   setIsInWishlist(true);
+                  queryClient.invalidateQueries({ queryKey: ["wishlist"] });
                 }}
                 className={classes.addToWishlistButton}
                 aria-label={t("card.aria.addToWishlist")}

@@ -115,11 +115,11 @@ export async function getWishlist(): Promise<WishlistItem[]> {
   return response.json();
 }
 
-// REMOVE ITEM FROM WISHLIST
-export async function removeFromWishlist(productId: number): Promise<void> {
+// REMOVE ITEM FROM WISHLIST BY WISHLIST ITEM ID
+export async function removeFromWishlistById(id: number): Promise<void> {
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`${API_BASE}/api/wishlist/${productId}`, {
+  const response = await fetch(`${API_BASE}/api/wishlist/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -133,6 +133,29 @@ export async function removeFromWishlist(productId: number): Promise<void> {
   }
 }
 
+
+// REMOVE ITEM FROM WISHLIST BY PRODUCT ID
+export async function removeFromWishlistByProductId(
+  productId: number
+): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `${API_BASE}/api/wishlist/product/${productId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to remove item from wishlist");
+  }
+}
 
 // ADD TO WISHLIST
 export async function addToWishlist(item: {

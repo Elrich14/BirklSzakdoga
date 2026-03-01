@@ -8,6 +8,10 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useTranslation } from "react-i18next";
+import {
+  AVAILABLE_COLORS,
+  PRODUCT_COLORS,
+} from "@/constants/filterConstants";
 
 const PREFIX = "FilterByColor";
 
@@ -47,7 +51,7 @@ interface FilterByColorProps {
 export default function FilterByColor({
   selectedColors,
   onColorChange,
-  availableColors = ["Black", "White"],
+  availableColors = AVAILABLE_COLORS as string[],
 }: FilterByColorProps) {
   const { t } = useTranslation();
 
@@ -65,11 +69,8 @@ export default function FilterByColor({
 
   const getColorHex = (color: string): string => {
     const colorMap: Record<string, string> = {
-      Black: "#000000",
-      White: "#FFFFFF",
-      Red: "#FF0000",
-      Blue: "#0000FF",
-      Green: "#00AA00",
+      [PRODUCT_COLORS.BLACK]: "#000000",
+      [PRODUCT_COLORS.WHITE]: "#FFFFFF",
     };
     return colorMap[color] || "#CCCCCC";
   };

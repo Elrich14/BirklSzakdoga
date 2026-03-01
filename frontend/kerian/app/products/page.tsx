@@ -10,6 +10,7 @@ import ProductFilter, {
   FilterState,
 } from "../components/filtering/ProductFilter";
 import { AVAILABLE_SIZES } from "@/constants/filterConstants";
+import { getUserRole } from "../utils/auth";
 
 const PREFIX = "ProductsPage";
 
@@ -72,6 +73,7 @@ export interface Product {
 
 export default function ProductsPage() {
   const { t } = useTranslation();
+  const userRole = getUserRole();
   const [filters, setFilters] = useState<FilterState>({
     sizes: AVAILABLE_SIZES,
     gender: [],
@@ -94,6 +96,7 @@ export default function ProductsPage() {
   const { data: wishlist = [] } = useQuery<WishlistItem[], Error>({
     queryKey: ["wishlist"],
     queryFn: getWishlist,
+    enabled: userRole !== "guest",
   });
 
   const highestPrice = products.length

@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { getWishlist, removeFromWishlist, WishlistItem } from "@/api";
+import { getWishlist, removeFromWishlistById, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import { useCartStore } from "../components/store/cartStore";
@@ -35,7 +35,7 @@ const Root = styled(List)(() => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     width: "100%",
     maxWidth: 1300,
     margin: "auto",
@@ -86,7 +86,7 @@ export default function Wishlist() {
   }, []);
 
   const onRemove = async (id: number) => {
-    await removeFromWishlist(id);
+    await removeFromWishlistById(id);
     setWishlist((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -172,9 +172,7 @@ export default function Wishlist() {
                         ? t("filter.genderOptions.Male")
                         : t("filter.genderOptions.Female")}
                       {" / "}
-                      {item.color === "Black"
-                        ? t("card.colors.black")
-                        : t("card.colors.white")}{" "}
+                      {t(`card.colors.${item.color}`)}{" "}
                       {item.quantity}x - {item.price.toLocaleString()}{" "}
                       {t("card.currency")}
                     </Typography>

@@ -15,7 +15,9 @@ import ProductPopup from "./productPopup";
 import { getUserRole } from "../utils/auth";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { addToWishlist } from "@/api";
+import { addToWishlist, removeFromWishlistByProductId } from "@/api";
+import { PRODUCT_COLORS } from "@/constants/filterConstants";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 type ProductCardProps = {
@@ -132,6 +134,7 @@ export default function ProductCard({
   isWished,
 }: ProductCardProps) {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [openDialog, setOpenDialog] = useState(false);
 
   const userRole = getUserRole();
@@ -163,7 +166,12 @@ export default function ProductCard({
           ) : isInWishlist ? (
             <FavoriteIcon
               fontSize="large"
-              onClick={(e) => e.stopPropagation()}
+              onClick={async (e) => {
+                e.stopPropagation();
+                await removeFromWishlistByProductId(id);
+                setIsInWishlist(false);
+                queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+              }}
               className={classes.addToWishlistButton}
               aria-label={t("card.aria.removeFromWishlist")}
             />
@@ -178,12 +186,13 @@ export default function ProductCard({
                   description,
                   imageUrl,
                   price,
-                  color: color[0] || "Black",
+                  color: color[0] || PRODUCT_COLORS.BLACK,
                   size: size[0] || "S",
                   gender: "Female",
                   quantity: 1,
                 });
                 setIsInWishlist(true);
+                queryClient.invalidateQueries({ queryKey: ["wishlist"] });
               }}
               className={classes.addToWishlistButton}
               aria-label={t("card.aria.addToWishlist")}

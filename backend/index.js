@@ -64,6 +64,25 @@ app.get("/api/wishlist", authenticateToken, async (req, res) => {
   }
 });
 
+app.delete(
+  "/api/wishlist/product/:productId",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const productId = req.params.productId;
+      const deleted = await Wishlist.destroy({ where: { productId, userId } });
+      if (deleted === 0) {
+        return res.status(404).json({ error: "Item not found" });
+      }
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error deleting wishlist item by productId:", error);
+      res.status(500).json({ error: "Failed to delete item" });
+    }
+  }
+);
+
 app.delete("/api/wishlist/:id", authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
