@@ -107,7 +107,8 @@ export default function CartPage() {
                 >
                   <Typography variant="body1">{item.productName}</Typography>
                   <Typography variant="body2">
-                    {item.size} / {item.color} / {item.gender} –{" "}
+                    {item.size} / {t(`card.colors.${item.color}`)} /{" "}
+                    {t(`filter.genderOptions.${item.gender}`)} –{" "}
                     {item.productQuantity} x
                   </Typography>
                 </Box>
