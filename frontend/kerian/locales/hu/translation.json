@@ -20,7 +20,8 @@
     "login": "Bejelentkezés",
     "register": "Regisztráció",
     "logout": "Kijelentkezés",
-    "welcome": "Üdvözöljük"
+    "welcome": "Üdvözöljük",
+    "admin": "Admin"
   },
   "login": {
     "title": "Bejelentkezés",
@@ -32,6 +33,7 @@
   },
   "register": {
     "title": "Regisztráció",
+    "username": "Felhasználónév",
     "confirmPassword": "Jelszó megerősítése",
     "submit": "Regisztráció",
     "loginLink": "Már van fiókja? Jelentkezzen be itt",
@@ -127,5 +129,62 @@
     "removedFromCart": "Termék eltávolítva a kosárból",
     "addedToWishlist": "Termék hozzáadva a kívánságlistához",
     "removedFromWishlist": "Termék eltávolítva a kívánságlistáról"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "analytics": "Analitika",
+    "productManagement": "Termékezelés",
+    "orders": {
+      "title": "Rendelési statisztikák",
+      "count": "Rendelések száma",
+      "income": "Bevétel",
+      "noData": "Nincs rendelési adat ebben az időszakban",
+      "range": {
+        "day": "Nap",
+        "week": "Hét",
+        "month": "Hónap",
+        "year": "Év"
+      }
+    },
+    "productStats": {
+      "title": "Termékeladások",
+      "selectProduct": "Válasszon terméket",
+      "quantity": "Eladott mennyiség",
+      "revenue": "Bevétel",
+      "noData": "Nincs eladási adat ebben az időszakban"
+    },
+    "products": {
+      "title": "Termékek",
+      "addNew": "Új termék hozzáadása",
+      "edit": "Szerkesztés",
+      "name": "Név",
+      "description": "Leírás",
+      "price": "Ár",
+      "category": "Kategória",
+      "colors": "Színek",
+      "sizes": "Méretek",
+      "genders": "Nemek",
+      "image": "Kép",
+      "images": "Képek",
+      "uploadImage": "Kép feltöltése",
+      "uploadImages": "Képek feltöltése",
+      "removeImage": "Kép eltávolítása",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "createSuccess": "Termék sikeresen létrehozva",
+      "updateSuccess": "Termék sikeresen frissítve",
+      "createError": "Nem sikerült létrehozni a terméket",
+      "updateError": "Nem sikerült frissíteni a terméket",
+      "delete": "Törlés",
+      "deleteConfirm": "Biztosan törölni szeretné ezt a terméket?",
+      "deleteSuccess": "Termék sikeresen törölve",
+      "deleteError": "Nem sikerült törölni a terméket"
+    },
+    "dashboard": {
+      "totalRevenue": "Teljes bevétel",
+      "ordersToday": "Mai rendelések",
+      "totalProducts": "Összes termék",
+      "totalCustomers": "Összes vásárló"
+    }
   }
 }

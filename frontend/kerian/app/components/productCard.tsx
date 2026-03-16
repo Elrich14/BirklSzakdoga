@@ -20,16 +20,18 @@ import { PRODUCT_COLORS } from "@/constants/filterConstants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-type ProductCardProps = {
+import { resolveImageUrl } from "../utils/image";
+
+interface ProductCardProps {
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  imageUrls: string[];
   price: number;
   color: string[];
   size: string[];
   isWished?: boolean;
-};
+}
 
 const PREFIX = "ProductCard";
 
@@ -44,6 +46,7 @@ const classes = {
   cardUpperSideBox: `${PREFIX}-cardUpperSideBox`,
   addToWishlistButton: `${PREFIX}-addToWishlistButton`,
   loginToBuyText: `${PREFIX}-loginToBuyText`,
+  divider: `${PREFIX}-divider`,
 };
 
 const Root = styled(Card)(() => ({
@@ -109,8 +112,8 @@ const Root = styled(Card)(() => ({
   },
   [`& .${classes.addToWishlistButton}`]: {
     position: "absolute",
-    top: 8,
-    right: 8,
+    top: "8px",
+    right: "8px",
     color: colors.kerian_main,
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     borderRadius: "50%",
@@ -129,13 +132,17 @@ const Root = styled(Card)(() => ({
     fontSize: "0.7rem",
     textAlign: "right",
   },
+  [`& .${classes.divider}`]: {
+    marginTop: "8px",
+    marginBottom: "8px",
+  },
 }));
 
 export default function ProductCard({
   id,
   name,
   description,
-  imageUrl,
+  imageUrls,
   price,
   color,
   size,
@@ -159,7 +166,7 @@ export default function ProductCard({
           <CardMedia
             className={classes.productImg}
             component="img"
-            image={imageUrl}
+            image={imageUrls?.[0] ? resolveImageUrl(imageUrls[0]) : undefined}
             alt={name}
           />
           {userRole === "guest" ? (
@@ -192,7 +199,7 @@ export default function ProductCard({
                   productId: id,
                   productName: name,
                   description,
-                  imageUrl,
+                  imageUrl: imageUrls?.[0] || "",
                   price,
                   color: color[0] || PRODUCT_COLORS.BLACK,
                   size: size[0] || "S",
@@ -209,7 +216,7 @@ export default function ProductCard({
         </Box>
         <CardContent>
           <Typography className={classes.productName}>{name}</Typography>
-          <Divider sx={{ my: 1 }} />
+          <Divider className={classes.divider} />
           <Typography className={classes.productDescription} variant="body2">
             {description}
           </Typography>
@@ -217,12 +224,12 @@ export default function ProductCard({
             <Typography className={classes.price} fontWeight="bold">
               {price} {t("card.currency")}
             </Typography>
-            {userRole == "user" && (
+            {userRole === "user" && (
               <Typography className={classes.loginToBuyText} variant="body2">
                 {t("card.openToOrder")}
               </Typography>
             )}
-            {userRole == "guest" && (
+            {userRole === "guest" && (
               <Typography className={classes.loginToBuyText} variant="body2">
                 {t("card.loginToBuy")}
               </Typography>
@@ -237,7 +244,7 @@ export default function ProductCard({
         id={id}
         name={name}
         description={description}
-        imageUrl={imageUrl}
+        imageUrls={imageUrls}
         price={price}
         color={color}
         size={size}

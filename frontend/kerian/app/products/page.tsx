@@ -5,7 +5,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import ProductFilter, {
   FilterState,
 } from "../components/filtering/ProductFilter";
@@ -33,7 +33,7 @@ const Root = styled("div")(() => ({
     margin: "auto",
   },
   [`& .${classes.sidebar}`]: {
-    width: 300,
+    width: "300px",
     padding: "0 16px",
     borderRight: "1px solid #e0e0e0",
     boxSizing: "border-box",
@@ -64,7 +64,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  imageUrls: string[];
   category: string;
   color: string[];
   size: string[];
@@ -98,6 +98,10 @@ export default function ProductsPage() {
     queryFn: getWishlist,
     enabled: userRole !== "guest",
   });
+
+  const onFiltersChange = useCallback((f: FilterState) => {
+    setFilters(f);
+  }, []);
 
   const highestPrice = products.length
     ? Math.max(...products.map((p) => p.price))
@@ -163,7 +167,7 @@ export default function ProductsPage() {
       <Box className={classes.sidebar}>
         <ProductFilter
           maxPrice={highestPrice}
-          onFiltersChange={(f) => setFilters(f)}
+          onFiltersChange={onFiltersChange}
         />
       </Box>
 
@@ -176,9 +180,9 @@ export default function ProductsPage() {
         {error && <Typography>{t("feedback.errorLoadingProducts")}</Typography>}
 
         <Box className={classes.productGrid}>
-          {filteredProducts.map((product, index) => {
+          {filteredProducts.map((product) => {
             const isWished = wishlist.some((w) => w.productId === product.id);
-            return <ProductCard key={index} {...product} isWished={isWished} />;
+            return <ProductCard key={product.id} {...product} isWished={isWished} />;
           })}
         </Box>
       </Box>

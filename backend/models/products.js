@@ -16,8 +16,9 @@ const Product = sequelize.define(
     description: {
       type: DataTypes.TEXT,
     },
-    imageUrl: {
-      type: DataTypes.TEXT,
+    imageUrls: {
+      type: DataTypes.ARRAY(DataTypes.TEXT),
+      allowNull: true,
     },
     price: {
       type: DataTypes.INTEGER,

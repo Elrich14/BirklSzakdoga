@@ -20,6 +20,7 @@ const classes = {
   title: `${PREFIX}-title`,
   checkboxGroup: `${PREFIX}-checkboxGroup`,
   colorBox: `${PREFIX}-colorBox`,
+  colorSwatch: `${PREFIX}-colorSwatch`,
 };
 
 const Root = styled(Box)(() => ({
@@ -39,6 +40,13 @@ const Root = styled(Box)(() => ({
     display: "flex",
     alignItems: "center",
     gap: "8px",
+  },
+  [`& .${classes.colorSwatch}`]: {
+    width: "16px",
+    height: "16px",
+    borderRadius: "3px",
+    border: "1px solid #ccc",
+    backgroundColor: "var(--swatch-color)",
   },
 }));
 
@@ -93,13 +101,8 @@ export default function FilterByColor({
             label={
               <Box className={classes.colorBox}>
                 <Box
-                  sx={{
-                    width: "16px",
-                    height: "16px",
-                    backgroundColor: getColorHex(color),
-                    borderRadius: "3px",
-                    border: "1px solid #ccc",
-                  }}
+                  className={classes.colorSwatch}
+                  style={{ "--swatch-color": getColorHex(color) } as React.CSSProperties}
                 />
                 {t(getColorKey(color)) || color}
               </Box>

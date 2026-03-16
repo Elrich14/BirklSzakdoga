@@ -71,16 +71,16 @@ const Root = styled("div")(() => ({
   },
   [`& .${classes.leftBox}`]: {
     display: "flex",
-    gap: 10,
+    gap: "10px",
   },
   [`& .${classes.rightBox}`]: {
     marginLeft: "auto",
     display: "flex",
-    gap: 10,
+    gap: "10px",
   },
   [`& .${classes.cartBox}`]: {
-    width: 20,
-    height: 20,
+    width: "20px",
+    height: "20px",
     padding: "6px 8px",
     marginRight: "15px",
     cursor: "pointer",
@@ -90,8 +90,8 @@ const Root = styled("div")(() => ({
     },
   },
   [`& .${classes.cartBoxActive}`]: {
-    width: 20,
-    height: 20,
+    width: "20px",
+    height: "20px",
     padding: "6px 8px",
     marginRight: "15px",
     cursor: "pointer",
@@ -151,6 +151,12 @@ export default function Navbar() {
       path: "/wishlist",
       name: t("navbar.wishlist"),
       if: "loggedIn",
+      align: "left",
+    },
+    {
+      path: "/admin",
+      name: t("navbar.admin"),
+      if: "admin",
       align: "left",
     },
     {

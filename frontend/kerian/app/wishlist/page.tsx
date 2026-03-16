@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   List,
   ListItem,
@@ -14,46 +13,65 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWishlist, removeFromWishlistById, WishlistItem } from "@/api";
+import { getUserRole } from "../utils/auth";
 import { colors } from "@/constants/colors";
 import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import { useCartStore } from "../components/store/cartStore";
 import { useTranslation } from "react-i18next";
 
+import { resolveImageUrl } from "../utils/image";
+
 const PREFIX = "Wishlist";
 
 const classes = {
   root: `${PREFIX}-root`,
+  title: `${PREFIX}-title`,
   listItem: `${PREFIX}-listItem`,
   avatar: `${PREFIX}-avatar`,
   addToCartButton: `${PREFIX}-addToCartButton`,
   deleteIcon: `${PREFIX}-deleteIcon`,
+  emptyText: `${PREFIX}-emptyText`,
+  description: `${PREFIX}-description`,
 };
 
-const Root = styled(List)(() => ({
+const Root = styled("div")(() => ({
   [`&.${classes.root}`]: {
+    minHeight: "100vh",
+  },
+  [`& .${classes.title}`]: {
+    display: "flex",
+    justifyContent: "left",
+    marginLeft: "300px",
+    marginTop: "30px",
+    fontFamily: "monospace",
+    fontSize: "30px",
+    color: colors.kerian_main,
+    opacity: 0.6,
+  },
+  [`& .MuiList-root`]: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "flex-start",
     width: "100%",
-    maxWidth: 1300,
+    maxWidth: "1300px",
     margin: "auto",
     gap: "30px",
-    minHeight: "100vh",
   },
   [`& .${classes.listItem}`]: {
     width: "100%",
-    maxWidth: 1300,
-    bgcolor: "#121212",
+    maxWidth: "1300px",
+    backgroundColor: "#121212",
     color: "#fff",
     borderBottom: "1px solid #333",
     borderRadius: "4px",
     justifyContent: "space-between",
   },
   [`& .${classes.avatar}`]: {
-    width: 56,
-    height: 56,
+    width: "56px",
+    height: "56px",
     marginRight: "10px",
   },
   [`& .${classes.addToCartButton}`]: {
@@ -64,30 +82,40 @@ const Root = styled(List)(() => ({
   [`& .${classes.deleteIcon}`]: {
     color: colors.kerian_main,
   },
+  [`& .${classes.emptyText}`]: {
+    color: "#ccc",
+    marginTop: "2rem",
+  },
+  [`& .${classes.description}`]: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    maxWidth: "1000px",
+  },
 }));
 
 export default function Wishlist() {
   const { t } = useTranslation();
-  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const queryClient = useQueryClient();
   const addItem = useCartStore((state) => state.addItem);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const userRole = getUserRole();
+  const isAuthenticated = userRole !== "guest";
 
-  useEffect(() => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    setIsAuthenticated(!!token);
-    if (token) {
-      const fetchWishlist = async () => {
-        const data = await getWishlist();
-        setWishlist(data);
-      };
-      fetchWishlist();
-    }
-  }, []);
+  const { data: wishlist = [] } = useQuery<WishlistItem[], Error>({
+    queryKey: ["wishlist"],
+    queryFn: getWishlist,
+    enabled: isAuthenticated,
+  });
 
-  const onRemove = async (id: number) => {
-    await removeFromWishlistById(id);
-    setWishlist((prev) => prev.filter((item) => item.id !== id));
+  const removeMutation = useMutation({
+    mutationFn: removeFromWishlistById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+    },
+  });
+
+  const onRemove = (id: number) => {
+    removeMutation.mutate(id);
   };
 
   const submitAddToCart = (e: React.MouseEvent, item: WishlistItem) => {
@@ -108,25 +136,14 @@ export default function Wishlist() {
   };
 
   return (
-    <>
-      <Typography
-        sx={{
-          display: "flex",
-          justifyContent: "left",
-          marginLeft: "300px",
-          marginTop: "30px",
-          fontFamily: "monospace",
-          fontSize: "30px",
-          color: colors.kerian_main,
-          opacity: 0.6,
-        }}
-      >
+    <Root className={classes.root}>
+      <Typography className={classes.title}>
         {t("wishlist.title")}
       </Typography>
       {isAuthenticated && (
-        <Root className={classes.root}>
+        <List>
           {wishlist.length === 0 ? (
-            <p style={{ color: "#ccc", marginTop: "2rem" }}>
+            <p className={classes.emptyText}>
               {t("wishlist.empty")}
             </p>
           ) : (
@@ -156,7 +173,7 @@ export default function Wishlist() {
               >
                 <ListItemAvatar>
                   <Avatar
-                    src={item.imageUrl}
+                    src={resolveImageUrl(item.imageUrl)}
                     alt={item.description || item.color}
                     className={classes.avatar}
                   />
@@ -178,12 +195,15 @@ export default function Wishlist() {
                     </Typography>
                   }
                   secondary={item.description}
+                  secondaryTypographyProps={{
+                    className: classes.description,
+                  }}
                 />
               </ListItem>
             ))
           )}
-        </Root>
+        </List>
       )}
-    </>
+    </Root>
   );
 }

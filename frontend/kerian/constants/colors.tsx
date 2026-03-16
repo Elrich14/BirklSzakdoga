@@ -2,6 +2,16 @@ export const colors = {
   kerian_main: "#039c82",
   kerian_main_button_hover: "#00cfac",
   kerian_navbar: "#3d3d3d",
+  admin_surface: "#1a1a1a",
+  admin_input: "#222",
+  admin_border: "#333",
+  admin_border_light: "#444",
+  admin_text_muted: "#888",
+  admin_text_secondary: "#999",
+  admin_text_light: "#ccc",
+  admin_accent_purple: "#6366f1",
+  admin_danger: "#f44336",
+  admin_checkbox_inactive: "#666",
 };
 
 export const boxShadows = {

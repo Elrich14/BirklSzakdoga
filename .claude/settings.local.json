@@ -3,7 +3,10 @@
     "allow": [
       "Bash(curl:*)",
       "Bash(ls:*)",
-      "Bash(gh issue:*)"
+      "Bash(gh issue:*)",
+      "Bash(npm install:*)",
+      "Bash(docker compose:*)",
+      "Bash(git status:*)"
     ]
   },
   "outputStyle": "Explanatory"

@@ -146,14 +146,36 @@ const StyledCard = styled(Box)(({ theme }) => ({
 }));
 ```
 
-### Avoid: Inline `sx` and `style` Props
+### NEVER Use Inline `sx`, `style`, or `secondaryTypographyProps.style`
+**All styles MUST go through styled components with the PREFIX + classes pattern.** No exceptions.
 ```tsx
 // BAD — inline sx prop
 <Box sx={{ padding: 2, margin: 1 }}>
 
 // BAD — inline style prop
 <div style={{ padding: '16px' }}>
+
+// BAD — inline style via props
+<ListItemText secondaryTypographyProps={{ style: { overflow: "hidden" } }} />
+
+// GOOD — use a class from the styled component
+<ListItemText secondaryTypographyProps={{ className: classes.description }} />
 ```
+
+### CSS Values — Always Use String Units
+**Never use bare numbers for CSS values.** Always include the unit as a string so it's clear what unit is being used.
+```tsx
+// BAD — unclear what unit
+marginLeft: 10,
+fontSize: 30,
+maxWidth: 1300,
+
+// GOOD — explicit units
+marginLeft: "10px",
+fontSize: "30px",
+maxWidth: "1300px",
+```
+The only exception is `0` (which needs no unit) and `opacity`/`zIndex`/`flexGrow` (which are unitless by spec).
 
 ### Theme Colors
 - Use theme variables and `colors` constant from `@/constants/colors`

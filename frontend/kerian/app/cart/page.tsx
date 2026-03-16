@@ -19,6 +19,7 @@ const classes = {
   itemBox: `${PREFIX}-itemBox`,
   itemRow: `${PREFIX}-itemRow`,
   itemText: `${PREFIX}-itemText`,
+  divider: `${PREFIX}-divider`,
   totalBox: `${PREFIX}-totalBox`,
   actionButtons: `${PREFIX}-actionButtons`,
   cartTitle: `${PREFIX}-cartTitle`,
@@ -48,6 +49,10 @@ const Root = styled("div")(() => ({
     display: "flex",
     flexDirection: "column",
     cursor: "pointer",
+  },
+  [`& .${classes.divider}`]: {
+    marginTop: "16px",
+    marginBottom: "16px",
   },
   [`& .${classes.totalBox}`]: {
     marginTop: "20px",
@@ -142,7 +147,7 @@ export default function CartPage() {
             ))}
           </Box>
 
-          <Divider sx={{ my: 2 }} />
+          <Divider className={classes.divider} />
 
           <Box className={classes.totalBox}>
             <Typography>{t("cart.total")}:</Typography>
@@ -169,7 +174,7 @@ export default function CartPage() {
           id={selectedItem.productId}
           name={selectedItem.productName}
           description={selectedItem.productDescription}
-          imageUrl={selectedItem.productImageUrl}
+          imageUrls={[selectedItem.productImageUrl]}
           price={selectedItem.productPrice}
           defaultGender={selectedItem.gender}
           defaultColor={selectedItem.color}

@@ -1,0 +1,188 @@
+"use client";
+
+import { styled } from "@mui/system";
+import { useTranslation } from "react-i18next";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Box,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
+} from "@mui/material";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import {
+  fetchAdminProducts,
+  fetchProductStats,
+  StatsRange,
+} from "@/api";
+import { colors } from "@/constants/colors";
+
+const PREFIX = "ProductSellRating";
+const classes = {
+  root: `${PREFIX}-root`,
+  header: `${PREFIX}-header`,
+  controls: `${PREFIX}-controls`,
+  productSelect: `${PREFIX}-productSelect`,
+  chartWrapper: `${PREFIX}-chartWrapper`,
+  noData: `${PREFIX}-noData`,
+};
+
+const Root = styled(Box)(() => ({
+  [`&.${classes.root}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "16px",
+  },
+  [`& .${classes.header}`]: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: "12px",
+  },
+  [`& .${classes.controls}`]: {
+    display: "flex",
+    gap: "16px",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  [`& .${classes.productSelect}`]: {
+    minWidth: "220px",
+  },
+  [`& .${classes.chartWrapper}`]: {
+    display: "flex",
+    justifyContent: "center",
+  },
+  [`& .${classes.noData}`]: {
+    textAlign: "center",
+    color: colors.admin_text_muted,
+    padding: "40px 0",
+  },
+}));
+
+const RANGES: StatsRange[] = ["day", "week", "month", "year"];
+
+export default function ProductSellRating() {
+  const { t } = useTranslation();
+  const [selectedProductId, setSelectedProductId] = useState<number | "">("");
+  const [range, setRange] = useState<StatsRange>("month");
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["adminProducts"],
+    queryFn: fetchAdminProducts,
+  });
+
+  const { data: stats = [] } = useQuery({
+    queryKey: ["productStats", selectedProductId, range],
+    queryFn: () => fetchProductStats(selectedProductId as number, range),
+    enabled: selectedProductId !== "",
+  });
+
+  const onProductChange = (event: SelectChangeEvent<number | "">) => {
+    setSelectedProductId(event.target.value as number | "");
+  };
+
+  const onRangeChange = (
+    _: React.MouseEvent<HTMLElement>,
+    newRange: StatsRange | null
+  ) => {
+    if (newRange) setRange(newRange);
+  };
+
+  const chartData = useMemo(() => [...stats].reverse(), [stats]);
+
+  return (
+    <Root className={classes.root}>
+      <Typography variant="h6">{t("admin.productStats.title")}</Typography>
+
+      <Box className={classes.controls}>
+        <FormControl size="small" className={classes.productSelect}>
+          <InputLabel>{t("admin.productStats.selectProduct")}</InputLabel>
+          <Select
+            value={selectedProductId}
+            onChange={onProductChange}
+            label={t("admin.productStats.selectProduct")}
+          >
+            {products.map((product) => (
+              <MenuItem key={product.id} value={product.id}>
+                {product.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <ToggleButtonGroup
+          value={range}
+          exclusive
+          onChange={onRangeChange}
+          size="small"
+        >
+          {RANGES.map((r) => (
+            <ToggleButton key={r} value={r}>
+              {t(`admin.orders.range.${r}`)}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+      </Box>
+
+      {selectedProductId === "" ? (
+        <Typography className={classes.noData}>
+          {t("admin.productStats.selectProduct")}
+        </Typography>
+      ) : stats.length === 0 ? (
+        <Typography className={classes.noData}>
+          {t("admin.productStats.noData")}
+        </Typography>
+      ) : (
+        <Box className={classes.chartWrapper}>
+        <ResponsiveContainer width="50%" height={350}>
+          <BarChart data={chartData} barSize={53} barGap={45} barCategoryGap="80%" margin={{ left: 40, right: 40 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={colors.admin_border} />
+            <XAxis dataKey="label" stroke={colors.admin_text_muted} padding={{ left: 40, right: 40 }} />
+            <YAxis yAxisId="left" stroke={colors.admin_text_muted} width={40} />
+            <YAxis yAxisId="right" orientation="right" stroke={colors.admin_text_muted} width={40} />
+            <Tooltip
+              cursor={false}
+              contentStyle={{
+                backgroundColor: colors.admin_input,
+                border: `1px solid ${colors.admin_border_light}`,
+                borderRadius: "8px",
+              }}
+            />
+            <Legend />
+            <Bar
+              yAxisId="left"
+              dataKey="quantity"
+              name={t("admin.productStats.quantity")}
+              fill={colors.kerian_main}
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar
+              yAxisId="right"
+              dataKey="revenue"
+              name={t("admin.productStats.revenue")}
+              fill={colors.admin_accent_purple}
+              radius={[4, 4, 0, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+        </Box>
+      )}
+    </Root>
+  );
+}

@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { registerUser } from "@/api";
 
 const PREFIX = "RegisterPage";
@@ -17,6 +18,8 @@ const PREFIX = "RegisterPage";
 const classes = {
   root: `${PREFIX}-root`,
   box: `${PREFIX}-box`,
+  alert: `${PREFIX}-alert`,
+  submitButton: `${PREFIX}-submitButton`,
 };
 
 const Root = styled("div")(() => ({
@@ -49,19 +52,26 @@ const Root = styled("div")(() => ({
     },
   },
   [`& .${classes.box}`]: {
-    minWidth: 400,
-    maxWidth: 400,
+    minWidth: "400px",
+    maxWidth: "400px",
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
-    borderRadius: 4,
+    borderRadius: "4px",
+  },
+  [`& .${classes.alert}`]: {
+    marginBottom: "16px",
+  },
+  [`& .${classes.submitButton}`]: {
+    marginTop: "16px",
   },
 }));
 
 export default function Register() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -70,14 +80,12 @@ export default function Register() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onChange = (e: any) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(false);
@@ -86,9 +94,8 @@ export default function Register() {
       await registerUser(formData);
       setSuccess(true);
       setFormData({ username: "", email: "", password: "" });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message || "An error occurred while registering.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("register.registerError"));
     }
   };
 
@@ -96,16 +103,16 @@ export default function Register() {
     <Root className={classes.root}>
       <Box className={classes.box}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Register
+          {t("register.title")}
         </Typography>
 
         {success && (
-          <Alert severity="success" sx={{ mb: 2 }}>
-            Registration successful!
+          <Alert severity="success" className={classes.alert}>
+            {t("register.registerSuccess")}
           </Alert>
         )}
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity="error" className={classes.alert}>
             {error}
           </Alert>
         )}
@@ -113,7 +120,7 @@ export default function Register() {
         <form onSubmit={onSubmit}>
           <FormGroup>
             <TextField
-              label="Username"
+              label={t("register.username")}
               name="username"
               value={formData.username}
               onChange={onChange}
@@ -124,7 +131,7 @@ export default function Register() {
             />
 
             <TextField
-              label="Email"
+              label={t("common.email")}
               name="email"
               value={formData.email}
               onChange={onChange}
@@ -136,7 +143,7 @@ export default function Register() {
             />
 
             <TextField
-              label="Password"
+              label={t("common.password")}
               name="password"
               value={formData.password}
               onChange={onChange}
@@ -152,9 +159,9 @@ export default function Register() {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mt: 2 }}
+              className={classes.submitButton}
             >
-              Register
+              {t("register.submit")}
             </Button>
           </FormGroup>
         </form>

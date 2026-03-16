@@ -22,28 +22,29 @@ import {
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
-import Image from "next/image";
+
 import { useEffect, useState } from "react";
-import { fetchProductById } from "@/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchProductById, addToWishlist, removeFromWishlistByProductId } from "@/api";
 import { colors as themeColors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "./store/cartStore";
 import QuantityInput from "./quantity";
-import { addToWishlist, removeFromWishlistByProductId } from "@/api";
-import { useQueryClient } from "@tanstack/react-query";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Product } from "../products/page";
 import { PRODUCT_COLORS, PRODUCT_GENDERS } from "@/constants/filterConstants";
 
-type ProductPopupProps = {
+import { resolveImageUrl } from "../utils/image";
+
+interface ProductPopupProps {
   open: boolean;
   onClose: () => void;
   id: number;
   name: string;
   description: string;
-  imageUrl: string;
+  imageUrls: string[];
   price: number;
   color: string[];
   size: string[];
@@ -55,12 +56,13 @@ type ProductPopupProps = {
   originalSize?: string;
   originalColor?: string;
   isWished?: boolean;
-};
+}
 
 const PREFIX = "ProductPopup";
 
 const classes = {
   root: `${PREFIX}-root`,
+  dialogTitle: `${PREFIX}-dialogTitle`,
   container: `${PREFIX}-container`,
   dataContainer: `${PREFIX}-dataContainer`,
   addToCardButton: `${PREFIX}-addToCardButton`,
@@ -72,15 +74,26 @@ const classes = {
   sizeSelect: `${PREFIX}-sizeSelect`,
   colorButton: `${PREFIX}-colorButton`,
   colorButtonCircle: `${PREFIX}-colorButtonCircle`,
+  colorButtonCircleSelected: `${PREFIX}-colorButtonCircleSelected`,
   colorButtonGroup: `${PREFIX}-colorButtonGroup`,
   cardLeftSideBox: `${PREFIX}-cardLeftSideBox`,
   addToWishlistButton: `${PREFIX}-addToWishlistButton`,
+  thumbnailRow: `${PREFIX}-thumbnailRow`,
+  thumbnail: `${PREFIX}-thumbnail`,
+  thumbnailActive: `${PREFIX}-thumbnailActive`,
+  mainImage: `${PREFIX}-mainImage`,
+  guestText: `${PREFIX}-guestText`,
 };
 
 const Root = styled(Dialog)(() => ({
   [`&.${classes.root}`]: {
     maxWidth: "1000px",
     margin: "auto",
+  },
+  [`& .${classes.dialogTitle}`]: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   [`& .${classes.container}`]: {
     display: "flex",
@@ -145,9 +158,14 @@ const Root = styled(Dialog)(() => ({
     },
   },
   [`& .${classes.colorButtonCircle}`]: {
-    width: 30,
-    height: 30,
+    width: "30px",
+    height: "30px",
     borderRadius: "50%",
+    outline: "none",
+    backgroundColor: "var(--circle-color)",
+  },
+  [`& .${classes.colorButtonCircleSelected}`]: {
+    outline: `3px solid ${themeColors.kerian_main}`,
   },
   [`& .${classes.colorButtonGroup}`]: {
     marginLeft: "auto",
@@ -157,8 +175,8 @@ const Root = styled(Dialog)(() => ({
   },
   [`& .${classes.addToWishlistButton}`]: {
     position: "absolute",
-    top: 8,
-    right: 8,
+    top: "8px",
+    right: "8px",
     color: themeColors.kerian_main,
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     borderRadius: "50%",
@@ -170,6 +188,38 @@ const Root = styled(Dialog)(() => ({
       backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
   },
+  [`& .${classes.thumbnailRow}`]: {
+    display: "flex",
+    gap: "8px",
+    justifyContent: "center",
+    marginTop: "8px",
+  },
+  [`& .${classes.thumbnail}`]: {
+    width: "60px",
+    height: "60px",
+    objectFit: "cover",
+    borderRadius: "4px",
+    cursor: "pointer",
+    opacity: 0.6,
+    transition: "opacity 0.2s, border-color 0.2s",
+    border: "2px solid transparent",
+    "&:hover": {
+      opacity: 1,
+    },
+  },
+  [`& .${classes.thumbnailActive}`]: {
+    opacity: 1,
+    borderColor: themeColors.kerian_main,
+  },
+  [`& .${classes.mainImage}`]: {
+    borderRadius: "4px",
+    objectFit: "cover",
+  },
+  [`& .${classes.guestText}`]: {
+    fontStyle: "italic",
+    opacity: 0.6,
+    marginTop: "20px",
+  },
 }));
 
 export default function ProductPopup({
@@ -178,7 +228,7 @@ export default function ProductPopup({
   id,
   name,
   description,
-  imageUrl,
+  imageUrls,
   price,
   color: initialColors,
   size: initialSizes,
@@ -193,6 +243,7 @@ export default function ProductPopup({
 }: ProductPopupProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [gender, setGender] = useState<
     (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
   >(defaultGender as (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]);
@@ -200,7 +251,16 @@ export default function ProductPopup({
   const [color, setColor] = useState<string>(defaultColor);
   const [quantity, setQuantity] = useState<number>(1);
   const [isInWishlist, setIsInWishlist] = useState(isWished);
-  const [dbProduct, setDbProduct] = useState<Product | null>(null);
+
+  const { data: dbProduct = null } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProductById(id),
+    enabled: open,
+  });
+
+  useEffect(() => {
+    if (open) setActiveImageIndex(0);
+  }, [id, open]);
 
   const colors = dbProduct?.color || initialColors;
   const sizes = dbProduct?.size || initialSizes;
@@ -211,13 +271,6 @@ export default function ProductPopup({
       ? dbProduct.gender
       : [dbProduct.gender]
     : [PRODUCT_GENDERS.FEMALE, PRODUCT_GENDERS.MALE];
-
-  useEffect(() => {
-    if (!open) return;
-    fetchProductById(id).then((data) => {
-      setDbProduct(Array.isArray(data) ? data[0] : data);
-    });
-  }, [id, open]);
 
   // when product data arrives, if it has gender options, auto-select the first one if needed
   useEffect(() => {
@@ -256,7 +309,7 @@ export default function ProductPopup({
       productId: id,
       productName: name,
       productDescription: description,
-      productImageUrl: imageUrl,
+      productImageUrl: imageUrls?.[0] || "",
       productPrice: price,
       productQuantity: quantity,
       gender,
@@ -277,7 +330,7 @@ export default function ProductPopup({
         productId: id,
         productName: name,
         productDescription: description,
-        productImageUrl: imageUrl,
+        productImageUrl: imageUrls?.[0] || "",
         productPrice: price,
         productQuantity: quantity,
         gender,
@@ -321,13 +374,7 @@ export default function ProductPopup({
       fullWidth
       maxWidth="md"
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <DialogTitle className={classes.dialogTitle}>
         {name}
         <IconButton onClick={onClose}>
           <CloseIcon aria-label={t("card.aria.close")} />
@@ -336,13 +383,29 @@ export default function ProductPopup({
       <DialogContent dividers>
         <Box className={classes.container}>
           <Box className={classes.cardLeftSideBox}>
-            <Image
-              src={imageUrl}
+            <img
+              src={resolveImageUrl(imageUrls?.[activeImageIndex] || imageUrls?.[0] || "")}
               alt={name}
               width={450}
               height={500}
-              style={{ borderRadius: 4 }}
+              className={classes.mainImage}
             />
+            {imageUrls?.length > 1 && (
+              <Box className={classes.thumbnailRow}>
+                {imageUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={resolveImageUrl(url)}
+                    alt={`${name} ${index + 1}`}
+                    className={`${classes.thumbnail} ${index === activeImageIndex ? classes.thumbnailActive : ""}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveImageIndex(index);
+                    }}
+                  />
+                ))}
+              </Box>
+            )}
             {userRole === "guest" ? (
               <Tooltip title={t("card.loginToWishlist")} arrow>
                 <FavoriteBorderIcon
@@ -373,7 +436,7 @@ export default function ProductPopup({
                     productId: id,
                     productName: name,
                     description,
-                    imageUrl,
+                    imageUrl: imageUrls?.[0] || "",
                     price,
                     color: color,
                     size: size,
@@ -417,7 +480,7 @@ export default function ProductPopup({
                   />
                 </RadioGroup>
               </FormControl>
-              {/*-----------------------------------gender vege-----------------------------------*/}
+
               <Typography variant="body2" fontWeight="bold">
                 {t("card.size")}:
               </Typography>
@@ -435,7 +498,7 @@ export default function ProductPopup({
                   ))}
                 </Select>
               </FormControl>
-              {/*-----------------------------------size vege-----------------------------------*/}
+
 
               <Typography variant="body2" fontWeight="bold">
                 {t("card.color")}:
@@ -457,30 +520,24 @@ export default function ProductPopup({
                     className={classes.colorButton}
                   >
                     <Box
-                      className={classes.colorButtonCircle}
-                      sx={{
-                        backgroundColor: col,
-                        outline:
-                          color === col
-                            ? `3px solid ${themeColors.kerian_main}`
-                            : "none",
-                      }}
+                      className={`${classes.colorButtonCircle} ${color === col ? classes.colorButtonCircleSelected : ""}`}
+                      style={{ "--circle-color": col } as React.CSSProperties}
                     />
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
-              {/*-----------------------------------color vege-----------------------------------*/}
+
               <Typography variant="body2" fontWeight="bold">
                 {t("card.quantity")}:
               </Typography>
               <QuantityInput value={quantity} onChange={setQuantity} />
-              {/*-----------------------------------quantity vege-----------------------------------*/}
+
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">
                 {price} {t("card.currency")}
               </Typography>
-              {userRole == "user" && (
+              {userRole === "user" && (
                 <Button
                   className={classes.addToCardButton}
                   variant="contained"
@@ -490,11 +547,8 @@ export default function ProductPopup({
                   {mode === "add" ? t("card.addToCart") : t("card.modify")}
                 </Button>
               )}
-              {userRole == "guest" && (
-                <Typography
-                  variant="body2"
-                  sx={{ fontStyle: "italic", opacity: 0.6, marginTop: "20px" }}
-                >
+              {userRole === "guest" && (
+                <Typography variant="body2" className={classes.guestText}>
                   {t("card.loginToBuy")}
                 </Typography>
               )}

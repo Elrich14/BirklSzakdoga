@@ -90,7 +90,7 @@ export async function fetchAllProducts(): Promise<Product[]> {
 }
 
 // GET PRODUCT BY ID
-export async function fetchProductById(id: string | number): Promise<Product[]> {
+export async function fetchProductById(id: string | number): Promise<Product> {
   const res = await fetch(`${API_BASE}/api/products/${id}`);
   if (!res.ok) throw new Error("Failed to fetch product details");
   return res.json();
@@ -190,11 +190,17 @@ export async function addToWishlist(item: {
 
 // SEND ORDER
 export async function sendOrder(data: OrderRequest): Promise<void> {
+  const token = localStorage.getItem("token");
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await fetch(`${API_BASE}/api/orderEmail`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
     body: JSON.stringify(data),
   });
 
@@ -202,4 +208,161 @@ export async function sendOrder(data: OrderRequest): Promise<void> {
     const err = await response.json();
     throw new Error(err.message || "Order submission failed");
   }
+}
+
+// ADMIN API
+
+export type StatsRange = "day" | "week" | "month" | "year";
+
+export interface OrderStatsItem {
+  label: string;
+  orderCount: number;
+  income: number;
+}
+
+export interface ProductStatsItem {
+  label: string;
+  quantity: number;
+  revenue: number;
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  ordersToday: number;
+  totalProducts: number;
+  totalCustomers: number;
+}
+
+export interface AdminProduct {
+  id: number;
+  name: string;
+  description: string | null;
+  imageUrls: string[] | null;
+  price: number;
+  category: string | null;
+  color: string[];
+  size: string[];
+  gender: string[];
+}
+
+// FETCH ORDER STATS
+export async function fetchOrderStats(
+  range: StatsRange
+): Promise<OrderStatsItem[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE}/api/admin/orders/stats?range=${range}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to fetch order stats");
+  }
+
+  return response.json();
+}
+
+// FETCH PRODUCT STATS
+export async function fetchProductStats(
+  productId: number,
+  range: StatsRange
+): Promise<ProductStatsItem[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE}/api/admin/products/${productId}/stats?range=${range}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to fetch product stats");
+  }
+
+  return response.json();
+}
+
+// FETCH ADMIN PRODUCTS
+export async function fetchAdminProducts(): Promise<AdminProduct[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/admin/products`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to fetch products");
+  }
+
+  return response.json();
+}
+
+// CREATE PRODUCT
+export async function createProduct(formData: FormData): Promise<AdminProduct> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/admin/products`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to create product");
+  }
+
+  return response.json();
+}
+
+// UPDATE PRODUCT
+export async function updateProduct(
+  id: number,
+  formData: FormData
+): Promise<AdminProduct> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/admin/products/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to update product");
+  }
+
+  return response.json();
+}
+
+// DELETE PRODUCT
+export async function deleteProduct(id: number): Promise<void> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/admin/products/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to delete product");
+  }
+}
+
+// FETCH DASHBOARD STATS
+export async function fetchDashboardStats(): Promise<DashboardStats> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/admin/dashboard`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to fetch dashboard stats");
+  }
+
+  return response.json();
 }

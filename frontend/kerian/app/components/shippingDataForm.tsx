@@ -21,6 +21,8 @@ import { phoneRegExp } from "@/constants/constants";
 const PREFIX = "ShippingDataForm";
 const classes = {
   root: `${PREFIX}-root`,
+  title: `${PREFIX}-title`,
+  errorText: `${PREFIX}-errorText`,
   textField: `${PREFIX}-textField`,
   defferentAddressCheckbox: `${PREFIX}-defferentAddressCheckbox`,
   errorMsg: `${PREFIX}-errorMsg`,
@@ -36,6 +38,15 @@ const Root = styled(Box)(() => ({
     borderRadius: "4px",
     marginTop: "100px",
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    maxWidth: "600px",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
+  [`& .${classes.title}`]: {
+    marginBottom: "16px",
+  },
+  [`& .${classes.errorText}`]: {
+    marginBottom: "16px",
   },
   [`& .${classes.textField}`]: {
     marginBottom: "16px",
@@ -98,13 +109,13 @@ export default function ShippingDataForm() {
   };
 
   return (
-    <Root className={classes.root} sx={{ maxWidth: 600, mx: "auto", p: 2 }}>
-      <Typography variant="h5" mb={2}>
+    <Root className={classes.root}>
+      <Typography className={classes.title} variant="h5">
         {t("orderingForm.title")}
       </Typography>
 
       {error && (
-        <Typography color="error" sx={{ mb: 2 }}>
+        <Typography className={classes.errorText} color="error">
           {t("feedback.orderError")}
         </Typography>
       )}

@@ -28,6 +28,8 @@ const classes = {
   checkboxGroup: `${PREFIX}-checkboxGroup`,
   radioGroup: `${PREFIX}-radioGroup`,
   priceInputs: `${PREFIX}-priceInputs`,
+  priceTextField: `${PREFIX}-priceTextField`,
+  sizeGrid: `${PREFIX}-sizeGrid`,
   colorBox: `${PREFIX}-colorBox`,
   actionButtons: `${PREFIX}-actionButtons`,
 };
@@ -66,6 +68,14 @@ const Root = styled(Box)(() => ({
     marginBottom: "16px",
     position: "relative",
     zIndex: 10,
+  },
+  [`& .${classes.priceTextField}`]: {
+    flex: 1,
+  },
+  [`& .${classes.sizeGrid}`]: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(50px, 1fr))",
+    gap: "5px",
   },
   [`& .${classes.colorBox}`]: {
     display: "flex",
@@ -253,7 +263,7 @@ export default function ProductFilterNew({
             value={localMinInput}
             onChange={(e) => onMinInputChange(e.target.value)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 0 }}
-            sx={{ flex: 1 }}
+            className={classes.priceTextField}
           />
           <TextField
             type="text"
@@ -266,7 +276,7 @@ export default function ProductFilterNew({
               pattern: "[0-9]*",
               max: maxPrice,
             }}
-            sx={{ flex: 1 }}
+            className={classes.priceTextField}
           />
         </Box>
         <Slider
@@ -295,13 +305,7 @@ export default function ProductFilterNew({
             }
             label={t("filter.selectAll")}
           />
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(50px, 1fr))",
-              gap: "5px",
-            }}
-          >
+          <Box className={classes.sizeGrid}>
             {availableSizes.map((size) => (
               <FormControlLabel
                 key={size}

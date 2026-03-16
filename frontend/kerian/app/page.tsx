@@ -16,6 +16,7 @@ const classes = {
   root: `${PREFIX}-root`,
   container: `${PREFIX}-container`,
   kerian: `${PREFIX}-kerian`,
+  heroImage: `${PREFIX}-heroImage`,
 };
 
 const Root = styled("div")(() => ({
@@ -36,6 +37,9 @@ const Root = styled("div")(() => ({
     fontWeight: "bold",
     color: "white",
   },
+  [`& .${classes.heroImage}`]: {
+    filter: "invert(1)",
+  },
 }));
 
 export default function Home() {
@@ -47,9 +51,7 @@ export default function Home() {
           alt="Csontváz"
           width={400}
           height={400}
-          style={{
-            filter: "invert(1)",
-          }}
+          className={classes.heroImage}
         />
 
         <h1 className={`${classes.kerian} ${playfair.className}`}>KERIAN</h1>

@@ -10,6 +10,7 @@ const classes = {
   root: `${PREFIX}-root`,
   title: `${PREFIX}-title`,
   priceInputs: `${PREFIX}-priceInputs`,
+  priceField: `${PREFIX}-priceField`,
   slider: `${PREFIX}-slider`,
 };
 
@@ -28,6 +29,9 @@ const Root = styled(Box)(() => ({
     gap: "10px",
     marginTop: "8px",
     marginBottom: "16px",
+  },
+  [`& .${classes.priceField}`]: {
+    flex: 1,
   },
   [`& .${classes.slider}`]: {
     marginTop: "12px",
@@ -93,7 +97,7 @@ export default function FilterByPrice({
           value={localMin}
           onChange={(e) => onMinInputChange(e.target.value)}
           inputProps={{ min: availableMinPrice }}
-          sx={{ flex: 1 }}
+          className={classes.priceField}
         />
         <TextField
           type="number"
@@ -102,7 +106,7 @@ export default function FilterByPrice({
           value={localMax}
           onChange={(e) => onMaxInputChange(e.target.value)}
           inputProps={{ max: availableMaxPrice }}
-          sx={{ flex: 1 }}
+          className={classes.priceField}
         />
       </Box>
 

@@ -1,28 +1,37 @@
+"use client";
+
 import { Box, IconButton, TextField } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import { styled } from "@mui/system";
 
-type quantityProps = {
+interface QuantityProps {
   value: number;
   onChange: (newValue: number) => void;
   className?: string;
   min?: number;
   max?: number;
-};
+}
 
 const PREFIX = "Quantity";
 
 const classes = {
   root: `${PREFIX}-root`,
+  quantityInput: `${PREFIX}-quantityInput`,
 };
 
 const Root = styled(Box)(() => ({
   [`&.${classes.root}`]: {
     display: "flex",
     alignItems: "center",
-    gap: 1,
+    gap: "4px",
     marginLeft: "auto",
+  },
+  [`& .${classes.quantityInput}`]: {
+    "& .MuiInputBase-input": {
+      textAlign: "center",
+      width: "20px",
+    },
   },
 }));
 
@@ -31,7 +40,7 @@ export default function QuantityInput({
   onChange,
   min = 1,
   max = 30,
-}: quantityProps) {
+}: QuantityProps) {
   const decrease = () => {
     if (value > min) onChange(value - 1);
   };
@@ -57,13 +66,10 @@ export default function QuantityInput({
         value={value}
         onChange={manualChange}
         size="small"
+        className={classes.quantityInput}
         inputProps={{
           min,
           max,
-          style: {
-            textAlign: "center",
-            width: "20px",
-          },
         }}
       />
       <IconButton size="small" onClick={increase}>

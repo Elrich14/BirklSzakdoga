@@ -22,7 +22,7 @@ const Wishlist = sequelize.define(
       allowNull: false,
     },
     imageUrl: DataTypes.STRING,
-    description: DataTypes.STRING,
+    description: DataTypes.TEXT,
     color: DataTypes.STRING,
     size: DataTypes.STRING,
     gender: DataTypes.STRING,

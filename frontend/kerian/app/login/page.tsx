@@ -28,6 +28,8 @@ const PREFIX = "LoginPage";
 const classes = {
   root: `${PREFIX}-root`,
   box: `${PREFIX}-box`,
+  alert: `${PREFIX}-alert`,
+  submitButton: `${PREFIX}-submitButton`,
 };
 
 const Root = styled("div")(() => ({
@@ -60,15 +62,21 @@ const Root = styled("div")(() => ({
     },
   },
   [`& .${classes.box}`]: {
-    minWidth: 400,
-    maxWidth: 400,
+    minWidth: "400px",
+    maxWidth: "400px",
     display: "flex",
     flexDirection: "column",
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
-    borderRadius: 4,
+    borderRadius: "4px",
+  },
+  [`& .${classes.alert}`]: {
+    marginBottom: "16px",
+  },
+  [`& .${classes.submitButton}`]: {
+    marginTop: "16px",
   },
 }));
 
@@ -124,12 +132,12 @@ export default function Login() {
         </Typography>
 
         {success && (
-          <Alert severity="success" sx={{ mb: 2 }}>
+          <Alert severity="success" className={classes.alert}>
             {t("login.loginSuccessful", "Login successful!")}
           </Alert>
         )}
         {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity="error" className={classes.alert}>
             {error}
           </Alert>
         )}
@@ -165,7 +173,7 @@ export default function Login() {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ mt: 2 }}
+              className={classes.submitButton}
             >
               {t("login.submit")}
             </Button>
