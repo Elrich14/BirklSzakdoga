@@ -5,7 +5,7 @@ const Product = require("./models/products");
 const Wishlist = require("./models/wishlist");
 const authenticateToken = require("./authenticateToken");
 const requireAdmin = require("./requireAdmin");
-const upload = require("./upload");
+const { upload } = require("./upload");
 
 const router = express.Router();
 
@@ -199,7 +199,7 @@ router.post(
 
       const imageUrls =
         req.files && req.files.length > 0
-          ? req.files.map((f) => `/uploads/${f.filename}`)
+          ? req.files.map((f) => f.path)
           : null;
 
       const product = await Product.create({
@@ -269,7 +269,7 @@ router.put(
 
       const newImageUrls =
         req.files && req.files.length > 0
-          ? req.files.map((f) => `/uploads/${f.filename}`)
+          ? req.files.map((f) => f.path)
           : [];
       const mergedImageUrls = [...parsedExistingImageUrls, ...newImageUrls];
       updates.imageUrls =

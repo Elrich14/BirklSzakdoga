@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -18,8 +17,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 app.use("/auth", auth);
 app.use("/api/admin", adminRoutes);
 

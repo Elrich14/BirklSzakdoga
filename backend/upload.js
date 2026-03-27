@@ -1,5 +1,12 @@
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const slugify = (text) =>
   text
@@ -7,24 +14,17 @@ const slugify = (text) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-const formatDate = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}${month}${day}`;
-};
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads"));
-  },
-  filename: (req, file, cb) => {
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
     const productName = slugify(req.body.name || "product");
-    const date = formatDate();
-    const ext = path.extname(file.originalname);
     req._uploadIndex = (req._uploadIndex || 0) + 1;
-    cb(null, `${productName}-${req._uploadIndex}-${date}${ext}`);
+    return {
+      folder: `kerian/products/${productName}`,
+      public_id: `${productName}-${req._uploadIndex}-${Date.now()}`,
+      allowed_formats: ["jpg", "jpeg", "png", "webp", "gif"],
+      transformation: [{ quality: "auto", fetch_format: "auto" }],
+    };
   },
 });
 
@@ -43,4 +43,4 @@ const upload = multer({
   limits: { fileSize: 15 * 1024 * 1024 },
 });
 
-module.exports = upload;
+module.exports = { upload, cloudinary };

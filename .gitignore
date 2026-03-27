@@ -128,3 +128,13 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# macOS
+.DS_Store
+
+# User-uploaded files (keep the folder via .gitkeep)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Test images
+Próba képek/
