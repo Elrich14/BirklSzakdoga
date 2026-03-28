@@ -1,0 +1,11 @@
+{
+  "name": "kerian-monorepo",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run startWatch",
+    "dev:frontend": "cd frontend/kerian && npm run dev",
+    "seed:products": "cd backend && npm run seedProducts",
+    "seed:users": "cd backend && npm run seedUsers",
+    "install:all": "cd backend && npm install && cd ../frontend/kerian && npm install"
+  }
+}

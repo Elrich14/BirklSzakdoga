@@ -1,4 +1,7 @@
 const { Sequelize } = require("sequelize");
+const dns = require("dns");
+
+dns.setDefaultResultOrder("ipv4first");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -11,6 +14,17 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT || 5432,
     dialect: "postgres",
     logging: false,
+    dialectOptions: {
+      ssl: process.env.DB_HOST?.includes("supabase")
+        ? { require: true, rejectUnauthorized: false }
+        : false,
+    },
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
   }
 );
 
