@@ -8,6 +8,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  Badge,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -15,9 +16,10 @@ import Link from "next/link";
 import { boxShadows, colors } from "@/constants/colors";
 import { getUserRole } from "../../utils/auth";
 import { usePathname } from "next/navigation";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../providers/languageProvider";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useCartStore } from "../store/cartStore";
 
 const PREFIX = "Navbar";
 
@@ -33,7 +35,7 @@ const classes = {
 type Route = {
   path: string;
   name?: string;
-  icon?: React.ElementType;
+  icon?: React.ReactNode;
   if: "always" | "loggedIn" | "loggedOut" | "admin";
   align: "left" | "right";
 };
@@ -117,6 +119,7 @@ const Root = styled("div")(() => ({
 }));
 
 export default function Navbar() {
+  const cartItems = useCartStore((state) => state.items);
   const [role, setRole] = useState<"guest" | "user" | "admin">("guest");
 
   useEffect(() => {
@@ -173,7 +176,11 @@ export default function Navbar() {
     },
     {
       path: "/cart",
-      icon: ShoppingCartIcon,
+      icon: (
+        <Badge badgeContent={cartItems.length} color="primary">
+          <ShoppingCartIcon />
+        </Badge>
+      ),
       if: "loggedIn",
       align: "right",
     },
@@ -205,7 +212,7 @@ export default function Navbar() {
         <Link href={route.path} key={index}>
           {route.icon ? (
             <Box className={isActive ? classes.cartBoxActive : classes.cartBox}>
-              <route.icon />
+              {route.icon}
             </Box>
           ) : (
             <Button className={isActive ? "active" : ""}>{route.name}</Button>

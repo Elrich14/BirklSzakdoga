@@ -130,6 +130,19 @@
     "addedToWishlist": "Termék hozzáadva a kívánságlistához",
     "removedFromWishlist": "Termék eltávolítva a kívánságlistáról"
   },
+  "snackbar": {
+    "loginSuccess": "Sikeres bejelentkezés!",
+    "loginError": "Hibás e-mail vagy jelszó.",
+    "logoutSuccess": "Sikeres kijelentkezés.",
+    "registerSuccess": "Sikeres regisztráció! Kérjük, jelentkezz be.",
+    "registerError": "Sikertelen regisztráció. Próbáld újra.",
+    "addedToCart": "Termék hozzáadva a kosárhoz!",
+    "cartUpdated": "Kosár frissítve.",
+    "addedToWishlist": "Hozzáadva a kívánságlistához!",
+    "orderSuccess": "Rendelés sikeresen leadva!",
+    "orderError": "Rendelés leadása sikertelen. Próbáld újra.",
+    "networkError": "Hálózati hiba. Próbáld újra."
+  },
   "admin": {
     "title": "Admin Panel",
     "analytics": "Analitika",

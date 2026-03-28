@@ -1,7 +1,6 @@
 "use client";
 import { boxShadows, colors } from "@/constants/colors";
 import {
-  Alert,
   Box,
   Button,
   FormGroup,
@@ -12,6 +11,7 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { registerUser } from "@/api";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 const PREFIX = "RegisterPage";
 
@@ -77,8 +77,7 @@ export default function Register() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -87,15 +86,13 @@ export default function Register() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
 
     try {
       await registerUser(formData);
-      setSuccess(true);
+      showSnackbar(t("snackbar.registerSuccess"), "success");
       setFormData({ username: "", email: "", password: "" });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("register.registerError"));
+    } catch {
+      showSnackbar(t("snackbar.registerError"), "error");
     }
   };
 
@@ -105,17 +102,6 @@ export default function Register() {
         <Typography variant="h4" component="h1" gutterBottom>
           {t("register.title")}
         </Typography>
-
-        {success && (
-          <Alert severity="success" className={classes.alert}>
-            {t("register.registerSuccess")}
-          </Alert>
-        )}
-        {error && (
-          <Alert severity="error" className={classes.alert}>
-            {error}
-          </Alert>
-        )}
 
         <form onSubmit={onSubmit}>
           <FormGroup>

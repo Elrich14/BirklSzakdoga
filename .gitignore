@@ -138,3 +138,6 @@ backend/uploads/*
 
 # Test images
 Próba képek/
+
+# Documentation (generated)
+docs/

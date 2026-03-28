@@ -25,7 +25,11 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchProductById, addToWishlist, removeFromWishlistByProductId } from "@/api";
+import {
+  fetchProductById,
+  addToWishlist,
+  removeFromWishlistByProductId,
+} from "@/api";
 import { colors as themeColors } from "../../constants/colors";
 import { getUserRole } from "../utils/auth";
 import { useTranslation } from "react-i18next";
@@ -33,10 +37,10 @@ import { useCartStore } from "./store/cartStore";
 import QuantityInput from "./quantity";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { Product } from "../products/page";
 import { PRODUCT_COLORS, PRODUCT_GENDERS } from "@/constants/filterConstants";
 
 import { resolveImageUrl } from "../utils/image";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 interface ProductPopupProps {
   open: boolean;
@@ -243,6 +247,7 @@ export default function ProductPopup({
 }: ProductPopupProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [gender, setGender] = useState<
     (typeof PRODUCT_GENDERS)[keyof typeof PRODUCT_GENDERS]
@@ -318,6 +323,7 @@ export default function ProductPopup({
       availableSizes: sizes,
       availableColors: colors,
     });
+    showSnackbar(t("snackbar.addedToCart"), "success");
   };
 
   const submitModify = (e: React.MouseEvent) => {
@@ -340,6 +346,7 @@ export default function ProductPopup({
         availableColors: colors,
       }
     );
+    showSnackbar(t("snackbar.cartUpdated"), "success");
   };
 
   useEffect(() => {
@@ -384,7 +391,9 @@ export default function ProductPopup({
         <Box className={classes.container}>
           <Box className={classes.cardLeftSideBox}>
             <img
-              src={resolveImageUrl(imageUrls?.[activeImageIndex] || imageUrls?.[0] || "")}
+              src={resolveImageUrl(
+                imageUrls?.[activeImageIndex] || imageUrls?.[0] || ""
+              )}
               alt={name}
               width={450}
               height={500}
@@ -445,6 +454,7 @@ export default function ProductPopup({
                   });
                   setIsInWishlist(true);
                   queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+                  showSnackbar(t("snackbar.addedToWishlist"), "success");
                 }}
                 className={classes.addToWishlistButton}
                 aria-label={t("card.aria.addToWishlist")}
@@ -499,7 +509,6 @@ export default function ProductPopup({
                 </Select>
               </FormControl>
 
-
               <Typography variant="body2" fontWeight="bold">
                 {t("card.color")}:
               </Typography>
@@ -531,7 +540,6 @@ export default function ProductPopup({
                 {t("card.quantity")}:
               </Typography>
               <QuantityInput value={quantity} onChange={setQuantity} />
-
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">

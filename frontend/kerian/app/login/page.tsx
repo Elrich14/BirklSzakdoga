@@ -1,6 +1,5 @@
 "use client";
 import {
-  Alert,
   Box,
   Button,
   FormGroup,
@@ -14,6 +13,7 @@ import { boxShadows, colors } from "../../constants/colors";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/api";
 import { jwtDecode } from "jwt-decode";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 type TokenPayload = {
   id: string;
@@ -87,8 +87,7 @@ export default function Login() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>();
-  const [success, setSuccess] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -97,8 +96,6 @@ export default function Login() {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
 
     try {
       const { token } = await loginUser(formData);
@@ -115,12 +112,11 @@ export default function Login() {
       );
       window.dispatchEvent(new Event("userChanged"));
 
-      setSuccess(true);
+      showSnackbar(t("snackbar.loginSuccess"), "success");
       setFormData({ email: "", password: "" });
       router.push("/");
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setError("An error occurred while logging in.");
+    } catch {
+      showSnackbar(t("snackbar.loginError"), "error");
     }
   };
 
@@ -130,17 +126,6 @@ export default function Login() {
         <Typography variant="h4" component="h1" gutterBottom>
           {t("login.title")}
         </Typography>
-
-        {success && (
-          <Alert severity="success" className={classes.alert}>
-            {t("login.loginSuccessful", "Login successful!")}
-          </Alert>
-        )}
-        {error && (
-          <Alert severity="error" className={classes.alert}>
-            {error}
-          </Alert>
-        )}
 
         <form onSubmit={onSubmit}>
           <FormGroup>

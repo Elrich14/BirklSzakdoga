@@ -3,6 +3,7 @@
 import { ReactNode, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "./providers/languageProvider";
+import { SnackbarProvider } from "./providers/snackbarProvider";
 import "../i18n";
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -10,7 +11,9 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>{children}</LanguageProvider>
+      <LanguageProvider>
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

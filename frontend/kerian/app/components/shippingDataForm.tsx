@@ -17,6 +17,7 @@ import { boxShadows } from "@/constants/colors";
 import { useCartStore } from "./store/cartStore";
 import { useTranslation } from "react-i18next";
 import { phoneRegExp } from "@/constants/constants";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 const PREFIX = "ShippingDataForm";
 const classes = {
@@ -64,6 +65,7 @@ const Root = styled(Box)(() => ({
 
 export default function ShippingDataForm() {
   const { t } = useTranslation();
+  const { showSnackbar } = useSnackbar();
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(false);
   const cartItems = useCartStore((state) => state.items);
@@ -101,10 +103,12 @@ export default function ShippingDataForm() {
       setError(false);
       await sendOrder({ ...values, cartItems });
       setSent(true);
+      showSnackbar(t("snackbar.orderSuccess"), "success");
     } catch (error) {
       console.error("Error when sending email", error);
       setError(true);
       setSent(false);
+      showSnackbar(t("snackbar.orderError"), "error");
     }
   };
 

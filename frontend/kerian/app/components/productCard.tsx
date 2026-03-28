@@ -21,6 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { resolveImageUrl } from "../utils/image";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 interface ProductCardProps {
   id: number;
@@ -150,6 +151,7 @@ export default function ProductCard({
 }: ProductCardProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
   const [openDialog, setOpenDialog] = useState(false);
 
   const userRole = getUserRole();
@@ -208,6 +210,7 @@ export default function ProductCard({
                 });
                 setIsInWishlist(true);
                 queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+                showSnackbar(t("snackbar.addedToWishlist"), "success");
               }}
               className={classes.addToWishlistButton}
               aria-label={t("card.aria.addToWishlist")}

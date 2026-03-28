@@ -123,6 +123,19 @@
     "addedToWishlist": "Product added to wishlist",
     "removedFromWishlist": "Product removed from wishlist"
   },
+  "snackbar": {
+    "loginSuccess": "Successfully logged in!",
+    "loginError": "Invalid email or password.",
+    "logoutSuccess": "You have been logged out.",
+    "registerSuccess": "Registration successful! Please log in.",
+    "registerError": "Registration failed. Please try again.",
+    "addedToCart": "Item added to cart!",
+    "cartUpdated": "Cart updated.",
+    "addedToWishlist": "Added to wishlist!",
+    "orderSuccess": "Order placed successfully!",
+    "orderError": "Failed to place order. Please try again.",
+    "networkError": "Network error. Please try again."
+  },
   "admin": {
     "title": "Admin Panel",
     "analytics": "Analytics",

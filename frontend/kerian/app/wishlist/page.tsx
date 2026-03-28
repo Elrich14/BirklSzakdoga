@@ -22,6 +22,7 @@ import { useCartStore } from "../components/store/cartStore";
 import { useTranslation } from "react-i18next";
 
 import { resolveImageUrl } from "../utils/image";
+import { useSnackbar } from "../providers/snackbarProvider";
 
 const PREFIX = "Wishlist";
 
@@ -97,6 +98,7 @@ const Root = styled("div")(() => ({
 export default function Wishlist() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
   const addItem = useCartStore((state) => state.addItem);
   const userRole = getUserRole();
   const isAuthenticated = userRole !== "guest";
@@ -133,6 +135,7 @@ export default function Wishlist() {
       availableSizes: [],
       availableColors: [],
     });
+    showSnackbar(t("snackbar.addedToCart"), "success");
   };
 
   return (
