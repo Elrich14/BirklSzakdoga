@@ -1,6 +1,7 @@
 "use client";
 import ProductCard from "../components/productCard";
-import { Typography, styled, Box, CircularProgress } from "@mui/material";
+import { Typography, styled, Box } from "@mui/material";
+import ProductCardSkeleton from "../components/productCardSkeleton";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
 import { colors } from "@/constants/colors";
@@ -176,14 +177,25 @@ export default function ProductsPage() {
           {t("products.products")}
         </Typography>
 
-        {isLoading && <CircularProgress />}
         {error && <Typography>{t("feedback.errorLoadingProducts")}</Typography>}
 
         <Box className={classes.productGrid}>
-          {filteredProducts.map((product) => {
-            const isWished = wishlist.some((w) => w.productId === product.id);
-            return <ProductCard key={product.id} {...product} isWished={isWished} />;
-          })}
+          {isLoading
+            ? Array.from({ length: 8 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))
+            : filteredProducts.map((product) => {
+                const isWished = wishlist.some(
+                  (w) => w.productId === product.id
+                );
+                return (
+                  <ProductCard
+                    key={product.id}
+                    {...product}
+                    isWished={isWished}
+                  />
+                );
+              })}
         </Box>
       </Box>
     </Root>
