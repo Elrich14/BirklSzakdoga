@@ -42,7 +42,7 @@ const classes = {
   productDescription: `${PREFIX}-productDescription`,
   productName: `${PREFIX}-productName`,
   addToCardButton: `${PREFIX}-addToCardButton`,
-  price: `${PREFIX}-price`,
+  pricePill: `${PREFIX}-pricePill`,
   cardFooterBox: `${PREFIX}-cardFooterBox`,
   cardUpperSideBox: `${PREFIX}-cardUpperSideBox`,
   addToWishlistButton: `${PREFIX}-addToWishlistButton`,
@@ -78,7 +78,9 @@ const Root = styled(Card)(() => ({
     },
   },
   [`& .${classes.productImg}`]: {
-    height: "240px",
+    aspectRatio: "1 / 1",
+    width: "100%",
+    objectFit: "cover",
   },
   [`& .${classes.productName}`]: {
     fontFamily: "monospace",
@@ -90,12 +92,22 @@ const Root = styled(Card)(() => ({
     fontWeight: "normal",
     fontSize: "15px",
     marginBottom: "15px",
+    display: "-webkit-box",
+    WebkitLineClamp: 5,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
-  [`& .${classes.price}`]: {
+  [`& .${classes.pricePill}`]: {
     fontFamily: "monospace",
-    fontStyle: "italic",
     fontWeight: "bold",
-    fontSize: "25px",
+    fontSize: "14px",
+    backgroundColor: colors.kerian_main,
+    color: "#fff",
+    padding: "4px 12px",
+    borderRadius: "20px",
+    display: "inline-block",
+    width: "fit-content",
     marginTop: "10px",
   },
   [`& .${classes.addToCardButton}`]: {
@@ -224,8 +236,8 @@ export default function ProductCard({
             {description}
           </Typography>
           <Box className={classes.cardFooterBox}>
-            <Typography className={classes.price} fontWeight="bold">
-              {price} {t("card.currency")}
+            <Typography className={classes.pricePill}>
+              {price.toLocaleString()} {t("card.currency")}
             </Typography>
             {userRole === "user" && (
               <Typography className={classes.loginToBuyText} variant="body2">

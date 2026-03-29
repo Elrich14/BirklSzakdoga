@@ -6,6 +6,7 @@ import Skeleton from "@mui/material/Skeleton";
 const PREFIX = "ProductCardSkeleton";
 const classes = {
   root: `${PREFIX}-root`,
+  imageArea: `${PREFIX}-imageArea`,
   content: `${PREFIX}-content`,
   footer: `${PREFIX}-footer`,
 };
@@ -17,6 +18,10 @@ const Root = styled(Card)(() => ({
     width: "100%",
     borderRadius: "6px",
     overflow: "hidden",
+  },
+  [`& .${classes.imageArea}`]: {
+    aspectRatio: "1 / 1",
+    width: "100%",
   },
   [`& .${classes.content}`]: {
     padding: "20px",
@@ -35,13 +40,16 @@ const Root = styled(Card)(() => ({
 export default function ProductCardSkeleton() {
   return (
     <Root className={classes.root}>
-      <Skeleton variant="rectangular" height={240} animation="wave" />
+      <Skeleton
+        variant="rectangular"
+        className={classes.imageArea}
+        animation="wave"
+      />
       <CardContent className={classes.content}>
         <Skeleton variant="text" width="60%" height={32} animation="wave" />
         <Skeleton variant="text" width="100%" height={18} animation="wave" />
         <Skeleton variant="text" width="80%" height={18} animation="wave" />
         <div className={classes.footer}>
-          <Skeleton variant="text" width="40%" height={32} animation="wave" />
           <Skeleton
             variant="rounded"
             width={100}
