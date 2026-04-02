@@ -1,6 +1,6 @@
 "use client";
 
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
   Box,
@@ -26,7 +26,6 @@ const classes = {
   errorText: `${PREFIX}-errorText`,
   textField: `${PREFIX}-textField`,
   defferentAddressCheckbox: `${PREFIX}-defferentAddressCheckbox`,
-  errorMsg: `${PREFIX}-errorMsg`,
   sendFromButton: `${PREFIX}-sendFromButton`,
 };
 
@@ -52,19 +51,13 @@ const Root = styled(Box)(() => ({
   [`& .${classes.textField}`]: {
     marginBottom: "16px",
   },
-  [`& .${classes.errorMsg}`]: {
-    color: "red",
-    fontSize: "0.875rem",
-    marginTop: "-12px",
-    marginBottom: "8px",
-  },
   [`& .${classes.sendFromButton}`]: {
     marginTop: "16px",
   },
 }));
 
 export default function ShippingDataForm() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { showSnackbar } = useSnackbar();
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(false);
@@ -101,7 +94,7 @@ export default function ShippingDataForm() {
   const onSubmit = async (values: typeof initialValues) => {
     try {
       setError(false);
-      await sendOrder({ ...values, cartItems });
+      await sendOrder({ ...values, cartItems, language: i18n.language });
       setSent(true);
       showSnackbar(t("snackbar.orderSuccess"), "success");
     } catch (error) {
@@ -131,7 +124,7 @@ export default function ShippingDataForm() {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ handleChange, values }) => (
+          {({ handleChange, handleBlur, values, touched, errors }) => (
             <Form>
               <TextField
                 fullWidth
@@ -140,12 +133,10 @@ export default function ShippingDataForm() {
                 label={t("orderingForm.fullName")}
                 value={values.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.name && Boolean(errors.name)}
+                helperText={touched.name && errors.name}
                 className={classes.textField}
-              />
-              <ErrorMessage
-                name="name"
-                component="div"
-                className={classes.errorMsg}
               />
 
               <TextField
@@ -155,12 +146,10 @@ export default function ShippingDataForm() {
                 label={t("common.email")}
                 value={values.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
                 className={classes.textField}
-              />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className={classes.errorMsg}
               />
 
               <TextField
@@ -170,12 +159,10 @@ export default function ShippingDataForm() {
                 label={t("orderingForm.phone")}
                 value={values.phone}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.phone && Boolean(errors.phone)}
+                helperText={touched.phone && errors.phone}
                 className={classes.textField}
-              />
-              <ErrorMessage
-                name="phone"
-                component="div"
-                className={classes.errorMsg}
               />
 
               <TextField
@@ -186,12 +173,12 @@ export default function ShippingDataForm() {
                 placeholder={`${t("orderingForm.country")}, ${t("orderingForm.zipCode")}, ${t("orderingForm.city")}, ${t("orderingForm.streetAddress")}`}
                 value={values.shippingAddress}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                error={
+                  touched.shippingAddress && Boolean(errors.shippingAddress)
+                }
+                helperText={touched.shippingAddress && errors.shippingAddress}
                 className={classes.textField}
-              />
-              <ErrorMessage
-                name="shippingAddress"
-                component="div"
-                className={classes.errorMsg}
               />
 
               <FormControlLabel
@@ -207,22 +194,20 @@ export default function ShippingDataForm() {
               />
 
               {values.billingDifferent && (
-                <>
-                  <TextField
-                    fullWidth
-                    margin="normal"
-                    name="billingAddress"
-                    label={t("orderingForm.billingAddress")}
-                    value={values.billingAddress}
-                    onChange={handleChange}
-                    className={classes.textField}
-                  />
-                  <ErrorMessage
-                    name="billingAddress"
-                    component="div"
-                    className={classes.errorMsg}
-                  />
-                </>
+                <TextField
+                  fullWidth
+                  margin="normal"
+                  name="billingAddress"
+                  label={t("orderingForm.billingAddress")}
+                  value={values.billingAddress}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={
+                    touched.billingAddress && Boolean(errors.billingAddress)
+                  }
+                  helperText={touched.billingAddress && errors.billingAddress}
+                  className={classes.textField}
+                />
               )}
 
               <TextField

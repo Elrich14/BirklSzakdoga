@@ -9,7 +9,9 @@
     "validation": {
       "required": "This field is required",
       "invalidEmail": "Please enter a valid email address",
-      "invalidPhone": "Please enter a valid phone number"
+      "invalidPhone": "Please enter a valid phone number",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match"
     }
   },
   "navbar": {

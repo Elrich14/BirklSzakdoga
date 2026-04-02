@@ -22,6 +22,7 @@ export interface OrderRequest {
   shippingAddress: string;
   billingAddress?: string;
   note?: string;
+  language?: string;
   cartItems: {
     productId: number;
     productName: string;

@@ -9,7 +9,9 @@
     "validation": {
       "required": "Ez a mező kötelező",
       "invalidEmail": "Kérjük, adjon meg egy érvényes email címet",
-      "invalidPhone": "Kérjük, adjon meg egy érvényes telefonszámot"
+      "invalidPhone": "Kérjük, adjon meg egy érvényes telefonszámot",
+      "passwordMin": "A jelszónak legalább 6 karakter hosszúnak kell lennie",
+      "passwordMismatch": "A jelszavak nem egyeznek"
     }
   },
   "navbar": {

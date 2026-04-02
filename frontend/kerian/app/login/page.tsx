@@ -1,14 +1,18 @@
 "use client";
+
 import {
   Box,
   Button,
-  FormGroup,
+  IconButton,
   styled,
   TextField,
   Typography,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { boxShadows, colors } from "../../constants/colors";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/api";
@@ -28,8 +32,9 @@ const PREFIX = "LoginPage";
 const classes = {
   root: `${PREFIX}-root`,
   box: `${PREFIX}-box`,
-  alert: `${PREFIX}-alert`,
   submitButton: `${PREFIX}-submitButton`,
+  passwordRow: `${PREFIX}-passwordRow`,
+  toggleButton: `${PREFIX}-toggleButton`,
 };
 
 const Root = styled("div")(() => ({
@@ -46,10 +51,10 @@ const Root = styled("div")(() => ({
       justifyContent: "center",
       fontFamily: "serif",
     },
-    "& .MuiButtonBase-root": {
+    "& .MuiButtonBase-root.MuiButton-root": {
       backgroundColor: colors.kerian_main,
     },
-    "& .MuiButtonBase-root:hover": {
+    "& .MuiButtonBase-root.MuiButton-root:hover": {
       backgroundColor: colors.kerian_main_button_hover,
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
     },
@@ -72,33 +77,44 @@ const Root = styled("div")(() => ({
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
     borderRadius: "4px",
   },
-  [`& .${classes.alert}`]: {
-    marginBottom: "16px",
-  },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",
+  },
+  [`& .${classes.passwordRow}`]: {
+    position: "relative",
+  },
+  [`& .${classes.toggleButton}`]: {
+    position: "absolute",
+    right: "8px",
+    top: "55%",
+    transform: "translateY(-50%)",
   },
 }));
 
 export default function Login() {
   const router = useRouter();
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
+  const { showSnackbar } = useSnackbar();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const initialValues = {
     email: "",
     password: "",
-  });
-  const { showSnackbar } = useSnackbar();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email(t("common.validation.invalidEmail"))
+      .required(t("common.validation.required")),
+    password: Yup.string().required(t("common.validation.required")),
+  });
 
+  const onSubmit = async (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
-      const { token } = await loginUser(formData);
+      const { token } = await loginUser(values);
       const decoded = jwtDecode<TokenPayload>(token);
 
       localStorage.setItem("token", token);
@@ -113,7 +129,7 @@ export default function Login() {
       window.dispatchEvent(new Event("userChanged"));
 
       showSnackbar(t("snackbar.loginSuccess"), "success");
-      setFormData({ email: "", password: "" });
+      resetForm();
       router.push("/");
     } catch {
       showSnackbar(t("snackbar.loginError"), "error");
@@ -127,43 +143,69 @@ export default function Login() {
           {t("login.title")}
         </Typography>
 
-        <form onSubmit={onSubmit}>
-          <FormGroup>
-            <TextField
-              label={t("common.email")}
-              name="email"
-              value={formData.email}
-              onChange={onChange}
-              variant="outlined"
-              margin="normal"
-              type="email"
-              fullWidth
-              required
-            />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleChange, handleBlur, values, touched, errors }) => (
+            <Form>
+              <TextField
+                label={t("common.email")}
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
+                variant="outlined"
+                margin="normal"
+                type="email"
+                autoComplete="email"
+                fullWidth
+              />
 
-            <TextField
-              label={t("common.password")}
-              name="password"
-              value={formData.password}
-              onChange={onChange}
-              variant="outlined"
-              margin="normal"
-              type="password"
-              fullWidth
-              required
-            />
+              <Box className={classes.passwordRow}>
+                <TextField
+                  label={t("common.password")}
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.password && Boolean(errors.password)}
+                  helperText={touched.password && errors.password}
+                  variant="outlined"
+                  margin="normal"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  fullWidth
+                />
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  size="small"
+                  disableRipple
+                  className={classes.toggleButton}
+                >
+                  {showPassword ? (
+                    <VisibilityOff fontSize="small" />
+                  ) : (
+                    <Visibility fontSize="small" />
+                  )}
+                </IconButton>
+              </Box>
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              className={classes.submitButton}
-            >
-              {t("login.submit")}
-            </Button>
-          </FormGroup>
-        </form>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                className={classes.submitButton}
+              >
+                {t("login.submit")}
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </Box>
     </Root>
   );

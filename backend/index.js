@@ -126,12 +126,14 @@ app.post("/api/orderEmail", async (req, res) => {
     );
 
     let userId = null;
+    let username = null;
     const authHeader = req.headers["authorization"];
     const token = authHeader?.split(" ")[1];
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         userId = decoded.id;
+        username = decoded.username || null;
       } catch {
         // Guest order — no userId
       }
@@ -163,7 +165,7 @@ app.post("/api/orderEmail", async (req, res) => {
       )
     );
 
-    await orderEmail(req.body);
+    await orderEmail({ ...req.body, username });
     res.json({ message: "Order placed successfully" });
   } catch (error) {
     console.error("Error placing order:", error);

@@ -1,15 +1,20 @@
 "use client";
+
 import { boxShadows, colors } from "@/constants/colors";
 import {
   Box,
   Button,
-  FormGroup,
+  IconButton,
+  LinearProgress,
   styled,
   TextField,
   Typography,
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 import { registerUser } from "@/api";
 import { useSnackbar } from "../providers/snackbarProvider";
 
@@ -18,8 +23,10 @@ const PREFIX = "RegisterPage";
 const classes = {
   root: `${PREFIX}-root`,
   box: `${PREFIX}-box`,
-  alert: `${PREFIX}-alert`,
   submitButton: `${PREFIX}-submitButton`,
+  strengthBar: `${PREFIX}-strengthBar`,
+  passwordRow: `${PREFIX}-passwordRow`,
+  toggleButton: `${PREFIX}-toggleButton`,
 };
 
 const Root = styled("div")(() => ({
@@ -36,10 +43,10 @@ const Root = styled("div")(() => ({
       justifyContent: "center",
       fontFamily: "serif",
     },
-    "& .MuiButtonBase-root": {
+    "& .MuiButtonBase-root.MuiButton-root": {
       backgroundColor: colors.kerian_main,
     },
-    "& .MuiButtonBase-root:hover": {
+    "& .MuiButtonBase-root.MuiButton-root:hover": {
       backgroundColor: colors.kerian_main_button_hover,
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
     },
@@ -62,35 +69,75 @@ const Root = styled("div")(() => ({
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
     borderRadius: "4px",
   },
-  [`& .${classes.alert}`]: {
-    marginBottom: "16px",
-  },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",
   },
+  [`& .${classes.strengthBar}`]: {
+    height: "4px",
+    borderRadius: "2px",
+    marginTop: "4px",
+  },
+  [`& .${classes.passwordRow}`]: {
+    position: "relative",
+  },
+  [`& .${classes.toggleButton}`]: {
+    position: "absolute",
+    right: "8px",
+    top: "55%",
+    transform: "translateY(-50%)",
+  },
 }));
+
+const getPasswordStrength = (password: string): number => {
+  if (!password) return 0;
+  let score = 0;
+  if (password.length >= 6) score += 25;
+  if (password.length >= 10) score += 25;
+  if (/[A-Z]/.test(password)) score += 15;
+  if (/[0-9]/.test(password)) score += 15;
+  if (/[^A-Za-z0-9]/.test(password)) score += 20;
+  return Math.min(score, 100);
+};
+
+const getStrengthColor = (strength: number): string => {
+  if (strength < 30) return "#f44336";
+  if (strength < 60) return "#ff9800";
+  return colors.kerian_main;
+};
 
 export default function Register() {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
-    username: "",
+  const { showSnackbar } = useSnackbar();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const initialValues = {
+    displayName: "",
     email: "",
     password: "",
-  });
-  const { showSnackbar } = useSnackbar();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validationSchema = Yup.object({
+    displayName: Yup.string().required(t("common.validation.required")),
+    email: Yup.string()
+      .email(t("common.validation.invalidEmail"))
+      .required(t("common.validation.required")),
+    password: Yup.string()
+      .min(6, t("common.validation.passwordMin"))
+      .required(t("common.validation.required")),
+  });
 
+  const onSubmit = async (
+    values: typeof initialValues,
+    { resetForm }: { resetForm: () => void }
+  ) => {
     try {
-      await registerUser(formData);
+      await registerUser({
+        username: values.displayName,
+        email: values.email,
+        password: values.password,
+      });
       showSnackbar(t("snackbar.registerSuccess"), "success");
-      setFormData({ username: "", email: "", password: "" });
+      resetForm();
     } catch {
       showSnackbar(t("snackbar.registerError"), "error");
     }
@@ -103,54 +150,97 @@ export default function Register() {
           {t("register.title")}
         </Typography>
 
-        <form onSubmit={onSubmit}>
-          <FormGroup>
-            <TextField
-              label={t("register.username")}
-              name="username"
-              value={formData.username}
-              onChange={onChange}
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              required
-            />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {({ handleChange, handleBlur, values, touched, errors }) => {
+            const passwordStrength = getPasswordStrength(values.password);
 
-            <TextField
-              label={t("common.email")}
-              name="email"
-              value={formData.email}
-              onChange={onChange}
-              variant="outlined"
-              margin="normal"
-              type="email"
-              fullWidth
-              required
-            />
+            return (
+              <Form>
+                <TextField
+                  label={t("register.username")}
+                  name="displayName"
+                  value={values.displayName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.displayName && Boolean(errors.displayName)}
+                  helperText={touched.displayName && errors.displayName}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
 
-            <TextField
-              label={t("common.password")}
-              name="password"
-              value={formData.password}
-              onChange={onChange}
-              variant="outlined"
-              margin="normal"
-              type="password"
-              fullWidth
-              required
-            />
+                <TextField
+                  label={t("common.email")}
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.email && Boolean(errors.email)}
+                  helperText={touched.email && errors.email}
+                  variant="outlined"
+                  margin="normal"
+                  type="email"
+                  fullWidth
+                />
 
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              className={classes.submitButton}
-            >
-              {t("register.submit")}
-            </Button>
-          </FormGroup>
-        </form>
+                <Box className={classes.passwordRow}>
+                  <TextField
+                    label={t("common.password")}
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                    variant="outlined"
+                    margin="normal"
+                    type={showPassword ? "text" : "password"}
+                    fullWidth
+                  />
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    size="small"
+                    disableRipple
+                    className={classes.toggleButton}
+                  >
+                    {showPassword ? (
+                      <VisibilityOff fontSize="small" />
+                    ) : (
+                      <Visibility fontSize="small" />
+                    )}
+                  </IconButton>
+                </Box>
+                {values.password.length > 0 && (
+                  <LinearProgress
+                    variant="determinate"
+                    value={passwordStrength}
+                    className={classes.strengthBar}
+                    sx={{
+                      "& .MuiLinearProgress-bar": {
+                        backgroundColor: getStrengthColor(passwordStrength),
+                      },
+                      backgroundColor: "rgba(255,255,255,0.1)",
+                    }}
+                  />
+                )}
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  className={classes.submitButton}
+                >
+                  {t("register.submit")}
+                </Button>
+              </Form>
+            );
+          }}
+        </Formik>
       </Box>
     </Root>
   );
