@@ -6,7 +6,10 @@
       "Bash(gh issue:*)",
       "Bash(npm install:*)",
       "Bash(docker compose:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(npx tsc:*)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npx eslint:*)"
     ]
   },
   "outputStyle": "Explanatory"

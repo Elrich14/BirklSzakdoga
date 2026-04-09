@@ -72,6 +72,20 @@
 - Props types defined as `interface Props { ... }`
 - Use type guards over type assertions
 
+### Variable Naming — No Short Abbreviations
+- **NEVER** use 1-2-3 letter variable names: ~~`v`~~, ~~`s`~~, ~~`c`~~, ~~`col`~~, ~~`val`~~, ~~`img`~~, ~~`e`~~
+- **ALWAYS** use descriptive names: `variant`, `sizeOption`, `colorOption`, `parsedValue`, `image`, `event`
+- In `.reduce()` callbacks: ~~`sTotal`~~, ~~`cTotal`~~ → `sizeTotal`, `colorTotal`
+- In `.filter()` callbacks: ~~`(_, i)`~~ → `(_, currentIndex)`
+- Standard hooks (`t` from `useTranslation`) are fine — this rule applies to user-defined variables
+
+### Error Handling — Fix, Never Hide
+- **NEVER** use `eslint-disable` comments — fix the root cause instead
+- **NEVER** suppress or hide warnings/errors — every problem must be properly solved
+- **NEVER** use `@ts-ignore` or `@ts-expect-error` as a workaround
+- If ESLint warns about `<img>`, use `next/image` properly — don't disable the rule
+- Empty `catch {}` blocks are acceptable only when the catch is intentional AND has a comment explaining why (e.g., parsing optional JSON)
+
 ---
 
 ## Component File Structure (Frontend)

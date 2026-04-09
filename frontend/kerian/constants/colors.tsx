@@ -10,8 +10,11 @@ export const colors = {
   admin_text_secondary: "#999",
   admin_text_light: "#ccc",
   admin_accent_purple: "#6366f1",
-  admin_danger: "#f44336",
+  danger: "#f44336",
   admin_checkbox_inactive: "#666",
+  admin_overlay: "rgba(0, 0, 0, 0.7)",
+  admin_overlay_hover: "rgba(0, 0, 0, 0.9)",
+  white: "#ffffff",
 };
 
 export const boxShadows = {

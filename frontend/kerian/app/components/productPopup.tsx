@@ -23,10 +23,11 @@ import {
 import { SelectChangeEvent } from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchProductById,
+  fetchProductStock,
   addToWishlist,
   removeFromWishlistByProductId,
 } from "@/api";
@@ -87,6 +88,9 @@ const classes = {
   thumbnailActive: `${PREFIX}-thumbnailActive`,
   mainImage: `${PREFIX}-mainImage`,
   guestText: `${PREFIX}-guestText`,
+  stockInfo: `${PREFIX}-stockInfo`,
+  outOfStockText: `${PREFIX}-outOfStockText`,
+  sizeOutOfStock: `${PREFIX}-sizeOutOfStock`,
 };
 
 const Root = styled(Dialog)(() => ({
@@ -224,6 +228,19 @@ const Root = styled(Dialog)(() => ({
     opacity: 0.6,
     marginTop: "20px",
   },
+  [`& .${classes.stockInfo}`]: {
+    fontSize: "13px",
+    color: themeColors.kerian_main,
+    fontWeight: "bold",
+  },
+  [`& .${classes.outOfStockText}`]: {
+    fontSize: "13px",
+    color: themeColors.danger,
+    fontWeight: "bold",
+  },
+  [`& .${classes.sizeOutOfStock}`]: {
+    opacity: 0.4,
+  },
 }));
 
 export default function ProductPopup({
@@ -263,6 +280,12 @@ export default function ProductPopup({
     enabled: open,
   });
 
+  const { data: stockData = [], isFetched: isStockFetched } = useQuery({
+    queryKey: ["productStock", id],
+    queryFn: () => fetchProductStock(id),
+    enabled: open,
+  });
+
   useEffect(() => {
     if (open) setActiveImageIndex(0);
   }, [id, open]);
@@ -290,6 +313,26 @@ export default function ProductPopup({
       );
     }
   }, [dbProduct, gender]);
+
+  // Build a lookup map for stock: "gender_size_color" → stock count
+  const stockMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const variant of stockData) {
+      map[`${variant.gender}_${variant.size}_${variant.color}`] = variant.stock;
+    }
+    return map;
+  }, [stockData]);
+
+  const currentStock = stockMap[`${gender}_${size}_${color}`] ?? 0;
+  const isOutOfStock = isStockFetched && currentStock === 0;
+
+  // Helper: check if a specific size has any stock for current gender
+  const getSizeStock = (sizeOption: string) => {
+    if (!isStockFetched) return 1;
+    return colors.reduce((total, colorOption) => {
+      return total + (stockMap[`${gender}_${sizeOption}_${colorOption}`] ?? 0);
+    }, 0);
+  };
 
   const userRole = getUserRole();
   const addItem = useCartStore((state) => state.addItem);
@@ -372,6 +415,17 @@ export default function ProductPopup({
       );
     }
   }, [dbProduct, sizes, colors, size, color, originalSize, originalColor]);
+
+  // Reset quantity when variant changes to respect stock limits
+  useEffect(() => {
+    if (!isStockFetched) return;
+    const variantStock = stockMap[`${gender}_${size}_${color}`] ?? 0;
+    if (quantity > variantStock && variantStock > 0) {
+      setQuantity(variantStock);
+    } else if (variantStock === 0) {
+      setQuantity(1);
+    }
+  }, [gender, size, color, stockMap, isStockFetched]);
 
   return (
     <Root
@@ -501,11 +555,20 @@ export default function ProductPopup({
                   onChange={changeSize}
                   input={<OutlinedInput label={t("card.size")} />}
                 >
-                  {sizes?.map((s: string) => (
-                    <MenuItem key={s} value={s}>
-                      {s}
-                    </MenuItem>
-                  ))}
+                  {sizes?.map((sizeOption: string) => {
+                    const sizeStock = getSizeStock(sizeOption);
+                    const isSizeOut = isStockFetched && sizeStock === 0;
+                    return (
+                      <MenuItem
+                        key={sizeOption}
+                        value={sizeOption}
+                        className={isSizeOut ? classes.sizeOutOfStock : ""}
+                      >
+                        {sizeOption}
+                        {isSizeOut ? ` (${t("card.outOfStock")})` : ""}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </FormControl>
 
@@ -521,16 +584,16 @@ export default function ProductPopup({
                 }}
                 className={classes.colorButtonGroup}
               >
-                {colors?.map((col: string) => (
+                {colors?.map((colorOption: string) => (
                   <ToggleButton
-                    key={col}
-                    value={col}
+                    key={colorOption}
+                    value={colorOption}
                     disableRipple
                     className={classes.colorButton}
                   >
                     <Box
-                      className={`${classes.colorButtonCircle} ${color === col ? classes.colorButtonCircleSelected : ""}`}
-                      style={{ "--circle-color": col } as React.CSSProperties}
+                      className={`${classes.colorButtonCircle} ${color === colorOption ? classes.colorButtonCircleSelected : ""}`}
+                      style={{ "--circle-color": colorOption } as React.CSSProperties}
                     />
                   </ToggleButton>
                 ))}
@@ -539,7 +602,21 @@ export default function ProductPopup({
               <Typography variant="body2" fontWeight="bold">
                 {t("card.quantity")}:
               </Typography>
-              <QuantityInput value={quantity} onChange={setQuantity} />
+              <QuantityInput
+                value={quantity}
+                onChange={setQuantity}
+                max={isStockFetched ? Math.max(currentStock, 1) : 30}
+              />
+              {isStockFetched &&
+                (isOutOfStock ? (
+                  <Typography className={classes.outOfStockText}>
+                    {t("card.variantOutOfStock")}
+                  </Typography>
+                ) : (
+                  <Typography className={classes.stockInfo}>
+                    {t("card.stockLeft", { count: currentStock })}
+                  </Typography>
+                ))}
             </Box>
             <Box className={classes.popupFooterBox}>
               <Typography className={classes.price} fontWeight="bold">
@@ -551,8 +628,13 @@ export default function ProductPopup({
                   variant="contained"
                   size="small"
                   onClick={mode === "add" ? submitAddToCart : submitModify}
+                  disabled={isOutOfStock}
                 >
-                  {mode === "add" ? t("card.addToCart") : t("card.modify")}
+                  {isOutOfStock
+                    ? t("card.outOfStock")
+                    : mode === "add"
+                      ? t("card.addToCart")
+                      : t("card.modify")}
                 </Button>
               )}
               {userRole === "guest" && (

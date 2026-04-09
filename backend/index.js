@@ -4,7 +4,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const { sequelize } = require("./dataBase");
 const auth = require("./auth");
-const { Order, OrderItem } = require("./models");
+const { Order, OrderItem, ProductVariant } = require("./models");
 const Product = require("./models/products");
 const Wishlist = require("./models/wishlist");
 const authenticateToken = require("./authenticateToken");
@@ -44,6 +44,19 @@ app.get("/api/products/:id", async (req, res) => {
   } catch (err) {
     console.error("Error fetching product:", err);
     res.status(500).json({ error: "Failed to fetch product" });
+  }
+});
+
+app.get("/api/products/:id/stock", async (req, res) => {
+  try {
+    const variants = await ProductVariant.findAll({
+      where: { productId: req.params.id },
+      attributes: ["gender", "size", "color", "stock"],
+    });
+    res.json(variants);
+  } catch (error) {
+    console.error("Error fetching stock:", error);
+    res.status(500).json({ error: "Failed to fetch stock" });
   }
 });
 
@@ -116,9 +129,51 @@ app.post("/api/wishlist", authenticateToken, async (req, res) => {
 });
 
 app.post("/api/orderEmail", async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
     const { name, email, shippingAddress, billingAddress, note, cartItems } =
       req.body;
+
+    // Validate stock for all items before proceeding
+    for (const item of cartItems) {
+      const variant = await ProductVariant.findOne({
+        where: {
+          productId: item.productId,
+          gender: item.gender,
+          size: item.size,
+          color: item.color,
+        },
+        lock: transaction.LOCK.UPDATE,
+        transaction,
+      });
+
+      if (!variant || variant.stock < item.productQuantity) {
+        await transaction.rollback();
+        return res.status(400).json({
+          error: "insufficientStock",
+          productName: item.productName,
+          size: item.size,
+          color: item.color,
+          gender: item.gender,
+          available: variant ? variant.stock : 0,
+          requested: item.productQuantity,
+        });
+      }
+    }
+
+    // Decrement stock
+    for (const item of cartItems) {
+      await ProductVariant.decrement("stock", {
+        by: item.productQuantity,
+        where: {
+          productId: item.productId,
+          gender: item.gender,
+          size: item.size,
+          color: item.color,
+        },
+        transaction,
+      });
+    }
 
     const totalPrice = cartItems.reduce(
       (sum, item) => sum + item.productPrice * item.productQuantity,
@@ -139,35 +194,44 @@ app.post("/api/orderEmail", async (req, res) => {
       }
     }
 
-    const order = await Order.create({
-      userId,
-      customerName: name,
-      customerEmail: email,
-      shippingAddress,
-      billingAddress: billingAddress || null,
-      note: note || null,
-      totalPrice,
-      status: "pending",
-    });
+    const order = await Order.create(
+      {
+        userId,
+        customerName: name,
+        customerEmail: email,
+        shippingAddress,
+        billingAddress: billingAddress || null,
+        note: note || null,
+        totalPrice,
+        status: "pending",
+      },
+      { transaction }
+    );
 
     await Promise.all(
       cartItems.map((item) =>
-        OrderItem.create({
-          orderId: order.id,
-          productId: item.productId,
-          productName: item.productName,
-          productPrice: item.productPrice,
-          quantity: item.productQuantity,
-          gender: item.gender || null,
-          size: item.size || null,
-          color: item.color || null,
-        })
+        OrderItem.create(
+          {
+            orderId: order.id,
+            productId: item.productId,
+            productName: item.productName,
+            productPrice: item.productPrice,
+            quantity: item.productQuantity,
+            gender: item.gender || null,
+            size: item.size || null,
+            color: item.color || null,
+          },
+          { transaction }
+        )
       )
     );
+
+    await transaction.commit();
 
     await orderEmail({ ...req.body, username });
     res.json({ message: "Order placed successfully" });
   } catch (error) {
+    await transaction.rollback();
     console.error("Error placing order:", error);
     res.status(500).json({ error: "Failed to place order" });
   }

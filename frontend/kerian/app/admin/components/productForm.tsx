@@ -18,13 +18,17 @@ import {
   Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Image from "next/image";
 import {
   AdminProduct,
+  StockVariant,
   createProduct,
   updateProduct,
 } from "@/api";
 import { colors } from "@/constants/colors";
 import { AVAILABLE_COLORS, AVAILABLE_SIZES, AVAILABLE_GENDERS } from "@/constants/filterConstants";
+import VariantStockEditor from "./variantStockEditor";
+import { API_BASE } from "../../utils/image";
 
 interface ProductFormProps {
   product: AdminProduct | null;
@@ -134,11 +138,11 @@ const Root = styled(Box)(() => ({
     position: "absolute",
     top: "-8px",
     right: "-8px",
-    backgroundColor: "rgba(0,0,0,0.7)",
-    color: "#fff",
+    backgroundColor: colors.admin_overlay,
+    color: colors.white,
     padding: "2px",
     "&:hover": {
-      backgroundColor: "rgba(0,0,0,0.9)",
+      backgroundColor: colors.admin_overlay_hover,
     },
   },
   [`& .${classes.hiddenInput}`]: {
@@ -163,8 +167,6 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-import { API_BASE } from "../../utils/image";
-
 export default function ProductForm({ product, onClose }: ProductFormProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -181,6 +183,14 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [stockMap, setStockMap] = useState<Record<string, number>>(() => {
+    if (!product?.variants) return {};
+    const map: Record<string, number> = {};
+    for (const variant of product.variants) {
+      map[`${variant.gender}_${variant.size}_${variant.color}`] = variant.stock;
+    }
+    return map;
+  });
 
   const isEditing = product !== null;
 
@@ -251,8 +261,10 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const onRemoveImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const onRemoveImage = (targetIndex: number) => {
+    setImages((prev) =>
+      prev.filter((_, currentIndex) => currentIndex !== targetIndex)
+    );
   };
 
   const onSubmit = (values: ProductFormValues) => {
@@ -265,17 +277,32 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     formData.append("size", JSON.stringify(values.sizes));
     formData.append("gender", JSON.stringify(values.genders));
 
+    const stockUpdates: StockVariant[] = [];
+    for (const gender of values.genders) {
+      for (const size of values.sizes) {
+        for (const color of values.colors) {
+          stockUpdates.push({
+            gender,
+            size,
+            color,
+            stock: stockMap[`${gender}_${size}_${color}`] ?? 0,
+          });
+        }
+      }
+    }
+    formData.append("stockUpdates", JSON.stringify(stockUpdates));
+
     const existingUrls = images
-      .filter((img) => img.isExisting)
-      .map((img) => {
-        const url = img.url;
+      .filter((image) => image.isExisting)
+      .map((image) => {
+        const url = image.url;
         return url.startsWith(API_BASE) ? url.replace(API_BASE, "") : url;
       });
     formData.append("existingImageUrls", JSON.stringify(existingUrls));
 
     images
-      .filter((img) => !img.isExisting && img.file)
-      .forEach((img) => formData.append("images", img.file!));
+      .filter((image) => !image.isExisting && image.file)
+      .forEach((image) => formData.append("images", image.file!));
 
     if (isEditing) {
       updateMutation.mutate(formData);
@@ -291,7 +318,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
     fieldName: string
   ) => {
     const updated = currentValues.includes(value)
-      ? currentValues.filter((v) => v !== value)
+      ? currentValues.filter((item) => item !== value)
       : [...currentValues, value];
     setFieldValue(fieldName, updated);
   };
@@ -449,22 +476,50 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
               </FormGroup>
             </Box>
 
+            {values.genders.length > 0 &&
+              values.sizes.length > 0 &&
+              values.colors.length > 0 && (
+                <VariantStockEditor
+                  genders={values.genders}
+                  sizes={values.sizes}
+                  selectedColors={values.colors}
+                  stockMap={stockMap}
+                  onStockChange={(key, value) =>
+                    setStockMap((prev) => ({ ...prev, [key]: value }))
+                  }
+                  onSetAll={(stockValue) => {
+                    const newMap: Record<string, number> = { ...stockMap };
+                    for (const gender of values.genders) {
+                      for (const size of values.sizes) {
+                        for (const color of values.colors) {
+                          newMap[`${gender}_${size}_${color}`] = stockValue;
+                        }
+                      }
+                    }
+                    setStockMap(newMap);
+                  }}
+                />
+              )}
+
             <Box className={classes.imageSection}>
               <Typography variant="subtitle2">
                 {t("admin.products.images")}
               </Typography>
               <Box className={classes.imageGrid}>
-                {images.map((img, index) => (
-                  <Box key={index} className={classes.imageWrapper}>
-                    <img
-                      src={img.url}
-                      alt={`Preview ${index + 1}`}
+                {images.map((image, imageIndex) => (
+                  <Box key={imageIndex} className={classes.imageWrapper}>
+                    <Image
+                      src={image.url}
+                      alt={`Preview ${imageIndex + 1}`}
+                      width={120}
+                      height={120}
                       className={classes.imagePreview}
+                      unoptimized
                     />
                     <IconButton
                       className={classes.removeImageButton}
                       size="small"
-                      onClick={() => onRemoveImage(index)}
+                      onClick={() => onRemoveImage(imageIndex)}
                       aria-label={t("admin.products.removeImage")}
                     >
                       <CloseIcon fontSize="small" />

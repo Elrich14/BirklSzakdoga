@@ -207,8 +207,30 @@ export async function sendOrder(data: OrderRequest): Promise<void> {
 
   if (!response.ok) {
     const err = await response.json();
+    if (err.error === "insufficientStock") {
+      throw new Error(
+        JSON.stringify({
+          type: "insufficientStock",
+          productName: err.productName,
+          size: err.size,
+          color: err.color,
+          gender: err.gender,
+          available: err.available,
+          requested: err.requested,
+        })
+      );
+    }
     throw new Error(err.message || "Order submission failed");
   }
+}
+
+// STOCK
+export async function fetchProductStock(
+  productId: number | string
+): Promise<StockVariant[]> {
+  const res = await fetch(`${API_BASE}/api/products/${productId}/stock`);
+  if (!res.ok) throw new Error("Failed to fetch stock");
+  return res.json();
 }
 
 // ADMIN API
@@ -234,6 +256,13 @@ export interface DashboardStats {
   totalCustomers: number;
 }
 
+export interface StockVariant {
+  gender: string;
+  size: string;
+  color: string;
+  stock: number;
+}
+
 export interface AdminProduct {
   id: number;
   name: string;
@@ -244,6 +273,7 @@ export interface AdminProduct {
   color: string[];
   size: string[];
   gender: string[];
+  variants?: StockVariant[];
 }
 
 // FETCH ORDER STATS
@@ -351,6 +381,32 @@ export async function deleteProduct(id: number): Promise<void> {
     const err = await response.json();
     throw new Error(err.message || "Failed to delete product");
   }
+}
+
+// UPDATE STOCK
+export async function updateProductStock(
+  productId: number,
+  variants: StockVariant[]
+): Promise<StockVariant[]> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE}/api/admin/products/${productId}/stock`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ variants }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Failed to update stock");
+  }
+
+  return response.json();
 }
 
 // FETCH DASHBOARD STATS

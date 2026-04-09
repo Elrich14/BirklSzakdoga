@@ -29,6 +29,23 @@ const classes = {
   sendFromButton: `${PREFIX}-sendFromButton`,
 };
 
+interface StockError {
+  productName: string;
+  size: string;
+  color: string;
+  available: number;
+}
+
+function parseStockError(message: string): StockError | null {
+  try {
+    const parsed = JSON.parse(message);
+    if (parsed.type === "insufficientStock") return parsed as StockError;
+  } catch {
+    // Message is not JSON — not a stock error
+  }
+  return null;
+}
+
 const Root = styled(Box)(() => ({
   [`&.${classes.root}`]: {
     display: "flex",
@@ -97,10 +114,26 @@ export default function ShippingDataForm() {
       await sendOrder({ ...values, cartItems, language: i18n.language });
       setSent(true);
       showSnackbar(t("snackbar.orderSuccess"), "success");
-    } catch (error) {
-      console.error("Error when sending email", error);
+    } catch (orderError) {
+      console.error("Error when sending email", orderError);
       setError(true);
       setSent(false);
+
+      const message =
+        orderError instanceof Error ? orderError.message : "";
+      const stockError = parseStockError(message);
+      if (stockError) {
+        showSnackbar(
+          t("snackbar.insufficientStock", {
+            productName: stockError.productName,
+            size: stockError.size,
+            color: stockError.color,
+            available: stockError.available,
+          }),
+          "error"
+        );
+        return;
+      }
       showSnackbar(t("snackbar.orderError"), "error");
     }
   };

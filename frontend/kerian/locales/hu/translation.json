@@ -71,6 +71,9 @@
     "removeFromWishlist": "Törlés a kívánságlistáról",
     "outOfStock": "Nincs készleten",
     "inStock": "Készleten",
+    "stockLeft": "{{count}} db elérhető",
+    "insufficientStock": "Csak {{available}} db elérhető ({{requested}} db kérve)",
+    "variantOutOfStock": "Ez a variáns nincs készleten",
     "details": "Részletek",
     "quantity": "Mennyiség",
     "currency": "Ft",
@@ -143,6 +146,7 @@
     "addedToWishlist": "Hozzáadva a kívánságlistához!",
     "orderSuccess": "Rendelés sikeresen leadva!",
     "orderError": "Rendelés leadása sikertelen. Próbáld újra.",
+    "insufficientStock": "Nincs elég készlet: {{productName}} ({{size}}, {{color}}). Csak {{available}} db elérhető.",
     "networkError": "Hálózati hiba. Próbáld újra."
   },
   "admin": {
@@ -193,7 +197,11 @@
       "delete": "Törlés",
       "deleteConfirm": "Biztosan törölni szeretné ezt a terméket?",
       "deleteSuccess": "Termék sikeresen törölve",
-      "deleteError": "Nem sikerült törölni a terméket"
+      "deleteError": "Nem sikerült törölni a terméket",
+      "stock": "Készlet",
+      "stockManagement": "Készletkezelés",
+      "totalStock": "Összes készlet",
+      "setAll": "Összes beállítása"
     },
     "dashboard": {
       "totalRevenue": "Teljes bevétel",

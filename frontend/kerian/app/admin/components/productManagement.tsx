@@ -18,9 +18,11 @@ import {
   DialogTitle,
   DialogActions,
 } from "@mui/material";
+import Image from "next/image";
 import { fetchAdminProducts, deleteProduct, AdminProduct } from "@/api";
 import { colors } from "@/constants/colors";
 import ProductForm from "./productForm";
+import { API_BASE } from "../../utils/image";
 
 const PREFIX = "ProductManagement";
 const classes = {
@@ -65,18 +67,16 @@ const Root = styled(Box)(() => ({
     color: colors.kerian_main,
   },
   [`& .${classes.deleteButton}`]: {
-    color: colors.admin_danger,
+    color: colors.danger,
   },
 }));
 
 const StyledDialog = styled(Dialog)(() => ({
   [`& .${classes.dialogPaper}`]: {
     backgroundColor: colors.admin_surface,
-    color: "#ffffff",
+    color: colors.white,
   },
 }));
-
-import { API_BASE } from "../../utils/image";
 
 export default function ProductManagement() {
   const { t } = useTranslation();
@@ -142,6 +142,7 @@ export default function ProductManagement() {
               <TableCell>{t("admin.products.name")}</TableCell>
               <TableCell>{t("admin.products.price")}</TableCell>
               <TableCell>{t("admin.products.category")}</TableCell>
+              <TableCell>{t("admin.products.stock")}</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
@@ -150,20 +151,31 @@ export default function ProductManagement() {
               <TableRow key={product.id}>
                 <TableCell>
                   {product.imageUrls?.[0] && (
-                    <img
+                    <Image
                       src={
                         product.imageUrls[0].startsWith("/uploads")
                           ? `${API_BASE}${product.imageUrls[0]}`
                           : product.imageUrls[0]
                       }
                       alt={product.name}
+                      width={50}
+                      height={50}
                       className={classes.productImage}
+                      unoptimized
                     />
                   )}
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.price} Ft</TableCell>
                 <TableCell>{product.category || "-"}</TableCell>
+                <TableCell>
+                  {product.variants
+                    ? product.variants.reduce(
+                        (totalStock, variant) => totalStock + variant.stock,
+                        0
+                      )
+                    : 0}
+                </TableCell>
                 <TableCell>
                   <Button
                     size="small"
