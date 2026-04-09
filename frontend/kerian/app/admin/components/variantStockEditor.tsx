@@ -48,6 +48,7 @@ const Root = styled(Box)(() => ({
     gap: "8px",
     maxHeight: "300px",
     overflowY: "auto",
+    paddingRight: "12px",
   },
   [`& .${classes.row}`]: {
     display: "flex",
