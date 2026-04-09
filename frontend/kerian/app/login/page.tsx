@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { boxShadows, colors } from "../../constants/colors";
@@ -97,6 +97,10 @@ export default function Login() {
   const { showSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    router.prefetch("/");
+  }, [router]);
+
   const initialValues = {
     email: "",
     password: "",
@@ -128,9 +132,9 @@ export default function Login() {
       );
       window.dispatchEvent(new Event("userChanged"));
 
+      router.replace("/");
       showSnackbar(t("snackbar.loginSuccess"), "success");
       resetForm();
-      router.push("/");
     } catch {
       showSnackbar(t("snackbar.loginError"), "error");
     }
