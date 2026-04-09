@@ -1,6 +1,5 @@
 import { PRODUCT_GENDERS } from '@/constants/filterConstants';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 export type CartItem = {
   productId: number;
@@ -41,31 +40,64 @@ type CartState = {
   clearCart: () => void;
 };
 
-export const useCartStore = create<CartState>()(persist((set) => ({
+const getStorageKey = (): string => {
+  if (typeof window === "undefined") return "cart-guest";
+  const userJson = localStorage.getItem("user");
+  if (userJson) {
+    try {
+      const user = JSON.parse(userJson);
+      return `cart-${user.email}`;
+    } catch {
+      return "cart-guest";
+    }
+  }
+  return "cart-guest";
+};
+
+const loadCart = (): CartItem[] => {
+  if (typeof window === "undefined") return [];
+  const data = localStorage.getItem(getStorageKey());
+  if (data) {
+    try {
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
+
+const saveCart = (items: CartItem[]) => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(getStorageKey(), JSON.stringify(items));
+};
+
+export const useCartStore = create<CartState>((set) => ({
   items: [],
 
   addItem: (item) =>
     set((state) => {
       const existing = state.items.find(
-        (i) =>
-          i.productId === item.productId &&
-          i.gender === item.gender &&
-          i.size === item.size &&
-          i.color === item.color
+        (cartItem) =>
+          cartItem.productId === item.productId &&
+          cartItem.gender === item.gender &&
+          cartItem.size === item.size &&
+          cartItem.color === item.color
       );
 
       if (existing) {
         return {
-          items: state.items.map((i) =>
-            i.productId === item.productId &&
-            i.gender === item.gender &&
-            i.size === item.size &&
-            i.color === item.color
+          items: state.items.map((cartItem) =>
+            cartItem.productId === item.productId &&
+            cartItem.gender === item.gender &&
+            cartItem.size === item.size &&
+            cartItem.color === item.color
               ? {
-                  ...i,
-                  productQuantity: i.productQuantity + item.productQuantity,
+                  ...cartItem,
+                  productQuantity:
+                    cartItem.productQuantity + item.productQuantity,
                 }
-              : i
+              : cartItem
           ),
         };
       } else {
@@ -75,47 +107,53 @@ export const useCartStore = create<CartState>()(persist((set) => ({
       }
     }),
 
-updateItem: (
-  originalGender,
-  originalSize,
-  originalColor,
-  updatedItem
-) =>
-  set((state) => ({
-    items: state.items.map((i) =>
-      i.gender === originalGender &&
-      i.size === originalSize &&
-      i.color === originalColor
-        ? updatedItem
-        : i
-    ),
-  })),
-
+  updateItem: (originalGender, originalSize, originalColor, updatedItem) =>
+    set((state) => ({
+      items: state.items.map((cartItem) =>
+        cartItem.gender === originalGender &&
+        cartItem.size === originalSize &&
+        cartItem.color === originalColor
+          ? updatedItem
+          : cartItem
+      ),
+    })),
 
   removeItem: (productId, gender, size, color) =>
     set((state) => ({
       items: state.items.filter(
-        (i) =>
+        (cartItem) =>
           !(
-            i.productId === productId &&
-            i.gender === gender &&
-            i.size === size &&
-            i.color === color
+            cartItem.productId === productId &&
+            cartItem.gender === gender &&
+            cartItem.size === size &&
+            cartItem.color === color
           )
       ),
     })),
 
   updateQuantity: (productId, gender, size, color, quantity) =>
     set((state) => ({
-      items: state.items.map((i) =>
-        i.productId === productId &&
-        i.gender === gender &&
-        i.size === size &&
-        i.color === color
-          ? { ...i, productQuantity: quantity }
-          : i
+      items: state.items.map((cartItem) =>
+        cartItem.productId === productId &&
+        cartItem.gender === gender &&
+        cartItem.size === size &&
+        cartItem.color === color
+          ? { ...cartItem, productQuantity: quantity }
+          : cartItem
       ),
     })),
 
   clearCart: () => set({ items: [] }),
-}), { name: "cart-storage" }));
+}));
+
+if (typeof window !== "undefined") {
+  useCartStore.setState({ items: loadCart() });
+
+  useCartStore.subscribe((state) => {
+    saveCart(state.items);
+  });
+
+  window.addEventListener("userChanged", () => {
+    useCartStore.setState({ items: loadCart() });
+  });
+}
