@@ -36,7 +36,7 @@ interface StockError {
   available: number;
 }
 
-function parseStockError(message: string): StockError | null {
+const parseStockError = (message: string): StockError | null => {
   try {
     const parsed = JSON.parse(message);
     if (parsed.type === "insufficientStock") return parsed as StockError;
@@ -44,7 +44,7 @@ function parseStockError(message: string): StockError | null {
     // Message is not JSON — not a stock error
   }
   return null;
-}
+};
 
 const Root = styled(Box)(() => ({
   [`&.${classes.root}`]: {
@@ -53,7 +53,7 @@ const Root = styled(Box)(() => ({
     gap: "10px",
     padding: "20px",
     borderRadius: "4px",
-    marginTop: "100px",
+    marginTop: "50px",
     boxShadow: boxShadows.kerian_main_button_hover_shadow,
     maxWidth: "600px",
     marginLeft: "auto",
@@ -79,6 +79,7 @@ export default function ShippingDataForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(false);
   const cartItems = useCartStore((state) => state.items);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const initialValues = {
     name: "",
@@ -112,6 +113,7 @@ export default function ShippingDataForm() {
     try {
       setError(false);
       await sendOrder({ ...values, cartItems, language: i18n.language });
+      clearCart();
       setSent(true);
       showSnackbar(t("snackbar.orderSuccess"), "success");
     } catch (orderError) {
@@ -119,8 +121,7 @@ export default function ShippingDataForm() {
       setError(true);
       setSent(false);
 
-      const message =
-        orderError instanceof Error ? orderError.message : "";
+      const message = orderError instanceof Error ? orderError.message : "";
       const stockError = parseStockError(message);
       if (stockError) {
         showSnackbar(
