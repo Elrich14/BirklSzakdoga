@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Typography, IconButton, Button, Divider } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Typography,
+  IconButton,
+  Button,
+  Divider,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { styled } from "@mui/material";
 import { useCartStore } from "../components/store/cartStore";
@@ -10,6 +17,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
+import { resolveImageUrl } from "../utils/image";
 
 const PREFIX = "CartPage";
 
@@ -18,6 +26,8 @@ const classes = {
   container: `${PREFIX}-container`,
   itemBox: `${PREFIX}-itemBox`,
   itemRow: `${PREFIX}-itemRow`,
+  itemInfo: `${PREFIX}-itemInfo`,
+  avatar: `${PREFIX}-avatar`,
   itemText: `${PREFIX}-itemText`,
   divider: `${PREFIX}-divider`,
   totalBox: `${PREFIX}-totalBox`,
@@ -45,10 +55,22 @@ const Root = styled("div")(() => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  [`& .${classes.itemInfo}`]: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    cursor: "pointer",
+    flex: 1,
+    minWidth: 0,
+  },
+  [`& .${classes.avatar}`]: {
+    width: "56px",
+    height: "56px",
+  },
   [`& .${classes.itemText}`]: {
     display: "flex",
     flexDirection: "column",
-    cursor: "pointer",
+    minWidth: 0,
   },
   [`& .${classes.divider}`]: {
     marginTop: "16px",
@@ -107,15 +129,23 @@ export default function CartPage() {
                 className={classes.itemRow}
               >
                 <Box
-                  className={classes.itemText}
+                  className={classes.itemInfo}
                   onClick={() => setSelectedItem(item)}
                 >
-                  <Typography variant="body1">{item.productName}</Typography>
-                  <Typography variant="body2">
-                    {item.size} / {t(`card.colors.${item.color}`)} /{" "}
-                    {t(`filter.genderOptions.${item.gender}`)} –{" "}
-                    {item.productQuantity} x
-                  </Typography>
+                  <Avatar
+                    src={resolveImageUrl(item.productImageUrl)}
+                    alt={item.productName}
+                    className={classes.avatar}
+                    variant="rounded"
+                  />
+                  <Box className={classes.itemText}>
+                    <Typography variant="body1">{item.productName}</Typography>
+                    <Typography variant="body2">
+                      {item.size} / {t(`card.colors.${item.color}`)} /{" "}
+                      {t(`filter.genderOptions.${item.gender}`)} –{" "}
+                      {item.productQuantity} x
+                    </Typography>
+                  </Box>
                 </Box>
 
                 <QuantityInput
