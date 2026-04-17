@@ -13,11 +13,13 @@ import { styled } from "@mui/material";
 import { useCartStore } from "../components/store/cartStore";
 import QuantityInput from "../components/quantity";
 import ProductPopup from "../components/productPopup";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
 import { resolveImageUrl } from "../utils/image";
+import { useQueries } from "@tanstack/react-query";
+import { fetchProductStock } from "@/api";
 
 const PREFIX = "CartPage";
 
@@ -29,6 +31,7 @@ const classes = {
   itemInfo: `${PREFIX}-itemInfo`,
   avatar: `${PREFIX}-avatar`,
   itemText: `${PREFIX}-itemText`,
+  stockInfo: `${PREFIX}-stockInfo`,
   divider: `${PREFIX}-divider`,
   totalBox: `${PREFIX}-totalBox`,
   actionButtons: `${PREFIX}-actionButtons`,
@@ -72,6 +75,11 @@ const Root = styled("div")(() => ({
     flexDirection: "column",
     minWidth: 0,
   },
+  [`& .${classes.stockInfo}`]: {
+    color: colors.kerian_main,
+    opacity: 0.75,
+    fontSize: "12px",
+  },
   [`& .${classes.divider}`]: {
     marginTop: "16px",
     marginBottom: "16px",
@@ -114,6 +122,32 @@ export default function CartPage() {
     0
   );
 
+  const uniqueProductIds = useMemo(
+    () => Array.from(new Set(cartItems.map((item) => item.productId))),
+    [cartItems]
+  );
+
+  const stockQueries = useQueries({
+    queries: uniqueProductIds.map((productId) => ({
+      queryKey: ["productStock", productId],
+      queryFn: () => fetchProductStock(productId),
+    })),
+  });
+
+  const stockMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (let index = 0; index < uniqueProductIds.length; index++) {
+      const productId = uniqueProductIds[index];
+      const data = stockQueries[index]?.data;
+      if (!data) continue;
+      for (const variant of data) {
+        const key = `${productId}_${variant.gender}_${variant.size}_${variant.color}`;
+        map[key] = variant.stock;
+      }
+    }
+    return map;
+  }, [stockQueries, uniqueProductIds]);
+
   return (
     <Root className={classes.root}>
       <Typography className={classes.cartTitle}>{t("cart.title")}</Typography>
@@ -123,58 +157,79 @@ export default function CartPage() {
       ) : (
         <>
           <Box className={classes.itemBox}>
-            {cartItems.map((item) => (
-              <Box
-                key={`${item.productId}-${item.size}-${item.color}-${item.gender}`}
-                className={classes.itemRow}
-              >
+            {cartItems.map((item) => {
+              const stockKey = `${item.productId}_${item.gender}_${item.size}_${item.color}`;
+              const currentStock = stockMap[stockKey];
+              const isStockKnown = currentStock !== undefined;
+              const isOutOfStock = isStockKnown && currentStock === 0;
+              const maxQty = isStockKnown ? Math.max(currentStock, 1) : 30;
+
+              return (
                 <Box
-                  className={classes.itemInfo}
-                  onClick={() => setSelectedItem(item)}
+                  key={`${item.productId}-${item.size}-${item.color}-${item.gender}`}
+                  className={classes.itemRow}
                 >
-                  <Avatar
-                    src={resolveImageUrl(item.productImageUrl)}
-                    alt={item.productName}
-                    className={classes.avatar}
-                    variant="rounded"
-                  />
-                  <Box className={classes.itemText}>
-                    <Typography variant="body1">{item.productName}</Typography>
-                    <Typography variant="body2">
-                      {item.size} / {t(`card.colors.${item.color}`)} /{" "}
-                      {t(`filter.genderOptions.${item.gender}`)} –{" "}
-                      {item.productQuantity} x
-                    </Typography>
+                  <Box
+                    className={classes.itemInfo}
+                    onClick={() => setSelectedItem(item)}
+                  >
+                    <Avatar
+                      src={resolveImageUrl(item.productImageUrl)}
+                      alt={item.productName}
+                      className={classes.avatar}
+                      variant="rounded"
+                    />
+                    <Box className={classes.itemText}>
+                      <Typography variant="body1">
+                        {item.productName}
+                      </Typography>
+                      <Typography variant="body2">
+                        {item.size} / {t(`card.colors.${item.color}`)} /{" "}
+                        {t(`filter.genderOptions.${item.gender}`)} –{" "}
+                        {item.productQuantity} x
+                      </Typography>
+                      {isStockKnown && (
+                        <Typography
+                          variant="caption"
+                          className={classes.stockInfo}
+                        >
+                          {isOutOfStock
+                            ? t("card.outOfStock")
+                            : t("card.stockLeft", { count: currentStock })}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
+
+                  <QuantityInput
+                    value={item.productQuantity}
+                    onChange={(newQuantity) =>
+                      updateQuantity(
+                        item.productId,
+                        item.gender,
+                        item.size,
+                        item.color,
+                        newQuantity
+                      )
+                    }
+                    max={maxQty}
+                  />
+
+                  <IconButton
+                    onClick={() =>
+                      removeItem(
+                        item.productId,
+                        item.gender,
+                        item.size,
+                        item.color
+                      )
+                    }
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </Box>
-
-                <QuantityInput
-                  value={item.productQuantity}
-                  onChange={(newQuantity) =>
-                    updateQuantity(
-                      item.productId,
-                      item.gender,
-                      item.size,
-                      item.color,
-                      newQuantity
-                    )
-                  }
-                />
-
-                <IconButton
-                  onClick={() =>
-                    removeItem(
-                      item.productId,
-                      item.gender,
-                      item.size,
-                      item.color
-                    )
-                  }
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            ))}
+              );
+            })}
           </Box>
 
           <Divider className={classes.divider} />
