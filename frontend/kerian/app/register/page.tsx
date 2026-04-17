@@ -4,6 +4,7 @@ import { boxShadows, colors } from "@/constants/colors";
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   LinearProgress,
   styled,
@@ -155,7 +156,14 @@ export default function Register() {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ handleChange, handleBlur, values, touched, errors }) => {
+          {({
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            errors,
+            isSubmitting,
+          }) => {
             const passwordStrength = getPasswordStrength(values.password);
 
             return (
@@ -234,8 +242,13 @@ export default function Register() {
                   color="primary"
                   fullWidth
                   className={classes.submitButton}
+                  disabled={isSubmitting}
                 >
-                  {t("register.submit")}
+                  {isSubmitting ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    t("register.submit")
+                  )}
                 </Button>
               </Form>
             );

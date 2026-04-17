@@ -131,7 +131,7 @@ export default function Navbar() {
     window.addEventListener("userChanged", updateRole);
 
     return () => window.removeEventListener("userChanged", updateRole);
-  }, [role]);
+  }, []);
 
   const isLoggedIn = role !== "guest";
 

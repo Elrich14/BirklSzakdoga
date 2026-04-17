@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   styled,
   TextField,
@@ -152,7 +153,14 @@ export default function Login() {
           validationSchema={validationSchema}
           onSubmit={onSubmit}
         >
-          {({ handleChange, handleBlur, values, touched, errors }) => (
+          {({
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            errors,
+            isSubmitting,
+          }) => (
             <Form>
               <TextField
                 label={t("common.email")}
@@ -204,8 +212,13 @@ export default function Login() {
                 color="primary"
                 fullWidth
                 className={classes.submitButton}
+                disabled={isSubmitting}
               >
-                {t("login.submit")}
+                {isSubmitting ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  t("login.submit")
+                )}
               </Button>
             </Form>
           )}
