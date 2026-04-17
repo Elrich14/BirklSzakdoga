@@ -11,6 +11,7 @@ export const colors = {
   admin_text_light: "#ccc",
   admin_accent_purple: "#6366f1",
   danger: "#f44336",
+  snackbar_success: "#0f9d58",
   admin_checkbox_inactive: "#666",
   admin_overlay: "rgba(0, 0, 0, 0.7)",
   admin_overlay_hover: "rgba(0, 0, 0, 0.9)",

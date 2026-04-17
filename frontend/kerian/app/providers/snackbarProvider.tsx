@@ -14,6 +14,7 @@ import Alert, { AlertColor } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { colors } from "@/constants/colors";
+import { SNACKBAR_AUTO_HIDE_DURATION_MS } from "@/constants/constants";
 
 interface SnackbarState {
   isOpen: boolean;
@@ -42,7 +43,7 @@ const StyledAlert = styled(Alert)(() => ({
     borderRadius: "8px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
     "&.MuiAlert-standardSuccess": {
-      backgroundColor: colors.kerian_main,
+      backgroundColor: colors.snackbar_success,
       color: "#fff",
     },
     "&.MuiAlert-standardSuccess .MuiAlert-icon": {
@@ -50,8 +51,6 @@ const StyledAlert = styled(Alert)(() => ({
     },
   },
 }));
-
-const AUTO_HIDE_DURATION = 4000;
 
 export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   const [snackbar, setSnackbar] = useState<SnackbarState>({
@@ -82,7 +81,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
       {children}
       <Snackbar
         open={snackbar.isOpen}
-        autoHideDuration={AUTO_HIDE_DURATION}
+        autoHideDuration={SNACKBAR_AUTO_HIDE_DURATION_MS}
         onClose={onClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >

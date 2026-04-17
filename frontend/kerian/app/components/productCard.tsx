@@ -12,14 +12,15 @@ import {
 import { boxShadows, colors } from "@/constants/colors";
 import { useEffect, useState } from "react";
 import ProductPopup from "./productPopup";
+import ReviewsPopup from "./reviews/reviewsPopup";
 import { getUserRole } from "../utils/auth";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import RateReviewOutlinedIcon from "@mui/icons-material/RateReviewOutlined";
 import { addToWishlist, removeFromWishlistByProductId } from "@/api";
 import { PRODUCT_COLORS } from "@/constants/filterConstants";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-
 import { resolveImageUrl } from "../utils/image";
 import { useSnackbar } from "../providers/snackbarProvider";
 
@@ -46,6 +47,7 @@ const classes = {
   cardFooterBox: `${PREFIX}-cardFooterBox`,
   cardUpperSideBox: `${PREFIX}-cardUpperSideBox`,
   addToWishlistButton: `${PREFIX}-addToWishlistButton`,
+  reviewsButton: `${PREFIX}-reviewsButton`,
   loginToBuyText: `${PREFIX}-loginToBuyText`,
   divider: `${PREFIX}-divider`,
 };
@@ -138,6 +140,21 @@ const Root = styled(Card)(() => ({
       backgroundColor: "rgba(0, 0, 0, 0.6)",
     },
   },
+  [`& .${classes.reviewsButton}`]: {
+    position: "absolute",
+    bottom: "8px",
+    right: "8px",
+    color: colors.kerian_main,
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    borderRadius: "50%",
+    padding: "6px",
+    cursor: "pointer",
+    transition: "0.2s",
+    "&:hover": {
+      color: colors.kerian_main,
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+    },
+  },
   [`& .${classes.loginToBuyText}`]: {
     fontStyle: "italic",
     opacity: 0.6,
@@ -165,6 +182,7 @@ export default function ProductCard({
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
   const [openDialog, setOpenDialog] = useState(false);
+  const [openReviewsDialog, setOpenReviewsDialog] = useState(false);
 
   const userRole = getUserRole();
   const [isInWishlist, setIsInWishlist] = useState(isWished);
@@ -187,7 +205,7 @@ export default function ProductCard({
             <Tooltip title={t("card.loginToWishlist")} arrow>
               <FavoriteBorderIcon
                 fontSize="large"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
                 className={classes.addToWishlistButton}
                 aria-label={t("card.loginToWishlist")}
               />
@@ -195,8 +213,8 @@ export default function ProductCard({
           ) : isInWishlist ? (
             <FavoriteIcon
               fontSize="large"
-              onClick={async (e) => {
-                e.stopPropagation();
+              onClick={async (event) => {
+                event.stopPropagation();
                 await removeFromWishlistByProductId(id);
                 setIsInWishlist(false);
                 queryClient.invalidateQueries({ queryKey: ["wishlist"] });
@@ -207,8 +225,8 @@ export default function ProductCard({
           ) : (
             <FavoriteBorderIcon
               fontSize="large"
-              onClick={async (e) => {
-                e.stopPropagation();
+              onClick={async (event) => {
+                event.stopPropagation();
                 await addToWishlist({
                   productId: id,
                   productName: name,
@@ -228,6 +246,17 @@ export default function ProductCard({
               aria-label={t("card.aria.addToWishlist")}
             />
           )}
+          <Tooltip title={t("reviews.viewReviews")} arrow>
+            <RateReviewOutlinedIcon
+              fontSize="large"
+              onClick={(event) => {
+                event.stopPropagation();
+                setOpenReviewsDialog(true);
+              }}
+              className={classes.reviewsButton}
+              aria-label={t("reviews.viewReviews")}
+            />
+          </Tooltip>
         </Box>
         <CardContent>
           <Typography className={classes.productName}>{name}</Typography>
@@ -265,6 +294,13 @@ export default function ProductCard({
         size={size}
         mode="add"
         isWished={isInWishlist}
+      />
+
+      <ReviewsPopup
+        open={openReviewsDialog}
+        onClose={() => setOpenReviewsDialog(false)}
+        productId={id}
+        productName={name}
       />
     </>
   );

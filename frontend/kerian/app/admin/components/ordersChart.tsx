@@ -15,8 +15,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { fetchOrderStats, StatsRange } from "@/api";
+import { fetchOrderStats } from "@/api";
 import { colors } from "@/constants/colors";
+import { STATS_RANGES, StatsRange } from "@/constants/constants";
 
 const PREFIX = "OrdersChart";
 const classes = {
@@ -50,8 +51,6 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-const RANGES: StatsRange[] = ["day", "week", "month", "year"];
-
 export default function OrdersChart() {
   const { t } = useTranslation();
   const [range, setRange] = useState<StatsRange>("month");
@@ -80,9 +79,9 @@ export default function OrdersChart() {
           onChange={onRangeChange}
           size="small"
         >
-          {RANGES.map((r) => (
-            <ToggleButton key={r} value={r}>
-              {t(`admin.orders.range.${r}`)}
+          {STATS_RANGES.map((rangeOption) => (
+            <ToggleButton key={rangeOption} value={rangeOption}>
+              {t(`admin.orders.range.${rangeOption}`)}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

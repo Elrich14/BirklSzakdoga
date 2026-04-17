@@ -1,5 +1,10 @@
 import { Product } from "../kerian/app/products/page";
 import { PRODUCT_GENDERS } from "./constants/filterConstants";
+import { API_BASE, OrderStatus, StatsRange } from "./constants/constants";
+
+export type { OrderStatus, StatsRange };
+
+// ==================== AUTH TYPES ====================
 
 export interface LoginRequest {
   email: string;
@@ -15,6 +20,32 @@ export interface RegisterRequest {
   email: string;
   password: string;
 }
+
+// ==================== PRODUCT TYPES ====================
+
+export interface StockVariant {
+  gender: string;
+  size: string;
+  color: string;
+  stock: number;
+}
+
+// ==================== WISHLIST TYPES ====================
+
+export interface WishlistItem {
+  id: number;
+  productId: number;
+  productName: string;
+  description: string;
+  imageUrl: string;
+  gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
+  price: number;
+  quantity: number;
+  color: string;
+  size: string;
+}
+
+// ==================== ORDER TYPES ====================
 
 export interface OrderRequest {
   name: string;
@@ -34,20 +65,119 @@ export interface OrderRequest {
   }[];
 }
 
-export interface WishlistItem {
-  id: number;
-  productId: number;
-  productName: string;
-  description: string;
-  imageUrl: string;
-  gender: typeof PRODUCT_GENDERS[keyof typeof PRODUCT_GENDERS];
-  price: number;
-  quantity: number;
-  color: string;
-  size: string;
+export interface SendOrderResponse {
+  orderId: number;
+  status: OrderStatus;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+export interface OrderStatusResponse {
+  orderId: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminOrderItem {
+  id: number;
+  orderId: number;
+  productId: number | null;
+  productName: string;
+  productPrice: number;
+  quantity: number;
+  gender: string | null;
+  size: string | null;
+  color: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminOrder {
+  id: number;
+  userId: string | null;
+  customerName: string;
+  customerEmail: string;
+  shippingAddress: string;
+  billingAddress: string | null;
+  note: string | null;
+  totalPrice: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  items: AdminOrderItem[];
+}
+
+export interface AdminOrdersPage {
+  orders: AdminOrder[];
+  nextCursor: number | null;
+  hasMore: boolean;
+}
+
+// ==================== ADMIN TYPES ====================
+
+export interface OrderStatsItem {
+  label: string;
+  orderCount: number;
+  income: number;
+}
+
+export interface ProductStatsItem {
+  label: string;
+  quantity: number;
+  revenue: number;
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  ordersToday: number;
+  totalProducts: number;
+  totalCustomers: number;
+}
+
+export interface AdminProduct {
+  id: number;
+  name: string;
+  description: string | null;
+  imageUrls: string[] | null;
+  price: number;
+  category: string | null;
+  color: string[];
+  size: string[];
+  gender: string[];
+  variants?: StockVariant[];
+}
+
+// ==================== REVIEW TYPES ====================
+
+export interface Review {
+  id: number;
+  userId: string;
+  productId: number;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    id: string;
+    username: string;
+  };
+}
+
+export type CanReviewReason =
+  | "not-purchased"
+  | "not-delivered"
+  | "already-reviewed"
+  | null;
+
+export interface CanReviewResponse {
+  canReview: boolean;
+  reason: CanReviewReason;
+}
+
+export interface CreateReviewRequest {
+  productId: number;
+  rating: number;
+  comment?: string;
+}
 
 // LOGIN
 export async function loginUser(data: LoginRequest): Promise<LoginResponse> {
@@ -190,7 +320,9 @@ export async function addToWishlist(item: {
 
 
 // SEND ORDER
-export async function sendOrder(data: OrderRequest): Promise<void> {
+export async function sendOrder(
+  data: OrderRequest
+): Promise<SendOrderResponse> {
   const token = localStorage.getItem("token");
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -222,7 +354,38 @@ export async function sendOrder(data: OrderRequest): Promise<void> {
     }
     throw new Error(err.message || "Order submission failed");
   }
+
+  return response.json();
 }
+
+// FETCH ORDER STATUS (for tracking stepper)
+export const fetchOrderStatus = async (
+  orderId: number
+): Promise<OrderStatusResponse> => {
+  const response = await fetch(`${API_BASE}/api/orders/${orderId}/status`);
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to fetch order status");
+  }
+
+  return response.json();
+};
+
+// FETCH MY ORDERS (authenticated user)
+export const fetchMyOrders = async (): Promise<AdminOrder[]> => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/orders/my`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to fetch orders");
+  }
+
+  return response.json();
+};
 
 // STOCK
 export async function fetchProductStock(
@@ -234,47 +397,6 @@ export async function fetchProductStock(
 }
 
 // ADMIN API
-
-export type StatsRange = "day" | "week" | "month" | "year";
-
-export interface OrderStatsItem {
-  label: string;
-  orderCount: number;
-  income: number;
-}
-
-export interface ProductStatsItem {
-  label: string;
-  quantity: number;
-  revenue: number;
-}
-
-export interface DashboardStats {
-  totalRevenue: number;
-  ordersToday: number;
-  totalProducts: number;
-  totalCustomers: number;
-}
-
-export interface StockVariant {
-  gender: string;
-  size: string;
-  color: string;
-  stock: number;
-}
-
-export interface AdminProduct {
-  id: number;
-  name: string;
-  description: string | null;
-  imageUrls: string[] | null;
-  price: number;
-  category: string | null;
-  color: string[];
-  size: string[];
-  gender: string[];
-  variants?: StockVariant[];
-}
 
 // FETCH ORDER STATS
 export async function fetchOrderStats(
@@ -422,4 +544,123 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   }
 
   return response.json();
+}
+
+// ADMIN ORDERS
+
+// FETCH ORDERS PAGE (ADMIN) — cursor-based pagination
+export const fetchAdminOrders = async (
+  cursor?: number | null
+): Promise<AdminOrdersPage> => {
+  const token = localStorage.getItem("token");
+  const params = new URLSearchParams();
+  if (cursor) {
+    params.set("cursor", String(cursor));
+  }
+  const queryString = params.toString();
+  const url = `${API_BASE}/api/admin/orders${queryString ? `?${queryString}` : ""}`;
+
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to fetch orders");
+  }
+
+  return response.json();
+};
+
+// UPDATE ORDER STATUS (ADMIN)
+export const updateOrderStatus = async (
+  orderId: number,
+  status: OrderStatus
+): Promise<AdminOrder> => {
+  const token = localStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE}/api/admin/orders/${orderId}/status`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to update order status");
+  }
+
+  return response.json();
+};
+
+// REVIEWS
+
+// GET REVIEWS FOR A PRODUCT
+export async function fetchProductReviews(
+  productId: number
+): Promise<Review[]> {
+  const response = await fetch(
+    `${API_BASE}/api/reviews?productId=${productId}`
+  );
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to fetch reviews");
+  }
+  return response.json();
+}
+
+// CHECK IF CURRENT USER CAN REVIEW A PRODUCT
+export async function canReviewProduct(
+  productId: number
+): Promise<CanReviewResponse> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(
+    `${API_BASE}/api/reviews/can-review/${productId}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to check eligibility");
+  }
+  return response.json();
+}
+
+// CREATE REVIEW
+export async function createReview(
+  data: CreateReviewRequest
+): Promise<Review> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to create review");
+  }
+  return response.json();
+}
+
+// DELETE REVIEW
+export async function deleteReview(reviewId: number): Promise<void> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/api/reviews/${reviewId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to delete review");
+  }
 }

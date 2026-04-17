@@ -36,7 +36,7 @@ type Route = {
   path: string;
   name?: string;
   icon?: React.ReactNode;
-  if: "always" | "loggedIn" | "loggedOut" | "admin";
+  if: "always" | "loggedIn" | "loggedOut" | "admin" | "userOnly";
   align: "left" | "right";
 };
 
@@ -157,6 +157,12 @@ export default function Navbar() {
       align: "left",
     },
     {
+      path: "/my-orders",
+      name: t("navbar.myOrders"),
+      if: "userOnly",
+      align: "left",
+    },
+    {
       path: "/admin",
       name: t("navbar.admin"),
       if: "admin",
@@ -192,15 +198,16 @@ export default function Navbar() {
     },
   ];
 
-  const filteredRoutes = routes.filter((r) => {
-    if (r.if === "loggedIn") return isLoggedIn;
-    if (r.if === "loggedOut") return !isLoggedIn;
-    if (r.if === "admin") return role === "admin";
+  const filteredRoutes = routes.filter((route) => {
+    if (route.if === "loggedIn") return isLoggedIn;
+    if (route.if === "loggedOut") return !isLoggedIn;
+    if (route.if === "admin") return role === "admin";
+    if (route.if === "userOnly") return role === "user";
     return true;
   });
 
-  const leftRoutes = filteredRoutes.filter((r) => r.align === "left");
-  const rightRoutes = filteredRoutes.filter((r) => r.align === "right");
+  const leftRoutes = filteredRoutes.filter((route) => route.align === "left");
+  const rightRoutes = filteredRoutes.filter((route) => route.align === "right");
 
   const pathname = usePathname();
 

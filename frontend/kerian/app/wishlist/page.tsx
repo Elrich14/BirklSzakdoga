@@ -120,8 +120,8 @@ export default function Wishlist() {
     removeMutation.mutate(id);
   };
 
-  const submitAddToCart = (e: React.MouseEvent, item: WishlistItem) => {
-    e.stopPropagation();
+  const submitAddToCart = (event: React.MouseEvent, item: WishlistItem) => {
+    event.stopPropagation();
     addItem({
       productId: item.productId ?? item.id,
       productName: item.productName,
@@ -167,7 +167,7 @@ export default function Wishlist() {
                       variant="text"
                       startIcon={<ShoppingCartIcon />}
                       className={classes.addToCartButton}
-                      onClick={(e) => submitAddToCart(e, item)}
+                      onClick={(event) => submitAddToCart(event, item)}
                     >
                       {t("card.addToCart")}
                     </Button>

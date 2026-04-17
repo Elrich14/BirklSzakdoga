@@ -25,12 +25,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  fetchAdminProducts,
-  fetchProductStats,
-  StatsRange,
-} from "@/api";
+import { fetchAdminProducts, fetchProductStats } from "@/api";
 import { colors } from "@/constants/colors";
+import { STATS_RANGES, StatsRange } from "@/constants/constants";
 
 const PREFIX = "ProductSellRating";
 const classes = {
@@ -74,8 +71,6 @@ const Root = styled(Box)(() => ({
     padding: "40px 0",
   },
 }));
-
-const RANGES: StatsRange[] = ["day", "week", "month", "year"];
 
 export default function ProductSellRating() {
   const { t } = useTranslation();
@@ -132,9 +127,9 @@ export default function ProductSellRating() {
           onChange={onRangeChange}
           size="small"
         >
-          {RANGES.map((r) => (
-            <ToggleButton key={r} value={r}>
-              {t(`admin.orders.range.${r}`)}
+          {STATS_RANGES.map((rangeOption) => (
+            <ToggleButton key={rangeOption} value={rangeOption}>
+              {t(`admin.orders.range.${rangeOption}`)}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>

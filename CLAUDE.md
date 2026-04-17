@@ -43,6 +43,7 @@
 3. **Before deleting anything:** Always ask the user for confirmation.
 4. **Before refactoring:** Only refactor what was explicitly requested. Do not "improve" surrounding code.
 5. **Before adding a new page/route:** Confirm the route name and where it fits in the navigation.
+6. **Before adding an API endpoint:** Put it in the right backend file — `auth.js`, `productRoutes.js`, `wishlistRoutes.js`, `orderRoutes.js`, `reviewRoutes.js`, or `adminRoutes.js` — and add the typed client function to `frontend/kerian/api.ts`. Don't create a new backend route file for a single endpoint, and don't scatter `fetch()` calls through components.
 
 ---
 
@@ -213,6 +214,11 @@ The only exception is `0` (which needs no unit) and `opacity`/`zIndex`/`flexGrow
 
 ## API Patterns
 
+### API Organization
+- **Backend:** routes are split by domain into `auth.js`, `productRoutes.js`, `wishlistRoutes.js`, `orderRoutes.js`, `reviewRoutes.js`, and `adminRoutes.js`. Each file exports an `express.Router()`. `index.js` is a thin bootstrap that mounts them at their URL prefixes (`/auth`, `/api/products`, `/api/wishlist`, `/api`, `/api/reviews`, `/api/admin`). Shared middleware (`authenticateToken`, `requireAdmin`), DB setup (`dataBase.js`), models (`models/`), and helpers (`orderEmail.js`, `upload.js`) stay in their own files.
+- **Frontend:** every typed client function lives in a single file — `frontend/kerian/api.ts`. No scattered `fetch()` calls in components, pages, or providers. When you need to call the backend, add a typed function to `api.ts` and import it.
+- **When adding a new endpoint:** add the route to the matching backend file AND add the typed client function to `api.ts`. Keep the two sides in sync.
+
 ### Frontend API Client (`frontend/kerian/api.ts`)
 - Base URL: `process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"`
 - Auth: Bearer token from `localStorage.getItem("token")`
@@ -241,12 +247,19 @@ The only exception is `0` (which needs no unit) and `opacity`/`zIndex`/`flexGrow
 ```
 BirklSzakdoga/
 ├── backend/
-│   ├── index.js              # Express server + all routes
-│   ├── auth.js               # Login/register routes
+│   ├── index.js              # Express server bootstrap — mounts route modules
+│   ├── auth.js               # /auth/* routes (login, register)
+│   ├── productRoutes.js      # /api/products/* routes
+│   ├── wishlistRoutes.js     # /api/wishlist/* routes
+│   ├── orderRoutes.js        # /api/orderEmail + /api/orders/* routes
+│   ├── reviewRoutes.js       # /api/reviews/* routes
+│   ├── adminRoutes.js        # /api/admin/* routes
 │   ├── authenticateToken.js  # JWT middleware
+│   ├── requireAdmin.js       # Admin-only middleware
 │   ├── orderEmail.js         # Nodemailer email service
+│   ├── upload.js             # Multer upload helper
 │   ├── dataBase.js           # Sequelize initialization
-│   ├── models/               # Sequelize models (user, products, wishlist)
+│   ├── models/               # Sequelize models (user, products, wishlist, etc.)
 │   ├── migrations/           # DB schema migrations
 │   ├── seeders/              # Data seeders
 │   └── constants/            # Shared constants
@@ -269,7 +282,7 @@ BirklSzakdoga/
 │   │   └── utils/            # Auth utilities
 │   ├── constants/            # Colors, filter constants, validation
 │   ├── locales/              # i18n translation files
-│   ├── api.ts                # API client with all endpoints
+│   ├── api.ts                # Typed API client — all endpoints in one file
 │   ├── theme.ts              # MUI dark theme
 │   └── i18n.ts               # i18next configuration
 ├── docker-compose.yml

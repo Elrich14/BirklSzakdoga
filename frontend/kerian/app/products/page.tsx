@@ -100,12 +100,12 @@ export default function ProductsPage() {
     enabled: userRole !== "guest",
   });
 
-  const onFiltersChange = useCallback((f: FilterState) => {
-    setFilters(f);
+  const onFiltersChange = useCallback((newFilters: FilterState) => {
+    setFilters(newFilters);
   }, []);
 
   const highestPrice = products.length
-    ? Math.max(...products.map((p) => p.price))
+    ? Math.max(...products.map((product) => product.price))
     : 0;
 
   // if products load or highestPrice changes, ensure default priceMax is set sensibly
@@ -126,13 +126,13 @@ export default function ProductsPage() {
 
       if (filters.colors.length > 0) {
         if (filters.colors.length === 2) {
-          const hasAllColors = filters.colors.every((c) =>
-            product.color.includes(c)
+          const hasAllColors = filters.colors.every((colorOption) =>
+            product.color.includes(colorOption)
           );
           if (!hasAllColors) return false;
         } else {
-          const hasColor = filters.colors.some((c) =>
-            product.color.includes(c)
+          const hasColor = filters.colors.some((colorOption) =>
+            product.color.includes(colorOption)
           );
           if (!hasColor) return false;
         }
@@ -147,13 +147,13 @@ export default function ProductsPage() {
             : [];
 
         if (filters.gender.length === 2) {
-          const hasAllGenders = filters.gender.every((g) =>
-            productGenders.includes(g)
+          const hasAllGenders = filters.gender.every((genderOption) =>
+            productGenders.includes(genderOption)
           );
           if (!hasAllGenders) return false;
         } else {
-          const hasMatchingGender = productGenders.some((g) =>
-            filters.gender.includes(g)
+          const hasMatchingGender = productGenders.some((genderOption) =>
+            filters.gender.includes(genderOption)
           );
           if (!hasMatchingGender) return false;
         }
@@ -186,7 +186,7 @@ export default function ProductsPage() {
               ))
             : filteredProducts.map((product) => {
                 const isWished = wishlist.some(
-                  (w) => w.productId === product.id
+                  (wishlistItem) => wishlistItem.productId === product.id
                 );
                 return (
                   <ProductCard

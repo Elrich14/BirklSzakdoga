@@ -23,7 +23,8 @@
     "register": "Regisztráció",
     "logout": "Kijelentkezés",
     "welcome": "Üdvözöljük",
-    "admin": "Admin"
+    "admin": "Admin",
+    "myOrders": "Rendeléseim"
   },
   "login": {
     "title": "Bejelentkezés",
@@ -93,6 +94,54 @@
       "removeFromWishlist": "Eltávolítás a kívánságlistából",
       "close": "Bezárás"
     }
+  },
+  "reviews": {
+    "title": "Vélemények — {{product}}",
+    "viewReviews": "Vélemények megtekintése",
+    "writeReview": "Írj véleményt",
+    "yourRating": "Értékelésed",
+    "commentPlaceholder": "Oszd meg tapasztalataidat erről a termékről (opcionális)",
+    "submit": "Vélemény küldése",
+    "deleteAction": "Vélemény törlése",
+    "deleteConfirm": "Biztosan törölni szeretnéd ezt a véleményt?",
+    "noReviews": "Még nincs vélemény — legyél te az első!",
+    "anonymousUser": "Névtelen",
+    "loginToReview": "Jelentkezz be a véleményíráshoz.",
+    "count": "{{count}} vélemény",
+    "reason": {
+      "notPurchased": "Ezt a terméket csak vásárlás után tudod értékelni.",
+      "notDelivered": "Ezt a terméket akkor tudod értékelni, ha a rendelésedet kézbesítették.",
+      "alreadyReviewed": "Erre a termékre már írtál véleményt."
+    },
+    "validation": {
+      "ratingRequired": "Kérjük, válassz csillagos értékelést a küldés előtt."
+    },
+    "snackbar": {
+      "created": "Véleményt sikeresen elküldtük!",
+      "createError": "Nem sikerült elküldeni a véleményt.",
+      "deleted": "Vélemény törölve.",
+      "deleteError": "Nem sikerült törölni a véleményt."
+    }
+  },
+  "myOrders": {
+    "title": "Rendeléseim",
+    "empty": "Még nem adtál le rendelést.",
+    "orderDate": "Leadva: {{date}}",
+    "total": "Összesen: {{total}} Ft",
+    "items": "{{count}} tétel"
+  },
+  "orderStatus": {
+    "title": "#{{orderId}} rendelés — Státusz",
+    "pending": "Függőben",
+    "pendingDescription": "Rendelésedet megkaptuk, és megerősítésre vár.",
+    "confirmed": "Visszaigazolva",
+    "confirmedDescription": "Rendelésedet visszaigazoltuk, és előkészítés alatt áll.",
+    "shipped": "Elküldve",
+    "shippedDescription": "Rendelésed úton van hozzád.",
+    "delivered": "Kézbesítve",
+    "deliveredDescription": "Rendelésedet kézbesítettük. Jó használatot!",
+    "cancelled": "Törölve",
+    "cancelledDescription": "Ezt a rendelést törölték."
   },
   "products": {
     "products": "Termékeink"
@@ -208,6 +257,30 @@
       "ordersToday": "Mai rendelések",
       "totalProducts": "Összes termék",
       "totalCustomers": "Összes vásárló"
+    },
+    "orderManagement": "Rendeléskezelés",
+    "orderList": {
+      "title": "Rendelések",
+      "orderId": "Rendelés ID",
+      "customer": "Vevő",
+      "email": "Email",
+      "total": "Összeg",
+      "status": "Státusz",
+      "date": "Dátum",
+      "items": "Tételek",
+      "noOrders": "Nincs rendelés",
+      "statusUpdated": "A rendelés státusza sikeresen frissítve!",
+      "statusUpdateError": "Nem sikerült frissíteni a rendelés státuszát.",
+      "statusConfirm": "Biztosan módosítod a(z) #{{orderId}} rendelés státuszát erre: \"{{status}}\"?",
+      "confirm": "Megerősítés",
+      "cancel": "Mégse",
+      "statuses": {
+        "pending": "Függőben",
+        "confirmed": "Visszaigazolva",
+        "shipped": "Elküldve",
+        "delivered": "Kézbesítve",
+        "cancelled": "Törölve"
+      }
     }
   }
 }

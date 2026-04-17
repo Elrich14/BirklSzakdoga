@@ -13,10 +13,11 @@ import {
 import { useState } from "react";
 import { styled } from "@mui/system";
 import { sendOrder } from "@/api";
+import { OrderStatus, phoneRegExp } from "@/constants/constants";
+import OrderStatusTracker from "./orderStatusTracker";
 import { boxShadows } from "@/constants/colors";
 import { useCartStore } from "./store/cartStore";
 import { useTranslation } from "react-i18next";
-import { phoneRegExp } from "@/constants/constants";
 import { useSnackbar } from "../providers/snackbarProvider";
 
 const PREFIX = "ShippingDataForm";
@@ -76,7 +77,10 @@ const Root = styled(Box)(() => ({
 export default function ShippingDataForm() {
   const { t, i18n } = useTranslation();
   const { showSnackbar } = useSnackbar();
-  const [sent, setSent] = useState(false);
+  const [completedOrder, setCompletedOrder] = useState<{
+    orderId: number;
+    status: OrderStatus;
+  } | null>(null);
   const [error, setError] = useState(false);
   const cartItems = useCartStore((state) => state.items);
   const clearCart = useCartStore((state) => state.clearCart);
@@ -112,14 +116,18 @@ export default function ShippingDataForm() {
   const onSubmit = async (values: typeof initialValues) => {
     try {
       setError(false);
-      await sendOrder({ ...values, cartItems, language: i18n.language });
+      const orderResponse = await sendOrder({
+        ...values,
+        cartItems,
+        language: i18n.language,
+      });
       clearCart();
-      setSent(true);
+      setCompletedOrder(orderResponse);
       showSnackbar(t("snackbar.orderSuccess"), "success");
     } catch (orderError) {
       console.error("Error when sending email", orderError);
       setError(true);
-      setSent(false);
+      setCompletedOrder(null);
 
       const message = orderError instanceof Error ? orderError.message : "";
       const stockError = parseStockError(message);
@@ -150,8 +158,11 @@ export default function ShippingDataForm() {
           {t("feedback.orderError")}
         </Typography>
       )}
-      {sent ? (
-        <Typography color="green">{t("feedback.orderSuccess")}</Typography>
+      {completedOrder ? (
+        <OrderStatusTracker
+          orderId={completedOrder.orderId}
+          initialStatus={completedOrder.status}
+        />
       ) : (
         <Formik
           initialValues={initialValues}

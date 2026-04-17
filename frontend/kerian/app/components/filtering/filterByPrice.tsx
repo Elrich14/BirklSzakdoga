@@ -95,7 +95,7 @@ export default function FilterByPrice({
           size="small"
           label={t("filter.minPrice") || "Min"}
           value={localMin}
-          onChange={(e) => onMinInputChange(e.target.value)}
+          onChange={(event) => onMinInputChange(event.target.value)}
           inputProps={{ min: availableMinPrice }}
           className={classes.priceField}
         />
@@ -104,7 +104,7 @@ export default function FilterByPrice({
           size="small"
           label={t("filter.maxPrice") || "Max"}
           value={localMax}
-          onChange={(e) => onMaxInputChange(e.target.value)}
+          onChange={(event) => onMaxInputChange(event.target.value)}
           inputProps={{ max: availableMaxPrice }}
           className={classes.priceField}
         />

@@ -22,7 +22,7 @@ import Image from "next/image";
 import { fetchAdminProducts, deleteProduct, AdminProduct } from "@/api";
 import { colors } from "@/constants/colors";
 import ProductForm from "./productForm";
-import { API_BASE } from "../../utils/image";
+import { API_BASE } from "@/constants/constants";
 
 const PREFIX = "ProductManagement";
 const classes = {

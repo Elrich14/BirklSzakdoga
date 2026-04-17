@@ -49,10 +49,10 @@ export default function QuantityInput({
     if (value < max) onChange(value + 1);
   };
 
-  const manualChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = parseInt(e.target.value, 10);
-    if (!isNaN(newVal) && newVal >= min && newVal <= max) {
-      onChange(newVal);
+  const manualChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const parsedValue = parseInt(event.target.value, 10);
+    if (!isNaN(parsedValue) && parsedValue >= min && parsedValue <= max) {
+      onChange(parsedValue);
     }
   };
 

@@ -9,6 +9,7 @@ import { getUserRole } from "../utils/auth";
 import SideNavbar from "../components/sideNavbar/sideNavbar";
 import AnalyticsDashboard from "./components/analyticsDashboard";
 import ProductManagement from "./components/productManagement";
+import OrderManagement from "./components/orderManagement";
 
 const PREFIX = "AdminPage";
 const classes = {
@@ -42,6 +43,7 @@ export default function AdminPage() {
   const tabs = [
     { key: "analytics", label: t("admin.analytics") },
     { key: "products", label: t("admin.productManagement") },
+    { key: "orders", label: t("admin.orderManagement") },
   ];
 
   const onTabChange = (key: string) => {
@@ -63,6 +65,7 @@ export default function AdminPage() {
       <Box className={classes.content}>
         {activeTab === "analytics" && <AnalyticsDashboard />}
         {activeTab === "products" && <ProductManagement />}
+        {activeTab === "orders" && <OrderManagement />}
       </Box>
     </Root>
   );

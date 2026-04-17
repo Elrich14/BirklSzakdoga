@@ -1,12 +1,17 @@
 const express = require("express");
-const { QueryTypes } = require("sequelize");
+const { QueryTypes, Op } = require("sequelize");
 const { sequelize } = require("./dataBase");
 const Product = require("./models/products");
 const ProductVariant = require("./models/productVariant");
 const Wishlist = require("./models/wishlist");
+const { Order, OrderItem } = require("./models");
 const authenticateToken = require("./authenticateToken");
 const requireAdmin = require("./requireAdmin");
 const { upload } = require("./upload");
+const {
+  ORDER_STATUSES,
+  DEFAULT_ORDER_PAGE_SIZE,
+} = require("./constants/constants");
 
 /**
  * Syncs product variants: creates missing combinations, removes stale ones.
@@ -484,6 +489,81 @@ router.put(
     } catch (error) {
       console.error("Error updating stock:", error);
       res.status(500).json({ error: "Failed to update stock" });
+    }
+  }
+);
+
+// GET /api/admin/orders — cursor-paginated, newest first
+router.get(
+  "/orders",
+  authenticateToken,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const limit = Math.min(
+        parseInt(req.query.limit) || DEFAULT_ORDER_PAGE_SIZE,
+        100
+      );
+      const cursor = req.query.cursor ? parseInt(req.query.cursor) : null;
+
+      const where = {};
+      if (cursor) {
+        where.id = { [Op.lt]: cursor };
+      }
+
+      const orders = await Order.findAll({
+        where,
+        order: [["id", "DESC"]],
+        limit: limit + 1,
+        include: [{ model: OrderItem, as: "items" }],
+      });
+
+      const hasMore = orders.length > limit;
+      const pageOrders = hasMore ? orders.slice(0, limit) : orders;
+      const nextCursor = hasMore
+        ? pageOrders[pageOrders.length - 1].id
+        : null;
+
+      res.json({
+        orders: pageOrders,
+        nextCursor,
+        hasMore,
+      });
+    } catch (error) {
+      console.error("Error fetching admin orders:", error);
+      res.status(500).json({ error: "Failed to fetch orders" });
+    }
+  }
+);
+
+// PUT /api/admin/orders/:id/status
+router.put(
+  "/orders/:id/status",
+  authenticateToken,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { status } = req.body;
+      if (!status || !ORDER_STATUSES.includes(status)) {
+        return res.status(400).json({
+          error: `status must be one of: ${ORDER_STATUSES.join(", ")}`,
+        });
+      }
+
+      const order = await Order.findByPk(req.params.id);
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      await order.update({ status });
+
+      const updated = await Order.findByPk(order.id, {
+        include: [{ model: OrderItem, as: "items" }],
+      });
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      res.status(500).json({ error: "Failed to update order status" });
     }
   }
 );

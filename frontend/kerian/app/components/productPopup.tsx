@@ -351,8 +351,8 @@ export default function ProductPopup({
     setSize(event.target.value);
   };
 
-  const submitAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const submitAddToCart = (event: React.MouseEvent) => {
+    event.stopPropagation();
     addItem({
       productId: id,
       productName: name,
@@ -369,8 +369,8 @@ export default function ProductPopup({
     showSnackbar(t("snackbar.addedToCart"), "success");
   };
 
-  const submitModify = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const submitModify = (event: React.MouseEvent) => {
+    event.stopPropagation();
     updateItem(
       originalGender ?? gender,
       originalSize ?? size,
@@ -461,8 +461,8 @@ export default function ProductPopup({
                     src={resolveImageUrl(url)}
                     alt={`${name} ${index + 1}`}
                     className={`${classes.thumbnail} ${index === activeImageIndex ? classes.thumbnailActive : ""}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    onClick={(event) => {
+                      event.stopPropagation();
                       setActiveImageIndex(index);
                     }}
                   />
@@ -473,7 +473,7 @@ export default function ProductPopup({
               <Tooltip title={t("card.loginToWishlist")} arrow>
                 <FavoriteBorderIcon
                   fontSize="large"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(event) => event.stopPropagation()}
                   className={classes.addToWishlistButton}
                   aria-label={t("card.loginToWishlist")}
                 />
@@ -481,8 +481,8 @@ export default function ProductPopup({
             ) : isInWishlist ? (
               <FavoriteIcon
                 fontSize="large"
-                onClick={async (e) => {
-                  e.stopPropagation();
+                onClick={async (event) => {
+                  event.stopPropagation();
                   await removeFromWishlistByProductId(id);
                   setIsInWishlist(false);
                   queryClient.invalidateQueries({ queryKey: ["wishlist"] });
@@ -493,8 +493,8 @@ export default function ProductPopup({
             ) : (
               <FavoriteBorderIcon
                 fontSize="large"
-                onClick={async (e) => {
-                  e.stopPropagation();
+                onClick={async (event) => {
+                  event.stopPropagation();
                   await addToWishlist({
                     productId: id,
                     productName: name,

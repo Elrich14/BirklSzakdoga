@@ -28,7 +28,7 @@ import {
 import { colors } from "@/constants/colors";
 import { AVAILABLE_COLORS, AVAILABLE_SIZES, AVAILABLE_GENDERS } from "@/constants/filterConstants";
 import VariantStockEditor from "./variantStockEditor";
-import { API_BASE } from "../../utils/image";
+import { API_BASE } from "@/constants/constants";
 
 interface ProductFormProps {
   product: AdminProduct | null;

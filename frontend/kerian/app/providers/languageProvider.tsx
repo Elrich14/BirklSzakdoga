@@ -24,7 +24,7 @@ const readLangSync = (): string => {
   if (typeof document !== "undefined") {
     const cookieLang = document.cookie
       .split("; ")
-      .find((r) => r.startsWith("i18nextLng="))
+      .find((cookie) => cookie.startsWith("i18nextLng="))
       ?.split("=")[1];
     const stored = localStorage.getItem("i18nextLng");
     return cookieLang || stored || "en";

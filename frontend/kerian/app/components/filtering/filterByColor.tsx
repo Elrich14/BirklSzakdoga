@@ -65,7 +65,7 @@ export default function FilterByColor({
 
   const onColorCheckboxChange = (color: string) => {
     if (selectedColors.includes(color)) {
-      onColorChange(selectedColors.filter((c) => c !== color));
+      onColorChange(selectedColors.filter((existingColor) => existingColor !== color));
     } else {
       onColorChange([...selectedColors, color]);
     }

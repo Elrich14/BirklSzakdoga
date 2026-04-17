@@ -57,7 +57,7 @@ export default function FilterBySize({
   const onSizeCheckboxChange = (size: string) => {
     if (selectedSizes.includes(size)) {
       // Remove size if it's already selected
-      onSizeChange(selectedSizes.filter((s) => s !== size));
+      onSizeChange(selectedSizes.filter((existingSize) => existingSize !== size));
     } else {
       // Add size if it's not selected
       onSizeChange([...selectedSizes, size]);
@@ -83,7 +83,7 @@ export default function FilterBySize({
             control={
               <Checkbox
                 checked={isAllSelected}
-                onChange={(e) => toggleSelectAll(e.target.checked)}
+                onChange={(event) => toggleSelectAll(event.target.checked)}
               />
             }
             label={t("filter.selectAll")}

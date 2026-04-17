@@ -162,7 +162,7 @@ export default function ProductFilterNew({
   // Size handlers
   const onSizeCheckboxChange = (size: string) => {
     const newSizes = filters.sizes.includes(size)
-      ? filters.sizes.filter((s) => s !== size)
+      ? filters.sizes.filter((existingSize) => existingSize !== size)
       : [...filters.sizes, size];
     updateFilters({ ...filters, sizes: newSizes });
   };
@@ -177,7 +177,7 @@ export default function ProductFilterNew({
   // Gender handler
   const onGenderChange = (gender: string) => {
     const newGenders = filters.gender.includes(gender)
-      ? filters.gender.filter((g) => g !== gender)
+      ? filters.gender.filter((existingGender) => existingGender !== gender)
       : [...filters.gender, gender];
     updateFilters({
       ...filters,
@@ -188,7 +188,7 @@ export default function ProductFilterNew({
   // Color handlers
   const onColorCheckboxChange = (color: string) => {
     const newColors = filters.colors.includes(color)
-      ? filters.colors.filter((c) => c !== color)
+      ? filters.colors.filter((existingColor) => existingColor !== color)
       : [...filters.colors, color];
     updateFilters({ ...filters, colors: newColors });
   };
@@ -261,7 +261,7 @@ export default function ProductFilterNew({
             size="small"
             label={t("filter.minPrice") || "Min"}
             value={localMinInput}
-            onChange={(e) => onMinInputChange(e.target.value)}
+            onChange={(event) => onMinInputChange(event.target.value)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*", min: 0 }}
             className={classes.priceTextField}
           />
@@ -270,7 +270,7 @@ export default function ProductFilterNew({
             size="small"
             label={t("filter.maxPrice") || "Max"}
             value={localMaxInput}
-            onChange={(e) => onMaxInputChange(e.target.value)}
+            onChange={(event) => onMaxInputChange(event.target.value)}
             inputProps={{
               inputMode: "numeric",
               pattern: "[0-9]*",
@@ -300,7 +300,7 @@ export default function ProductFilterNew({
             control={
               <Checkbox
                 checked={isAllSizesSelected}
-                onChange={(e) => toggleAllSizes(e.target.checked)}
+                onChange={(event) => toggleAllSizes(event.target.checked)}
               />
             }
             label={t("filter.selectAll")}
