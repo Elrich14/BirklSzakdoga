@@ -64,7 +64,7 @@ async function migrate() {
           const result = await cloudinary.uploader.upload(filePath, {
             folder: `kerian/products/${productSlug}`,
             public_id: `${productSlug}-${i + 1}`,
-            transformation: [{ quality: "auto", fetch_format: "auto" }],
+            transformation: [{ fetch_format: "auto" }],
           });
 
           newUrls.push(result.secure_url);

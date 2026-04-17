@@ -23,7 +23,7 @@ const storage = new CloudinaryStorage({
       folder: `kerian/products/${productName}`,
       public_id: `${productName}-${req._uploadIndex}-${Date.now()}`,
       allowed_formats: ["jpg", "jpeg", "png", "webp", "gif"],
-      transformation: [{ quality: "auto", fetch_format: "auto" }],
+      transformation: [{ fetch_format: "auto" }],
     };
   },
 });
