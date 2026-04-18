@@ -36,6 +36,7 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ error: err.message });
   }
   if (err) {
+    console.error(`Unhandled error on ${req.method} ${req.originalUrl}:`, err);
     return res
       .status(500)
       .json({ error: err.message || "Internal server error" });
