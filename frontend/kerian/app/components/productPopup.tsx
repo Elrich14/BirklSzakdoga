@@ -106,18 +106,20 @@ const Root = styled(Dialog)(() => ({
   [`& .${classes.container}`]: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   [`& .${classes.dataContainer}`]: {
     display: "flex",
     flexDirection: "column",
+    flex: 1,
     margin: "10px 0px 10px 20px",
   },
   [`& .${classes.addToCardButton}`]: {
     fontFamily: "monospace",
     fontWeight: "normal",
-    fontSize: "20px",
+    fontSize: "16px",
     width: "150px",
+    whiteSpace: "nowrap",
   },
   [`& .${classes.productDescription}`]: {
     fontFamily: "monospace",
@@ -180,6 +182,7 @@ const Root = styled(Dialog)(() => ({
   },
   [`& .${classes.cardLeftSideBox}`]: {
     position: "relative",
+    flexShrink: 0,
   },
   [`& .${classes.addToWishlistButton}`]: {
     position: "absolute",
