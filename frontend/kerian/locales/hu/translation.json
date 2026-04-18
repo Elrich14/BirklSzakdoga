@@ -6,6 +6,7 @@
     "email": "Email",
     "password": "Jelszó",
     "submit": "Küldés",
+    "cancel": "Mégse",
     "validation": {
       "required": "Ez a mező kötelező",
       "invalidEmail": "Kérjük, adjon meg egy érvényes email címet",
@@ -32,7 +33,18 @@
     "registerLink": "Nincs még fiókja? Regisztráljon itt",
     "forgotPassword": "Elfelejtett jelszó?",
     "loginSuccessful": "Sikeres bejelentkezés!",
-    "loginError": "Érvénytelen email vagy jelszó"
+    "loginError": "Érvénytelen email vagy jelszó",
+    "twoFactor": {
+      "title": "Kétfaktoros hitelesítés",
+      "codePrompt": "Adja meg a 6 számjegyű kódot a hitelesítő alkalmazásból",
+      "recoveryPrompt": "Adja meg az egyik helyreállítási kódját (XXXX-XXXX)",
+      "verify": "Megerősítés",
+      "invalidCode": "Érvénytelen kód. Próbálja újra.",
+      "rateLimited": "Túl sok sikertelen próbálkozás. Próbálja újra {{minutes}} perc múlva.",
+      "sessionExpired": "A munkamenet lejárt. Jelentkezzen be újra.",
+      "useRecoveryCode": "Helyreállítási kód használata helyette",
+      "useAuthenticatorApp": "Hitelesítő alkalmazás használata helyette"
+    }
   },
   "register": {
     "title": "Regisztráció",
@@ -281,6 +293,36 @@
         "delivered": "Kézbesítve",
         "cancelled": "Törölve"
       }
+    },
+    "security": {
+      "tab": "Biztonság",
+      "title": "Kétfaktoros hitelesítés",
+      "status": "Állapot",
+      "enabled": "Bekapcsolva",
+      "disabled": "Kikapcsolva",
+      "enable": "2FA bekapcsolása",
+      "disable": "2FA kikapcsolása",
+      "regenerate": "Helyreállítási kódok újragenerálása",
+      "scanQr": "Olvassa be ezt a QR-kódot a Google Authenticator, Authy vagy 1Password alkalmazással",
+      "manualEntry": "Vagy adja meg ezt a kulcsot kézzel:",
+      "enterCode": "Adja meg a 6 számjegyű kódot az alkalmazásból",
+      "verify": "Megerősítés és bekapcsolás",
+      "invalidCode": "Érvénytelen kód. Próbálja újra.",
+      "saveCodesWarning": "Mentse el ezeket a helyreállítási kódokat biztonságos helyre. Csak egyszer jelennek meg. Minden kód csak egyszer használható, ha elveszíti a hozzáférést a hitelesítő alkalmazáshoz.",
+      "copyAll": "Összes másolása",
+      "downloadCodes": "Letöltés .txt fájlként",
+      "savedConfirmation": "Elmentettem a helyreállítási kódokat biztonságos helyre",
+      "done": "Kész",
+      "enableSuccess": "2FA sikeresen bekapcsolva",
+      "disableSuccess": "2FA kikapcsolva",
+      "regenerateSuccess": "Helyreállítási kódok újragenerálva",
+      "codesCopied": "Kódok vágólapra másolva",
+      "errorStartSetup": "Nem sikerült elindítani a 2FA beállítást",
+      "lowRecoveryCodes": "Már csak {{count}} helyreállítási kódja maradt. Generálja őket újra most.",
+      "disableDialogTitle": "Kétfaktoros hitelesítés kikapcsolása",
+      "codeOrRecovery": "Hitelesítő kód vagy helyreállítási kód",
+      "regenerateDialogTitle": "Helyreállítási kódok újragenerálása",
+      "regenerateWarning": "Ez érvényteleníti a meglévő helyreállítási kódjait, és 8 új kódot generál."
     }
   }
 }

@@ -6,6 +6,7 @@
     "email": "Email",
     "password": "Password",
     "submit": "Submit",
+    "cancel": "Cancel",
     "validation": {
       "required": "This field is required",
       "invalidEmail": "Please enter a valid email address",
@@ -32,7 +33,18 @@
     "registerLink": "Don't have an account? Register here",
     "forgotPassword": "Forgot Password?",
     "loginSuccessful": "Login successful!",
-    "loginError": "Invalid email or password"
+    "loginError": "Invalid email or password",
+    "twoFactor": {
+      "title": "Two-Factor Authentication",
+      "codePrompt": "Enter the 6-digit code from your authenticator app",
+      "recoveryPrompt": "Enter one of your recovery codes (XXXX-XXXX)",
+      "verify": "Verify",
+      "invalidCode": "Invalid code. Please try again.",
+      "rateLimited": "Too many failed attempts. Try again in {{minutes}} minute(s).",
+      "sessionExpired": "Session expired. Please log in again.",
+      "useRecoveryCode": "Use a recovery code instead",
+      "useAuthenticatorApp": "Use authenticator app instead"
+    }
   },
   "register": {
     "title": "Register",
@@ -274,6 +286,36 @@
         "delivered": "Delivered",
         "cancelled": "Cancelled"
       }
+    },
+    "security": {
+      "tab": "Security",
+      "title": "Two-Factor Authentication",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enable": "Enable 2FA",
+      "disable": "Disable 2FA",
+      "regenerate": "Regenerate recovery codes",
+      "scanQr": "Scan this QR code with Google Authenticator, Authy, or 1Password",
+      "manualEntry": "Or enter this key manually:",
+      "enterCode": "Enter the 6-digit code from your app",
+      "verify": "Verify and enable",
+      "invalidCode": "Invalid code. Please try again.",
+      "saveCodesWarning": "Save these recovery codes in a safe place. They are shown only once. Each code can be used only one time to log in if you lose access to your authenticator app.",
+      "copyAll": "Copy all",
+      "downloadCodes": "Download as .txt",
+      "savedConfirmation": "I've saved my recovery codes in a safe place",
+      "done": "Done",
+      "enableSuccess": "2FA enabled successfully",
+      "disableSuccess": "2FA disabled",
+      "regenerateSuccess": "Recovery codes regenerated",
+      "codesCopied": "Codes copied to clipboard",
+      "errorStartSetup": "Failed to start 2FA setup",
+      "lowRecoveryCodes": "You have only {{count}} recovery code(s) left. Regenerate them now.",
+      "disableDialogTitle": "Disable Two-Factor Authentication",
+      "codeOrRecovery": "Authenticator code or recovery code",
+      "regenerateDialogTitle": "Regenerate Recovery Codes",
+      "regenerateWarning": "This will invalidate your existing recovery codes and generate a new set of 8."
     }
   }
 }

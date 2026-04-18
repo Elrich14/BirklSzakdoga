@@ -5,6 +5,7 @@ const multer = require("multer");
 const { sequelize } = require("./dataBase");
 
 const authRoutes = require("./auth");
+const twoFactorRoutes = require("./twoFactorRoutes");
 const productRoutes = require("./productRoutes");
 const wishlistRoutes = require("./wishlistRoutes");
 const orderRoutes = require("./orderRoutes");
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/auth", authRoutes);
+app.use("/auth/2fa", twoFactorRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api", orderRoutes);

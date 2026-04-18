@@ -143,3 +143,7 @@ Próba képek/
 docs/
 
 Birkl_Erik_szakdolgozat_2.pdf
+
+# Recovery codes / secrets (never commit)
+*recovery*codes*
+*.rtf

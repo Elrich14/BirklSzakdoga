@@ -5,6 +5,7 @@ const Order = require("./order");
 const OrderItem = require("./orderItem");
 const ProductVariant = require("./productVariant");
 const Review = require("./review");
+const TwoFactorAttempt = require("./twoFactorAttempt");
 
 Order.hasMany(OrderItem, { foreignKey: "orderId", as: "items" });
 OrderItem.belongsTo(Order, { foreignKey: "orderId" });
@@ -17,6 +18,9 @@ Review.belongsTo(Product, { foreignKey: "productId", as: "product" });
 Product.hasMany(Review, { foreignKey: "productId", as: "reviews" });
 User.hasMany(Review, { foreignKey: "userId", as: "reviews" });
 
+TwoFactorAttempt.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(TwoFactorAttempt, { foreignKey: "userId" });
+
 module.exports = {
   Product,
   User,
@@ -25,4 +29,5 @@ module.exports = {
   OrderItem,
   ProductVariant,
   Review,
+  TwoFactorAttempt,
 };

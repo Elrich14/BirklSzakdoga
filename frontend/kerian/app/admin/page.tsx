@@ -10,6 +10,7 @@ import SideNavbar from "../components/sideNavbar/sideNavbar";
 import AnalyticsDashboard from "./components/analyticsDashboard";
 import ProductManagement from "./components/productManagement";
 import OrderManagement from "./components/orderManagement";
+import TwoFactorSettings from "./components/twoFactorSettings";
 
 const PREFIX = "AdminPage";
 const classes = {
@@ -44,6 +45,7 @@ export default function AdminPage() {
     { key: "analytics", label: t("admin.analytics") },
     { key: "products", label: t("admin.productManagement") },
     { key: "orders", label: t("admin.orderManagement") },
+    { key: "security", label: t("admin.security.tab") },
   ];
 
   const onTabChange = (key: string) => {
@@ -66,6 +68,7 @@ export default function AdminPage() {
         {activeTab === "analytics" && <AnalyticsDashboard />}
         {activeTab === "products" && <ProductManagement />}
         {activeTab === "orders" && <OrderManagement />}
+        {activeTab === "security" && <TwoFactorSettings />}
       </Box>
     </Root>
   );

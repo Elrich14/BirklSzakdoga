@@ -19,6 +19,15 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
 
+    if (user.twoFactorEnabled) {
+      const pendingToken = jwt.sign(
+        { id: user.id, scope: "2fa-pending" },
+        SECRET,
+        { expiresIn: "5m" }
+      );
+      return res.json({ pendingToken, twoFactorRequired: true });
+    }
+
     const token = jwt.sign(
       {
         id: user.id,

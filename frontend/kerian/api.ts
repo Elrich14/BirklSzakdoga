@@ -11,8 +11,26 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginResponse {
+export type LoginResponse =
+  | { token: string; twoFactorRequired?: false }
+  | { pendingToken: string; twoFactorRequired: true };
+
+export interface TwoFactorSetupResponse {
+  qrCodeDataUrl: string;
+  manualEntryKey: string;
+}
+
+export interface TwoFactorStatusResponse {
+  enabled: boolean;
+  remainingRecoveryCodes: number;
+}
+
+export interface TwoFactorVerifyResponse {
   token: string;
+}
+
+export interface TwoFactorRecoveryCodesResponse {
+  recoveryCodes: string[];
 }
 
 export interface RegisterRequest {
@@ -212,6 +230,105 @@ export async function registerUser(data: RegisterRequest): Promise<void> {
     throw new Error(err.message || "Registration failed");
   }
 }
+
+// ==================== 2FA ====================
+
+export const verifyTwoFactor = async (
+  pendingToken: string,
+  code: string
+): Promise<TwoFactorVerifyResponse> => {
+  const response = await fetch(`${API_BASE}/auth/2fa/verify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pendingToken, code }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    const error = new Error(err.error || "Verification failed") as Error & {
+      status?: number;
+      retryAfterSeconds?: number;
+    };
+    error.status = response.status;
+    if (err.retryAfterSeconds !== undefined) {
+      error.retryAfterSeconds = err.retryAfterSeconds;
+    }
+    throw error;
+  }
+
+  return response.json();
+};
+
+const authHeaders = (): Record<string, string> => {
+  const token = localStorage.getItem("token");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
+export const fetchTwoFactorStatus =
+  async (): Promise<TwoFactorStatusResponse> => {
+    const response = await fetch(`${API_BASE}/auth/2fa/status`, {
+      headers: authHeaders(),
+    });
+    if (!response.ok) throw new Error("Failed to fetch 2FA status");
+    return response.json();
+  };
+
+export const setupTwoFactor = async (): Promise<TwoFactorSetupResponse> => {
+  const response = await fetch(`${API_BASE}/auth/2fa/setup`, {
+    method: "POST",
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to start 2FA setup");
+  return response.json();
+};
+
+export const enableTwoFactor = async (
+  code: string
+): Promise<TwoFactorRecoveryCodesResponse> => {
+  const response = await fetch(`${API_BASE}/auth/2fa/enable`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ code }),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to enable 2FA");
+  }
+  return response.json();
+};
+
+export const disableTwoFactor = async (
+  password: string,
+  code: string
+): Promise<void> => {
+  const response = await fetch(`${API_BASE}/auth/2fa/disable`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ password, code }),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to disable 2FA");
+  }
+};
+
+export const regenerateRecoveryCodes = async (
+  code: string
+): Promise<TwoFactorRecoveryCodesResponse> => {
+  const response = await fetch(`${API_BASE}/auth/2fa/recovery-codes/regenerate`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ code }),
+  });
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to regenerate recovery codes");
+  }
+  return response.json();
+};
 
 // GET ALL PRODUCTS
 export async function fetchAllProducts(): Promise<Product[]> {

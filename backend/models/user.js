@@ -40,6 +40,19 @@ const User = sequelize.define('User', {
       isIn: [['user', 'admin']],
     },
   },
+  twoFactorSecret: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  twoFactorEnabled: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
+  twoFactorRecoveryCodes: {
+    type: DataTypes.JSONB,
+    allowNull: true,
+  },
 }, {
   timestamps: true,
   paranoid: true,
