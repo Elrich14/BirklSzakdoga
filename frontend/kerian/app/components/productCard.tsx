@@ -63,7 +63,7 @@ const Root = styled(Card)(() => ({
     overflow: "hidden",
     "&:hover": {
       boxShadow: boxShadows.kerian_main_button_hover_shadow,
-      transform: "scale(1.05)",
+      transform: "scale(1.03)",
       zIndex: 0,
     },
     "& img": {
