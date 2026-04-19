@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { resolveImageUrl } from "../utils/image";
 import { useQueries } from "@tanstack/react-query";
 import { fetchProductStock } from "@/api";
+import RecommendedProducts from "./recommendedProducts";
 
 const PREFIX = "CartPage";
 
@@ -249,6 +250,8 @@ export default function CartPage() {
               {t("cart.clear")}
             </Button>
           </Box>
+
+          <RecommendedProducts cartProductIds={uniqueProductIds} />
         </>
       )}
 

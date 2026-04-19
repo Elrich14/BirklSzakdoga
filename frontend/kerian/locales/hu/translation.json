@@ -167,7 +167,8 @@
     "empty": "A kosár üres",
     "total": "Végösszeg",
     "checkout": "Fizetés",
-    "clear": "Kosár törlése"
+    "clear": "Kosár törlése",
+    "aiRecommendations": "Ezek is tetszhetnek"
   },
   "orderingForm": {
     "title": "Szállítási információk",

@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
 const { sequelize } = require("./dataBase");
-
 const authRoutes = require("./auth");
 const twoFactorRoutes = require("./twoFactorRoutes");
 const productRoutes = require("./productRoutes");
@@ -11,6 +10,7 @@ const wishlistRoutes = require("./wishlistRoutes");
 const orderRoutes = require("./orderRoutes");
 const reviewRoutes = require("./reviewRoutes");
 const adminRoutes = require("./adminRoutes");
+const recommendationsRoutes = require("./recommendationsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +25,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/recommendations", recommendationsRoutes);
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

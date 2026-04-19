@@ -337,6 +337,20 @@ export async function fetchAllProducts(): Promise<Product[]> {
   return res.json();
 }
 
+// GET AI RECOMMENDATIONS BASED ON CART
+export async function fetchRecommendations(
+  cartProductIds: number[],
+  language: string
+): Promise<{ recommendedProductIds: number[] }> {
+  const res = await fetch(`${API_BASE}/api/recommendations`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cartProductIds, language }),
+  });
+  if (!res.ok) throw new Error("Failed to fetch recommendations");
+  return res.json();
+}
+
 // GET PRODUCT BY ID
 export async function fetchProductById(id: string | number): Promise<Product> {
   const res = await fetch(`${API_BASE}/api/products/${id}`);

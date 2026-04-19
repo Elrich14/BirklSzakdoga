@@ -160,7 +160,8 @@
     "empty": "Your cart is empty",
     "total": "Total",
     "checkout": "Checkout",
-    "clear": "Clear Cart"
+    "clear": "Clear Cart",
+    "aiRecommendations": "You might also like"
   },
   "orderingForm": {
     "title": "Shipping Information",
