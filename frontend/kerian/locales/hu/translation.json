@@ -101,6 +101,8 @@
     "insufficientStock": "Csak {{available}} db elérhető ({{requested}} db kérve)",
     "variantOutOfStock": "Ez a variáns nincs készleten",
     "details": "Részletek",
+    "description": "Leírás",
+    "readMore": "Tovább olvasom",
     "quantity": "Mennyiség",
     "currency": "Ft",
     "loginToBuy": "Jelentkezzen be a vásárláshoz",

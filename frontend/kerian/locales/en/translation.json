@@ -94,6 +94,8 @@
     "insufficientStock": "Only {{available}} available (requested {{requested}})",
     "variantOutOfStock": "This variant is out of stock",
     "details": "View Details",
+    "description": "Description",
+    "readMore": "Read more",
     "quantity": "Quantity",
     "currency": "Huf",
     "loginToBuy": "Login to buy",

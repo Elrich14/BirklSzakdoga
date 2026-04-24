@@ -99,6 +99,7 @@ const Root = styled(Card)(() => ({
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     textOverflow: "ellipsis",
+    height: "115px",
   },
   [`& .${classes.pricePill}`]: {
     fontFamily: "monospace",
@@ -261,9 +262,6 @@ export default function ProductCard({
         <CardContent>
           <Typography className={classes.productName}>{name}</Typography>
           <Divider className={classes.divider} />
-          <Typography className={classes.productDescription} variant="body2">
-            {description}
-          </Typography>
           <Box className={classes.cardFooterBox}>
             <Typography className={classes.pricePill}>
               {price.toLocaleString()} {t("card.currency")}

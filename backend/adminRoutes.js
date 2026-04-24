@@ -7,7 +7,7 @@ const Wishlist = require("./models/wishlist");
 const { Order, OrderItem } = require("./models");
 const authenticateToken = require("./authenticateToken");
 const requireAdmin = require("./requireAdmin");
-const { upload } = require("./upload");
+const { upload, uploadToCloudinary } = require("./upload");
 const {
   ORDER_STATUSES,
   DEFAULT_ORDER_PAGE_SIZE,
@@ -232,6 +232,7 @@ router.post(
   authenticateToken,
   requireAdmin,
   upload.array("images", 10),
+  uploadToCloudinary,
   async (req, res) => {
     try {
       const { name, description, price, category, color, size, gender } =
@@ -335,6 +336,7 @@ router.put(
   authenticateToken,
   requireAdmin,
   upload.array("images", 10),
+  uploadToCloudinary,
   async (req, res) => {
     try {
       const product = await Product.findByPk(req.params.id);
