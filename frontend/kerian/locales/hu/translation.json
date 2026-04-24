@@ -44,6 +44,19 @@
       "sessionExpired": "A munkamenet lejárt. Jelentkezzen be újra.",
       "useRecoveryCode": "Helyreállítási kód használata helyette",
       "useAuthenticatorApp": "Hitelesítő alkalmazás használata helyette"
+    },
+    "google": {
+      "or": "vagy",
+      "signInWithGoogle": "Bejelentkezés Google-lel",
+      "pickUsername": {
+        "title": "Már csak egy lépés — válassz felhasználónevet",
+        "subtitle": "Ezen a néven fognak látni a többi felhasználók a Kerianon.",
+        "available": "✓ Elérhető",
+        "taken": "Ez a felhasználónév már foglalt.",
+        "invalid": "3–50 karakter, csak betűk/számok/aláhúzás/kötőjel.",
+        "checking": "Ellenőrzés folyamatban…",
+        "submit": "Fiók létrehozása"
+      }
     }
   },
   "register": {
@@ -209,7 +222,14 @@
     "orderSuccess": "Rendelés sikeresen leadva!",
     "orderError": "Rendelés leadása sikertelen. Próbáld újra.",
     "insufficientStock": "Nincs elég készlet: {{productName}} ({{size}}, {{color}}). Csak {{available}} db elérhető.",
-    "networkError": "Hálózati hiba. Próbáld újra."
+    "networkError": "Hálózati hiba. Próbáld újra.",
+    "oauthAdminBlocked": "Az admin fiókoknak jelszóval és hitelesítő kóddal kell bejelentkezniük.",
+    "oauthEmailInUse": "Ezzel az email címmel már létezik fiók. Kérlek, jelentkezz be jelszóval.",
+    "oauthHandoffExpired": "A bejelentkezési link lejárt. Próbáld újra.",
+    "oauthFailed": "A Google bejelentkezés nem sikerült. Próbáld újra.",
+    "oauthEmailNotVerified": "A Google email címed nincs megerősítve. Erősítsd meg először a Google-nél.",
+    "oauthRateLimited": "Túl sok próbálkozás. Kérlek, várj egy percet.",
+    "oauthInternalError": "Valami hiba történt. Próbáld újra."
   },
   "admin": {
     "title": "Admin Panel",

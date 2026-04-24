@@ -795,3 +795,54 @@ export async function deleteReview(reviewId: number): Promise<void> {
     throw new Error(err.error || "Failed to delete review");
   }
 }
+
+// ==================== GOOGLE OAUTH ====================
+
+export type GoogleExchangeResponse =
+  | { token: string }
+  | { pendingToken: string; needsUsername: true };
+
+export async function exchangeGoogleHandoff(
+  handoff: string
+): Promise<GoogleExchangeResponse> {
+  const response = await fetch(`${API_BASE}/auth/google/exchange`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ handoff }),
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw Object.assign(new Error(error.error || "handoff_failed"), {
+      status: response.status,
+    });
+  }
+  return response.json();
+}
+
+export async function checkUsernameAvailable(
+  username: string
+): Promise<{ available: boolean; reason?: string }> {
+  const url = new URL(`${API_BASE}/auth/username-available`);
+  url.searchParams.set("username", username);
+  const response = await fetch(url.toString());
+  if (!response.ok) throw new Error("username_check_failed");
+  return response.json();
+}
+
+export async function completeGoogleSignup(
+  pendingToken: string,
+  username: string
+): Promise<{ token: string }> {
+  const response = await fetch(`${API_BASE}/auth/google/complete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pendingToken, username }),
+  });
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw Object.assign(new Error(error.error || "google_complete_failed"), {
+      status: response.status,
+    });
+  }
+  return response.json();
+}

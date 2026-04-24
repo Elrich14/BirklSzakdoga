@@ -9,6 +9,7 @@ const User = require("./models/user");
 const authenticateToken = require("./authenticateToken");
 const { encryptSecret, decryptSecret } = require("./utils/totpCrypto");
 const { rateLimit2FA, recordAttempt } = require("./rateLimit2FA");
+const { TOKEN_SCOPES } = require("./constants/constants");
 
 const router = express.Router();
 const SECRET = process.env.JWT_SECRET;
@@ -212,7 +213,7 @@ router.post("/verify", async (req, res) => {
       return res.status(401).json({ error: "Invalid or expired token" });
     }
 
-    if (decoded.scope !== "2fa-pending") {
+    if (decoded.scope !== TOKEN_SCOPES.TWO_FA_PENDING) {
       return res.status(401).json({ error: "Invalid token scope" });
     }
 

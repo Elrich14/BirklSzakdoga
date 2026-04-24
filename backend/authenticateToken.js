@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { TOKEN_SCOPES } = require("./constants/constants");
 const SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
@@ -9,7 +10,7 @@ const authenticateToken = (req, res, next) => {
 
   jwt.verify(token, SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
-    if (user.scope === "2fa-pending") return res.sendStatus(403);
+    if (user.scope === TOKEN_SCOPES.TWO_FA_PENDING) return res.sendStatus(403);
     req.user = user;
     next();
   });

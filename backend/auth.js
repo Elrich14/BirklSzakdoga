@@ -4,6 +4,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
+const { TOKEN_SCOPES } = require("./constants/constants");
 const SECRET = process.env.JWT_SECRET;
 
 router.post("/login", async (req, res) => {
@@ -21,7 +22,7 @@ router.post("/login", async (req, res) => {
 
     if (user.twoFactorEnabled) {
       const pendingToken = jwt.sign(
-        { id: user.id, scope: "2fa-pending" },
+        { id: user.id, scope: TOKEN_SCOPES.TWO_FA_PENDING },
         SECRET,
         { expiresIn: "5m" }
       );

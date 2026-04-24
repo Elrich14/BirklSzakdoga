@@ -317,3 +317,18 @@ BirklSzakdoga/
 - **Auth flow:** Login → JWT token → localStorage → Bearer header on protected requests
 - **Wishlist:** Only available for logged-in users
 - **Inactivity:** Auto-logout on user inactivity (InactivityHelper component)
+
+---
+
+## Known security gaps (deliberately deferred, tracked)
+
+These gaps exist in the current implementation and are tracked for future work. They were accepted as scope-outs during the Google OAuth rollout (issue #39, 2026-04-19) so the feature could ship on schedule. Do not silently re-introduce or "fix" these in unrelated PRs — each one has its own issue.
+
+- **JWT stored in `localStorage`** → vulnerable to XSS token theft. Migration to `httpOnly` cookies is tracked in **#50**. This is the single biggest real security upgrade — favor it over the other items when scheduling.
+- **In-memory OAuth handoff store** (`backend/oauth/handoffStore.js`) → works only on a single backend instance; a multi-instance deploy would break Google sign-in. Redis migration tracked in **#51**.
+- **No email verification on password registration** → a user can register with an email they don't own. Tracked in **#52**. Google sign-in *does* require `email_verified:true` from Google, so OAuth users are safe.
+- **No "link Google to existing account" UI on the profile page** → today, email-password users who try to sign in with the same Google email hit the `oauthEmailInUse` snackbar. Tracked in **#53**.
+- **No device/session management** → users can't see or revoke active sessions. Tracked in **#54**.
+- **Admin promotion of password-less Google users** → a Google-only account (`authProvider: "google"`, `password: null`) could theoretically be promoted to admin and then be unable to complete the admin login flow (which requires password + TOTP). Promotion path should refuse Google-only users. Tracked in **#55**.
+
+Umbrella roadmap issue: search GitHub for "OAuth hardening roadmap".

@@ -44,6 +44,19 @@
       "sessionExpired": "Session expired. Please log in again.",
       "useRecoveryCode": "Use a recovery code instead",
       "useAuthenticatorApp": "Use authenticator app instead"
+    },
+    "google": {
+      "or": "or",
+      "signInWithGoogle": "Sign in with Google",
+      "pickUsername": {
+        "title": "Almost there — choose a username",
+        "subtitle": "This is how other users will see you on Kerian.",
+        "available": "✓ Available",
+        "taken": "This username is already taken.",
+        "invalid": "3–50 chars, letters/numbers/underscore/hyphen only.",
+        "checking": "Checking availability…",
+        "submit": "Create account"
+      }
     }
   },
   "register": {
@@ -202,7 +215,14 @@
     "orderSuccess": "Order placed successfully!",
     "orderError": "Failed to place order. Please try again.",
     "insufficientStock": "Not enough stock for {{productName}} ({{size}}, {{color}}). Only {{available}} available.",
-    "networkError": "Network error. Please try again."
+    "networkError": "Network error. Please try again.",
+    "oauthAdminBlocked": "Admin accounts must sign in with password and authenticator code.",
+    "oauthEmailInUse": "An account with this email already exists. Please sign in with your password.",
+    "oauthHandoffExpired": "Sign-in link expired. Please try again.",
+    "oauthFailed": "Google sign-in failed. Please try again.",
+    "oauthEmailNotVerified": "Your Google email is not verified. Please verify it with Google first.",
+    "oauthRateLimited": "Too many attempts. Please wait a minute.",
+    "oauthInternalError": "Something went wrong. Please try again."
   },
   "admin": {
     "title": "Admin Panel",

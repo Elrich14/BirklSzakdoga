@@ -29,3 +29,10 @@ export const colors = {
 export const boxShadows = {
   kerian_main_button_hover_shadow: "0 4px 8px rgba(0, 207, 172, 0.3)",
 };
+
+export const googleBrand = {
+  buttonBackground: "#131314",
+  buttonText: "#ffffff",
+  buttonBorder: "#747775",
+  buttonBackgroundHover: "#2d2d2d",
+};

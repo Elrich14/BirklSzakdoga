@@ -18,6 +18,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { registerUser } from "@/api";
 import { useSnackbar } from "../providers/snackbarProvider";
+import GoogleSignInButton from "../components/auth/googleSignInButton";
 
 const PREFIX = "RegisterPage";
 
@@ -254,6 +255,8 @@ export default function Register() {
             );
           }}
         </Formik>
+
+        <GoogleSignInButton />
       </Box>
     </Root>
   );

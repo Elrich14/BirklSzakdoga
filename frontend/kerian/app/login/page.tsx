@@ -16,10 +16,15 @@ import { useEffect, useRef, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { boxShadows, colors } from "../../constants/colors";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loginUser, verifyTwoFactor } from "@/api";
 import { jwtDecode } from "jwt-decode";
 import { useSnackbar } from "../providers/snackbarProvider";
+import GoogleSignInButton from "../components/auth/googleSignInButton";
+import {
+  OAUTH_ERROR_I18N_KEYS,
+  type OAuthErrorCode,
+} from "../../constants/constants";
 
 type TokenPayload = {
   id: string;
@@ -132,6 +137,8 @@ export default function Login() {
   const [isVerifying, setIsVerifying] = useState(false);
   const twoFactorInputRef = useRef<HTMLInputElement | null>(null);
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     router.prefetch("/");
   }, [router]);
@@ -141,6 +148,16 @@ export default function Login() {
       twoFactorInputRef.current?.focus();
     }
   }, [loginState.step]);
+
+  useEffect(() => {
+    const errorCode = searchParams.get("error");
+    if (!errorCode) return;
+    const translationKey = OAUTH_ERROR_I18N_KEYS[errorCode as OAuthErrorCode];
+    if (translationKey) {
+      showSnackbar(t(translationKey), "error");
+      window.history.replaceState(null, "", "/login");
+    }
+  }, [searchParams, showSnackbar, t]);
 
   const initialValues = {
     email: "",
@@ -408,6 +425,8 @@ export default function Login() {
         {loginState.step === "credentials"
           ? renderCredentialsForm()
           : renderTwoFactorForm()}
+
+        {loginState.step === "credentials" && <GoogleSignInButton />}
       </Box>
     </Root>
   );

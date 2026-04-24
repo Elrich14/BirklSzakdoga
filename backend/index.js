@@ -2,9 +2,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
+const passport = require("passport");
+const session = require("express-session");
 const { sequelize } = require("./dataBase");
 const authRoutes = require("./auth");
 const twoFactorRoutes = require("./twoFactorRoutes");
+const oauthRoutes = require("./oauth/routes");
 const productRoutes = require("./productRoutes");
 const wishlistRoutes = require("./wishlistRoutes");
 const orderRoutes = require("./orderRoutes");
@@ -18,7 +21,26 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
+passport.use(require("./oauth/googleStrategy"));
+
+app.use(
+  "/auth/google",
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      maxAge: 5 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+    },
+  })
+);
+app.use(passport.initialize());
+
 app.use("/auth", authRoutes);
+app.use("/auth", oauthRoutes);
 app.use("/auth/2fa", twoFactorRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/wishlist", wishlistRoutes);
