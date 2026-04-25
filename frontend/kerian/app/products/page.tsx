@@ -81,6 +81,7 @@ export default function ProductsPage() {
     colors: [],
     priceMin: 0,
     priceMax: 0,
+    searchQuery: "",
   });
 
   const {
@@ -117,7 +118,16 @@ export default function ProductsPage() {
   }, [highestPrice]);
 
   const filteredProducts = useMemo(() => {
+    const trimmedQuery = filters.searchQuery.trim().toLowerCase();
     return products.filter((product) => {
+      if (trimmedQuery) {
+        const matchesName = product.name.toLowerCase().includes(trimmedQuery);
+        const matchesDescription = product.description
+          .toLowerCase()
+          .includes(trimmedQuery);
+        if (!matchesName && !matchesDescription) return false;
+      }
+
       if (product.price < filters.priceMin || product.price > filters.priceMax)
         return false;
 

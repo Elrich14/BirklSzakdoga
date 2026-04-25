@@ -78,6 +78,7 @@
     "minPrice": "Minimum ár",
     "maxPrice": "Maximum ár",
     "selectAll": "Összes kiválasztása",
+    "searchPlaceholder": "Keresés név vagy leírás alapján...",
     "sortOptions": {
       "priceAsc": "Ár: Növekvő",
       "priceDesc": "Ár: Csökkenő",

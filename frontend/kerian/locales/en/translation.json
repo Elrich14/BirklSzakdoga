@@ -78,6 +78,7 @@
     "minPrice": "Minimum Price",
     "maxPrice": "Maximum Price",
     "selectAll": "Select All",
+    "searchPlaceholder": "Search by name or description...",
     "clear": "Clear Filters",
     "genderOptions": {
       "Male": "Male",

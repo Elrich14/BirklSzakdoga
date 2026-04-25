@@ -9,7 +9,9 @@ import {
   FormGroup,
   TextField,
   Slider,
+  InputAdornment,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -29,6 +31,7 @@ const classes = {
   radioGroup: `${PREFIX}-radioGroup`,
   priceInputs: `${PREFIX}-priceInputs`,
   priceTextField: `${PREFIX}-priceTextField`,
+  searchField: `${PREFIX}-searchField`,
   sizeGrid: `${PREFIX}-sizeGrid`,
   colorBox: `${PREFIX}-colorBox`,
   actionButtons: `${PREFIX}-actionButtons`,
@@ -72,6 +75,13 @@ const Root = styled(Box)(() => ({
   [`& .${classes.priceTextField}`]: {
     flex: 1,
   },
+  [`& .${classes.searchField}`]: {
+    width: "100%",
+    marginTop: "8px",
+  },
+  [`& .${classes.searchField} input::placeholder`]: {
+    fontSize: "13px",
+  },
   [`& .${classes.sizeGrid}`]: {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(50px, 1fr))",
@@ -103,6 +113,7 @@ export interface FilterState {
   colors: string[];
   priceMin: number;
   priceMax: number;
+  searchQuery: string;
 }
 
 export default function ProductFilterNew({
@@ -120,6 +131,7 @@ export default function ProductFilterNew({
     colors: [],
     priceMin: 0,
     priceMax: initialSelectedMax,
+    searchQuery: "",
   });
 
   // local inputs for price so we can clear on focus and only commit on blur
@@ -129,6 +141,10 @@ export default function ProductFilterNew({
   const [localMaxInput, setLocalMaxInput] = useState<string>(
     String(filters.priceMax)
   );
+
+  // local search input — committed to filters via debounce to avoid
+  // re-filtering on every keystroke
+  const [localSearchInput, setLocalSearchInput] = useState<string>("");
 
   // sync local inputs when filters change (e.g., reset)
   useEffect(() => {
@@ -205,13 +221,23 @@ export default function ProductFilterNew({
 
   const debounceMinRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const debounceMaxRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debounceSearchRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     return () => {
       if (debounceMinRef.current) clearTimeout(debounceMinRef.current);
       if (debounceMaxRef.current) clearTimeout(debounceMaxRef.current);
+      if (debounceSearchRef.current) clearTimeout(debounceSearchRef.current);
     };
   }, []);
+
+  const onSearchInputChange = (value: string) => {
+    setLocalSearchInput(value);
+    if (debounceSearchRef.current) clearTimeout(debounceSearchRef.current);
+    debounceSearchRef.current = setTimeout(() => {
+      updateFilters({ ...filters, searchQuery: value });
+    }, 300);
+  };
 
   const onMinInputChange = (value: string) => {
     setLocalMinInput(value);
@@ -237,18 +263,42 @@ export default function ProductFilterNew({
 
   // Clear all filters
   const onClearFilters = () => {
+    if (debounceSearchRef.current) clearTimeout(debounceSearchRef.current);
+    setLocalSearchInput("");
     updateFilters({
       sizes: availableSizes,
       gender: [],
       colors: [],
       priceMin: 0,
       priceMax: initialSelectedMax,
+      searchQuery: "",
     });
   };
 
   return (
     <Root className={classes.root}>
       <Typography className={classes.title}>{t("filter.title")}</Typography>
+
+      {/* SEARCH FILTER */}
+      <Box className={classes.filterSection}>
+        <TextField
+          type="text"
+          size="small"
+          placeholder={t("filter.searchPlaceholder")}
+          value={localSearchInput}
+          onChange={(event) => onSearchInputChange(event.target.value)}
+          className={classes.searchField}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </Box>
 
       {/* PRICE FILTER */}
       <Box className={classes.filterSection}>
