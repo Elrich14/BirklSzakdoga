@@ -19,7 +19,7 @@ const classes = {
   heroImage: `${PREFIX}-heroImage`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     width: "100%",
     display: "flex",
@@ -35,10 +35,12 @@ const Root = styled("div")(() => ({
   [`& .${classes.kerian}`]: {
     fontSize: "200px",
     fontWeight: "bold",
-    color: "white",
+    color: theme.palette.text.primary,
   },
   [`& .${classes.heroImage}`]: {
-    filter: "invert(1)",
+    ...theme.applyStyles("dark", {
+      filter: "invert(1)",
+    }),
   },
 }));
 

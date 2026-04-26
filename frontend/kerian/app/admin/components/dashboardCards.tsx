@@ -9,7 +9,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PeopleIcon from "@mui/icons-material/People";
 import { fetchDashboardStats } from "@/api";
-import { colors } from "@/constants/colors";
 
 const PREFIX = "DashboardCards";
 const classes = {
@@ -22,7 +21,7 @@ const classes = {
   cardValue: `${PREFIX}-cardValue`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
@@ -32,7 +31,7 @@ const Root = styled(Box)(() => ({
     },
   },
   [`& .${classes.card}`]: {
-    backgroundColor: colors.admin_surface,
+    backgroundColor: theme.palette.admin.surface,
     borderRadius: "12px",
     padding: "24px",
     display: "flex",
@@ -46,13 +45,13 @@ const Root = styled(Box)(() => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: `${colors.kerian_main}22`,
-    color: colors.kerian_main,
+    backgroundColor: theme.palette.kerian.bg,
+    color: theme.palette.kerian.main,
     flexShrink: 0,
   },
 }));
 
-const LoadingWrapper = styled(Box)(() => ({
+const LoadingWrapper = styled(Box)(({ theme }) => ({
   [`&.${classes.loadingWrapper}`]: {
     display: "flex",
     justifyContent: "center",
@@ -60,13 +59,13 @@ const LoadingWrapper = styled(Box)(() => ({
     paddingBottom: "32px",
   },
   [`& .${classes.spinner}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
 }));
 
-const CardLabel = styled(Typography)(() => ({
+const CardLabel = styled(Typography)(({ theme }) => ({
   [`&.${classes.cardLabel}`]: {
-    color: colors.admin_text_secondary,
+    color: theme.palette.admin.textSecondary,
   },
 }));
 

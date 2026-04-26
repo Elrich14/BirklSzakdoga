@@ -13,13 +13,13 @@ import {
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { boxShadows, colors } from "@/constants/colors";
 import { getUserRole } from "../../utils/auth";
 import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../providers/languageProvider";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCartStore } from "../store/cartStore";
+import ThemeToggle from "../themeToggle";
 
 const PREFIX = "Navbar";
 
@@ -40,7 +40,7 @@ type Route = {
   align: "left" | "right";
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     position: "sticky",
     top: 0,
@@ -49,17 +49,17 @@ const Root = styled("div")(() => ({
       display: "flex",
       flexDirection: "row",
       gap: "10px",
-      backgroundColor: colors.kerian_navbar,
+      backgroundColor: theme.palette.kerian.navbar,
     },
     "& .MuiButton-root": {
-      color: "white",
+      color: theme.palette.text.primary,
       textTransform: "none",
     },
     "& .MuiButton-root:hover": {
-      boxShadow: boxShadows.kerian_main_button_hover_shadow,
+      boxShadow: theme.palette.kerian.shadowHover,
     },
     "& .MuiButton-root.active": {
-      color: colors.kerian_main,
+      color: theme.palette.kerian.main,
       fontWeight: "bold",
       fontStyle: "italic",
     },
@@ -79,40 +79,45 @@ const Root = styled("div")(() => ({
     marginLeft: "auto",
     display: "flex",
     gap: "10px",
+    alignItems: "center",
   },
   [`& .${classes.cartBox}`]: {
-    width: "20px",
-    height: "20px",
-    padding: "6px 8px",
-    marginRight: "15px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "40px",
+    padding: "8px",
     cursor: "pointer",
-    color: "white",
+    color: theme.palette.text.primary,
     "&:hover": {
-      color: colors.kerian_main,
+      color: theme.palette.kerian.main,
     },
   },
   [`& .${classes.cartBoxActive}`]: {
-    width: "20px",
-    height: "20px",
-    padding: "6px 8px",
-    marginRight: "15px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "40px",
+    height: "40px",
+    padding: "8px",
     cursor: "pointer",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.langSelect}`]: {
-    color: "white",
+    color: theme.palette.text.primary,
     fontSize: "14px",
     minWidth: "50px",
     "& .MuiSelect-select": {
       padding: "4px 24px 4px 8px",
     },
     "& .MuiSelect-icon": {
-      color: "white",
+      color: theme.palette.text.primary,
     },
     "&:hover": {
-      color: colors.kerian_main,
+      color: theme.palette.kerian.main,
       "& .MuiSelect-icon": {
-        color: colors.kerian_main,
+        color: theme.palette.kerian.main,
       },
     },
   },
@@ -157,12 +162,6 @@ export default function Navbar() {
       align: "left",
     },
     {
-      path: "/my-orders",
-      name: t("navbar.myOrders"),
-      if: "userOnly",
-      align: "left",
-    },
-    {
       path: "/admin",
       name: t("navbar.admin"),
       if: "admin",
@@ -187,6 +186,12 @@ export default function Navbar() {
           <ShoppingCartIcon />
         </Badge>
       ),
+      if: "loggedIn",
+      align: "right",
+    },
+    {
+      path: "/profile",
+      name: t("navbar.profile"),
       if: "loggedIn",
       align: "right",
     },
@@ -230,11 +235,12 @@ export default function Navbar() {
 
   return (
     <Root className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar className={classes.toolbar}>
           <Box className={classes.leftBox}>{renderRoutes(leftRoutes)}</Box>
           <Box className={classes.rightBox}>
             {renderRoutes(rightRoutes)}
+            <ThemeToggle />
             <Select
               value={language}
               onChange={onLanguageChange}

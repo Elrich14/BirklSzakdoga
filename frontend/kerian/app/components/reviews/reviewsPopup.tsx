@@ -28,7 +28,6 @@ import {
   Review,
   CanReviewReason,
 } from "@/api";
-import { colors } from "@/constants/colors";
 import { getUserRole, getCurrentUserId } from "../../utils/auth";
 import { useSnackbar } from "../../providers/snackbarProvider";
 import StarRating from "./starRating";
@@ -70,7 +69,7 @@ const classes = {
   ratingLabel: `${PREFIX}-ratingLabel`,
 };
 
-const Root = styled(Dialog)(() => ({
+const Root = styled(Dialog)(({ theme }) => ({
   [`& .MuiDialog-paper`]: {
     minWidth: "500px",
     maxWidth: "650px",
@@ -78,7 +77,7 @@ const Root = styled(Dialog)(() => ({
     maxHeight: "calc(100vh - 60px)",
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#111111",
+    backgroundColor: theme.palette.background.paper,
   },
   [`& .${classes.dialogTitle}`]: {
     display: "flex",
@@ -89,7 +88,7 @@ const Root = styled(Dialog)(() => ({
     fontSize: "18px",
   },
   [`& .${classes.closeButton}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.header}`]: {
     display: "flex",
@@ -106,7 +105,7 @@ const Root = styled(Dialog)(() => ({
     fontFamily: "monospace",
     fontSize: "32px",
     fontWeight: "bold",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.reviewCount}`]: {
     fontFamily: "monospace",
@@ -119,7 +118,7 @@ const Root = styled(Dialog)(() => ({
     gap: "12px",
     padding: "16px",
     borderRadius: "8px",
-    border: `1px solid ${colors.kerian_main}`,
+    border: `1px solid ${theme.palette.kerian.main}`,
     marginBottom: "16px",
   },
   [`& .${classes.formTitle}`]: {
@@ -140,15 +139,15 @@ const Root = styled(Dialog)(() => ({
   },
   [`& .${classes.submitButton}`]: {
     fontFamily: "monospace",
-    backgroundColor: colors.kerian_main,
+    backgroundColor: theme.palette.kerian.main,
     color: "#ffffff",
     textTransform: "none",
     "&:hover": {
-      backgroundColor: colors.kerian_main,
+      backgroundColor: theme.palette.kerian.main,
       opacity: 0.85,
     },
     "&.Mui-disabled": {
-      backgroundColor: "rgba(3, 156, 130, 0.4)",
+      backgroundColor: theme.palette.kerian.bg,
       color: "#ffffff",
     },
   },
@@ -157,7 +156,7 @@ const Root = styled(Dialog)(() => ({
       fontFamily: "monospace",
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "rgba(255, 255, 255, 0.2)",
+      borderColor: theme.palette.kerian.overlayHoverLight,
     },
   },
   [`& .${classes.reviewList}`]: {
@@ -168,7 +167,7 @@ const Root = styled(Dialog)(() => ({
   [`& .${classes.reviewItem}`]: {
     padding: "12px",
     borderRadius: "6px",
-    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    backgroundColor: theme.palette.kerian.overlayHoverLight,
   },
   [`& .${classes.reviewHeader}`]: {
     display: "flex",
@@ -216,16 +215,16 @@ const Root = styled(Dialog)(() => ({
   [`& .${classes.divider}`]: {
     marginTop: "12px",
     marginBottom: "12px",
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    borderColor: theme.palette.kerian.overlayHoverLight,
   },
   [`& .${classes.reasonAlert}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
     marginBottom: "16px",
-    backgroundColor: "rgba(3, 156, 130, 0.12)",
-    color: colors.kerian_main,
+    backgroundColor: theme.palette.kerian.bg,
+    color: theme.palette.kerian.main,
     "& .MuiAlert-icon": {
-      color: colors.kerian_main,
+      color: theme.palette.kerian.main,
     },
   },
 }));

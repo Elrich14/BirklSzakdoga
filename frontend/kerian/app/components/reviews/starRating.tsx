@@ -5,8 +5,6 @@ import { styled } from "@mui/system";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-import { colors } from "@/constants/colors";
-
 interface StarRatingProps {
   value: number;
   max?: number;
@@ -23,18 +21,18 @@ const classes = {
   starButton: `${PREFIX}-starButton`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "inline-flex",
     alignItems: "center",
     gap: "2px",
   },
   [`& .${classes.star}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.starButton}`]: {
     padding: "2px",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
 }));
 

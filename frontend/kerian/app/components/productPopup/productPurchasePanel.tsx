@@ -25,7 +25,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { colors as themeColors } from "@/constants/colors";
 import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import QuantityInput from "../quantity";
 
@@ -81,7 +80,7 @@ const classes = {
   guestText: `${PREFIX}-guestText`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -109,7 +108,7 @@ const Root = styled(Box)(() => ({
   [`& .${classes.readMoreLink}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: themeColors.kerian_main,
+    color: theme.palette.kerian.main,
     textDecoration: "underline",
     cursor: "pointer",
     marginTop: "4px",
@@ -154,7 +153,7 @@ const Root = styled(Box)(() => ({
     backgroundColor: "var(--circle-color)",
   },
   [`& .${classes.colorButtonCircleSelected}`]: {
-    outline: `3px solid ${themeColors.kerian_main}`,
+    outline: `3px solid ${theme.palette.kerian.main}`,
   },
   [`& .${classes.colorButtonGroup}`]: {
     marginLeft: "auto",
@@ -164,12 +163,12 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.stockInfo}`]: {
     fontSize: "13px",
-    color: themeColors.kerian_main,
+    color: theme.palette.kerian.main,
     fontWeight: "bold",
   },
   [`& .${classes.outOfStockText}`]: {
     fontSize: "13px",
-    color: themeColors.danger,
+    color: theme.palette.error.main,
     fontWeight: "bold",
   },
   [`& .${classes.footer}`]: {

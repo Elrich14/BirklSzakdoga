@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import { boxShadows, colors } from "../../../constants/colors";
 import {
   USERNAME_AVAILABILITY_DEBOUNCE_MS,
   USERNAME_MIN_LENGTH,
@@ -57,7 +56,7 @@ const classes = {
   availabilityBad: `${PREFIX}-availabilityBad`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -70,23 +69,23 @@ const Root = styled("div")(() => ({
     minWidth: "400px",
     maxWidth: "400px",
     padding: "30px",
-    boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    boxShadow: theme.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",
-    backgroundColor: colors.kerian_main,
-    "&:hover": { backgroundColor: colors.kerian_main_button_hover },
+    backgroundColor: theme.palette.kerian.main,
+    "&:hover": { backgroundColor: theme.palette.kerian.hover },
   },
   [`& .${classes.availabilityOk}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.availabilityBad}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: colors.danger,
+    color: theme.palette.error.main,
   },
 }));
 

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { Product } from "../products/page";
 import ProductPopup from "../components/productPopup";
 import { resolveImageUrl } from "../utils/image";
-import { colors, boxShadows } from "@/constants/colors";
 
 interface RecommendedProductTileProps {
   product: Product;
@@ -22,7 +21,7 @@ const classes = {
   price: `${PREFIX}-price`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     alignItems: "center",
@@ -34,8 +33,8 @@ const Root = styled(Box)(() => ({
     minWidth: 0,
     transition: "background-color 0.2s ease, box-shadow 0.2s ease",
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.05)",
-      boxShadow: boxShadows.kerian_main_button_hover_shadow,
+      backgroundColor: theme.palette.kerian.overlayHoverLight,
+      boxShadow: theme.palette.kerian.shadowHover,
     },
   },
   [`& .${classes.image}`]: {
@@ -64,8 +63,8 @@ const Root = styled(Box)(() => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "12px",
-    backgroundColor: colors.kerian_main,
-    color: "#fff",
+    backgroundColor: theme.palette.kerian.main,
+    color: theme.palette.text.primary,
     padding: "2px 8px",
     borderRadius: "12px",
     width: "fit-content",

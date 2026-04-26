@@ -1,19 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { styled } from "@mui/system";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, Collapse, IconButton } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { fetchMyOrders, AdminOrder } from "@/api";
-import { colors } from "@/constants/colors";
-import { getUserRole } from "../utils/auth";
-import OrderStatusTracker from "../components/orderStatusTracker";
+import OrderStatusTracker from "../../components/orderStatusTracker";
 
-const PREFIX = "MyOrders";
+const PREFIX = "MyOrdersTab";
 const classes = {
   root: `${PREFIX}-root`,
   title: `${PREFIX}-title`,
@@ -31,19 +28,18 @@ const classes = {
   itemValue: `${PREFIX}-itemValue`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
     gap: "24px",
     maxWidth: "700px",
-    margin: "0 auto",
-    padding: "32px 16px",
   },
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "24px",
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.empty}`]: {
     fontFamily: "monospace",
@@ -51,11 +47,12 @@ const Root = styled(Box)(() => ({
     opacity: 0.6,
     textAlign: "center",
     padding: "48px 0",
+    color: theme.palette.text.primary,
   },
   [`& .${classes.orderCard}`]: {
     borderRadius: "12px",
-    border: `1px solid ${colors.admin_border}`,
-    backgroundColor: "rgba(255, 255, 255, 0.03)",
+    border: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.palette.kerian.overlayHoverLight,
     overflow: "hidden",
   },
   [`& .${classes.orderHeader}`]: {
@@ -65,7 +62,7 @@ const Root = styled(Box)(() => ({
     padding: "16px 20px",
     cursor: "pointer",
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.04)",
+      backgroundColor: theme.palette.kerian.overlayHoverLight,
     },
   },
   [`& .${classes.orderInfo}`]: {
@@ -77,15 +74,15 @@ const Root = styled(Box)(() => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "16px",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.orderMeta}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    opacity: 0.6,
+    color: theme.palette.text.secondary,
   },
   [`& .${classes.expandButton}`]: {
-    color: colors.admin_text_light,
+    color: theme.palette.admin.textLight,
   },
   [`& .${classes.orderDetails}`]: {
     padding: "0 20px 20px",
@@ -99,8 +96,8 @@ const Root = styled(Box)(() => ({
     gap: "8px",
     padding: "12px",
     borderRadius: "8px",
-    backgroundColor: "rgba(255, 255, 255, 0.03)",
-    border: `1px solid ${colors.admin_border}`,
+    backgroundColor: theme.palette.kerian.overlayHoverLight,
+    border: `1px solid ${theme.palette.admin.border}`,
   },
   [`& .${classes.itemRow}`]: {
     display: "flex",
@@ -112,35 +109,23 @@ const Root = styled(Box)(() => ({
   [`& .${classes.itemLabel}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    opacity: 0.85,
+    color: theme.palette.text.primary,
   },
   [`& .${classes.itemValue}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    opacity: 0.6,
+    color: theme.palette.text.secondary,
   },
 }));
 
-export default function MyOrdersPage() {
+export default function MyOrdersTab() {
   const { t } = useTranslation();
-  const router = useRouter();
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (getUserRole() === "guest") {
-      router.push("/login");
-    }
-  }, [router]);
 
   const { data: orders = [] } = useQuery({
     queryKey: ["myOrders"],
     queryFn: fetchMyOrders,
-    enabled: getUserRole() !== "guest",
   });
-
-  if (getUserRole() === "guest") {
-    return null;
-  }
 
   const onToggleOrder = (orderId: number) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);

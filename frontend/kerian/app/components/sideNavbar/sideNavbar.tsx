@@ -2,7 +2,6 @@
 
 import { styled } from "@mui/system";
 import { List, ListItemButton, ListItemText, Box } from "@mui/material";
-import { colors } from "@/constants/colors";
 
 interface SideNavbarTab {
   key: string;
@@ -25,18 +24,18 @@ const classes = {
   activeItem: `${PREFIX}-activeItem`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     width: "260px",
     minHeight: "calc(100vh - 60px)",
-    backgroundColor: "#111111",
-    borderRight: `1px solid ${colors.admin_border}`,
+    backgroundColor: theme.palette.background.paper,
+    borderRight: `1px solid ${theme.palette.admin.border}`,
     display: "flex",
     flexDirection: "column",
     paddingTop: "16px",
   },
   [`& .${classes.title}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
     fontSize: "20px",
     fontWeight: 700,
     padding: "8px 24px 16px",
@@ -48,19 +47,19 @@ const Root = styled(Box)(() => ({
   [`& .${classes.listItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
-    color: colors.admin_text_light,
+    color: theme.palette.admin.textLight,
     "&:hover": {
-      backgroundColor: colors.admin_surface,
-      color: "#fff",
+      backgroundColor: theme.palette.admin.surface,
+      color: theme.palette.text.primary,
     },
   },
   [`& .${classes.activeItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
-    backgroundColor: `${colors.kerian_main}22`,
-    color: colors.kerian_main,
+    backgroundColor: theme.palette.kerian.bg,
+    color: theme.palette.kerian.main,
     "&:hover": {
-      backgroundColor: `${colors.kerian_main}33`,
+      backgroundColor: theme.palette.kerian.bg,
     },
   },
 }));

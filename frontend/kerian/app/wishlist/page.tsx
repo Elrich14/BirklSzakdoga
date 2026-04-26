@@ -16,7 +16,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWishlist, removeFromWishlistById, WishlistItem } from "@/api";
 import { getUserRole } from "../utils/auth";
-import { colors } from "@/constants/colors";
 import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import { useCartStore } from "../components/store/cartStore";
 import { useTranslation } from "react-i18next";
@@ -37,7 +36,7 @@ const classes = {
   description: `${PREFIX}-description`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     minHeight: "100vh",
   },
@@ -48,7 +47,7 @@ const Root = styled("div")(() => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
     opacity: 0.6,
   },
   [`& .MuiList-root`]: {
@@ -64,9 +63,9 @@ const Root = styled("div")(() => ({
   [`& .${classes.listItem}`]: {
     width: "100%",
     maxWidth: "1300px",
-    backgroundColor: "#121212",
-    color: "#fff",
-    borderBottom: "1px solid #333",
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    borderBottom: `1px solid ${theme.palette.admin.border}`,
     borderRadius: "4px",
     justifyContent: "space-between",
   },
@@ -76,15 +75,15 @@ const Root = styled("div")(() => ({
     marginRight: "10px",
   },
   [`& .${classes.addToCartButton}`]: {
-    color: colors.kerian_main,
-    border: `1px solid ${colors.kerian_main}`,
+    color: theme.palette.kerian.main,
+    border: `1px solid ${theme.palette.kerian.main}`,
     marginLeft: "10px",
   },
   [`& .${classes.deleteIcon}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.emptyText}`]: {
-    color: "#ccc",
+    color: theme.palette.text.secondary,
     marginTop: "2rem",
   },
   [`& .${classes.description}`]: {

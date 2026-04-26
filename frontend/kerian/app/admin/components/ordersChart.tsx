@@ -1,6 +1,7 @@
 "use client";
 
 import { styled } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +17,6 @@ import {
   Legend,
 } from "recharts";
 import { fetchOrderStats } from "@/api";
-import { colors } from "@/constants/colors";
 import { STATS_RANGES, StatsRange } from "@/constants/constants";
 
 const PREFIX = "OrdersChart";
@@ -27,7 +27,7 @@ const classes = {
   noData: `${PREFIX}-noData`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -46,13 +46,14 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.noData}`]: {
     textAlign: "center",
-    color: colors.admin_text_muted,
+    color: theme.palette.admin.textMuted,
     padding: "40px 0",
   },
 }));
 
 export default function OrdersChart() {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [range, setRange] = useState<StatsRange>("month");
 
   const { data: stats = [] } = useQuery({
@@ -95,15 +96,15 @@ export default function OrdersChart() {
         <Box className={classes.chartWrapper}>
         <ResponsiveContainer width="50%" height={350}>
           <BarChart data={chartData} barSize={53} barGap={45} barCategoryGap="80%" margin={{ left: 40, right: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke={colors.admin_border} />
-            <XAxis dataKey="label" stroke={colors.admin_text_muted} padding={{ left: 40, right: 40 }} />
-            <YAxis yAxisId="left" stroke={colors.admin_text_muted} width={40} />
-            <YAxis yAxisId="right" orientation="right" stroke={colors.admin_text_muted} width={40} />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.admin.border} />
+            <XAxis dataKey="label" stroke={theme.palette.admin.textMuted} padding={{ left: 40, right: 40 }} />
+            <YAxis yAxisId="left" stroke={theme.palette.admin.textMuted} width={40} />
+            <YAxis yAxisId="right" orientation="right" stroke={theme.palette.admin.textMuted} width={40} />
             <Tooltip
               cursor={false}
               contentStyle={{
-                backgroundColor: colors.admin_input,
-                border: `1px solid ${colors.admin_border_light}`,
+                backgroundColor: theme.palette.admin.input,
+                border: `1px solid ${theme.palette.admin.borderLight}`,
                 borderRadius: "8px",
               }}
             />
@@ -112,14 +113,14 @@ export default function OrdersChart() {
               yAxisId="left"
               dataKey="orderCount"
               name={t("admin.orders.count")}
-              fill={colors.kerian_main}
+              fill={theme.palette.kerian.main}
               radius={[4, 4, 0, 0]}
             />
             <Bar
               yAxisId="right"
               dataKey="income"
               name={t("admin.orders.income")}
-              fill={colors.admin_accent_purple}
+              fill={theme.palette.admin.accentPurple}
               radius={[4, 4, 0, 0]}
             />
           </BarChart>

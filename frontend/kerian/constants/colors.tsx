@@ -1,3 +1,14 @@
+/**
+ * Most colors here have been migrated into the MUI theme palette
+ * (see frontend/kerian/theme.ts). Only `snackbar_success` and `googleBrand`
+ * remain in active use:
+ *   - snackbar_success: identical in both color schemes by spec
+ *   - googleBrand: follows Google brand guidelines, do not theme
+ *
+ * Other keys are kept as a transitional safety net but should not be
+ * imported in new code. Use theme.palette.kerian.* and theme.palette.admin.*
+ * via the styled callback's ({ theme }) => ({...}) form.
+ */
 export const colors = {
   kerian_main: "#039c82",
   kerian_main_button_hover: "#00cfac",

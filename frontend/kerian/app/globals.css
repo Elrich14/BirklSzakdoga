@@ -1,22 +1,21 @@
-:root {
-  --background: #141414;
-  --foreground: #ffffff;
-}
+/*
+ * Body background and text color are owned by MUI's CssBaseline
+ * (driven by theme.palette.background.default and theme.palette.text.primary).
+ * Do not redeclare them here — that overrides the theme-aware values.
+ */
 
 body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Override browser autofill background for dark theme */
+/* Browser autofill — match the theme's input surface and text color */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #141414 inset !important;
-  -webkit-text-fill-color: #ffffff !important;
-  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 30px var(--mui-palette-background-paper) inset !important;
+  -webkit-text-fill-color: var(--mui-palette-text-primary) !important;
+  caret-color: var(--mui-palette-text-primary);
 }
 
 input[type="number"]::-webkit-outer-spin-button,

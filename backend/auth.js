@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 
 const jwt = require("jsonwebtoken");
 const { TOKEN_SCOPES } = require("./constants/constants");
+const authenticateToken = require("./authenticateToken");
 const SECRET = process.env.JWT_SECRET;
 
 router.post("/login", async (req, res) => {
@@ -57,6 +58,22 @@ router.post("/register", (req, res) => {
     .catch((err) => {
       res.status(400).json(err);
     });
+});
+
+router.get("/me", authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: ["id", "username", "email", "authProvider", "createdAt"],
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
 });
 
 module.exports = router;

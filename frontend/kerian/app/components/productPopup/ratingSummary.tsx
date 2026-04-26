@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { fetchProductReviews } from "@/api";
-import { colors as themeColors } from "@/constants/colors";
 import StarRating from "../reviews/starRating";
 import ReviewsPopup from "../reviews/reviewsPopup";
 
@@ -26,7 +25,7 @@ const classes = {
   viewLink: `${PREFIX}-viewLink`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     alignItems: "center",
@@ -43,7 +42,7 @@ const Root = styled(Box)(() => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "15px",
-    color: themeColors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.count}`]: {
     fontFamily: "monospace",
@@ -53,7 +52,7 @@ const Root = styled(Box)(() => ({
   [`& .${classes.viewLink}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: themeColors.kerian_main,
+    color: theme.palette.kerian.main,
     textDecoration: "underline",
   },
 }));

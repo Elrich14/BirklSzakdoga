@@ -15,7 +15,6 @@ import { styled } from "@mui/system";
 import { sendOrder } from "@/api";
 import { OrderStatus, phoneRegExp } from "@/constants/constants";
 import OrderStatusTracker from "./orderStatusTracker";
-import { boxShadows } from "@/constants/colors";
 import { useCartStore } from "./store/cartStore";
 import { useTranslation } from "react-i18next";
 import { useSnackbar } from "../providers/snackbarProvider";
@@ -47,7 +46,7 @@ const parseStockError = (message: string): StockError | null => {
   return null;
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -55,7 +54,7 @@ const Root = styled(Box)(() => ({
     padding: "20px",
     borderRadius: "4px",
     marginTop: "50px",
-    boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    boxShadow: theme.palette.kerian.shadowHover,
     maxWidth: "600px",
     marginLeft: "auto",
     marginRight: "auto",

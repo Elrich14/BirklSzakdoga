@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { boxShadows, colors } from "../../constants/colors";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loginUser, verifyTwoFactor } from "@/api";
 import { jwtDecode } from "jwt-decode";
@@ -52,7 +51,7 @@ const classes = {
   twoFactorTitle: `${PREFIX}-twoFactorTitle`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -62,18 +61,18 @@ const Root = styled("div")(() => ({
     fontSize: "50px",
     fontFamily: "serif",
     "& .MuiButtonBase-root.MuiButton-root": {
-      backgroundColor: colors.kerian_main,
+      backgroundColor: theme.palette.kerian.main,
     },
     "& .MuiButtonBase-root.MuiButton-root:hover": {
-      backgroundColor: colors.kerian_main_button_hover,
-      boxShadow: boxShadows.kerian_main_button_hover_shadow,
+      backgroundColor: theme.palette.kerian.hover,
+      boxShadow: theme.palette.kerian.shadowHover,
     },
 
     "& .MuiInputBase-root.Mui-focused": {
-      "--mui-palette-primary-main": colors.kerian_main,
+      "--mui-palette-primary-main": theme.palette.kerian.main,
     },
     "& .MuiFormLabel-root.Mui-focused": {
-      "--mui-palette-primary-main": colors.kerian_main,
+      "--mui-palette-primary-main": theme.palette.kerian.main,
     },
   },
   [`& .${classes.box}`]: {
@@ -84,7 +83,7 @@ const Root = styled("div")(() => ({
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
-    boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    boxShadow: theme.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {
@@ -111,11 +110,11 @@ const Root = styled("div")(() => ({
     display: "block",
     marginTop: "12px",
     cursor: "pointer",
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.errorText}`]: {
     fontSize: "14px",
-    color: colors.danger,
+    color: theme.palette.error.main,
     marginTop: "8px",
   },
   [`& .${classes.twoFactorTitle}`]: {

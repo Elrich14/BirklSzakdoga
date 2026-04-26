@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { fetchAdminProducts, deleteProduct, AdminProduct } from "@/api";
-import { colors } from "@/constants/colors";
 import ProductForm from "./productForm";
 import { API_BASE } from "@/constants/constants";
 
@@ -36,7 +35,7 @@ const classes = {
   dialogPaper: `${PREFIX}-dialogPaper`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -48,10 +47,10 @@ const Root = styled(Box)(() => ({
     alignItems: "center",
   },
   [`& .${classes.table}`]: {
-    backgroundColor: colors.admin_surface,
+    backgroundColor: theme.palette.admin.surface,
     borderRadius: "12px",
     "& .MuiTableCell-root": {
-      borderColor: colors.admin_border,
+      borderColor: theme.palette.admin.border,
     },
   },
   [`& .${classes.productImage}`]: {
@@ -61,20 +60,20 @@ const Root = styled(Box)(() => ({
     borderRadius: "6px",
   },
   [`& .${classes.addButton}`]: {
-    backgroundColor: colors.kerian_main,
+    backgroundColor: theme.palette.kerian.main,
   },
   [`& .${classes.editButton}`]: {
-    color: colors.kerian_main,
+    color: theme.palette.kerian.main,
   },
   [`& .${classes.deleteButton}`]: {
-    color: colors.danger,
+    color: theme.palette.error.main,
   },
 }));
 
-const StyledDialog = styled(Dialog)(() => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.dialogPaper}`]: {
-    backgroundColor: colors.admin_surface,
-    color: colors.white,
+    backgroundColor: theme.palette.admin.surface,
+    color: theme.palette.text.primary,
   },
 }));
 

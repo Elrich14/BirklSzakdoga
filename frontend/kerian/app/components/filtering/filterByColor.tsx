@@ -23,7 +23,7 @@ const classes = {
   colorSwatch: `${PREFIX}-colorSwatch`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -45,7 +45,7 @@ const Root = styled(Box)(() => ({
     width: "16px",
     height: "16px",
     borderRadius: "3px",
-    border: "1px solid #ccc",
+    border: `1px solid ${theme.palette.text.secondary}`,
     backgroundColor: "var(--swatch-color)",
   },
 }));
