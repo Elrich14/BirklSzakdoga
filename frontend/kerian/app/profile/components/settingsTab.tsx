@@ -7,8 +7,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-import { styled } from "@mui/system";
-import { useColorScheme } from "@mui/material/styles";
+import { styled, useColorScheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../providers/languageProvider";
@@ -38,10 +37,10 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "24px",
-    color: theme.palette.kerian.main,
+    color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.card}`]: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
     border: `1px solid ${theme.palette.admin.border}`,
     borderRadius: "12px",
     padding: "20px",
@@ -64,7 +63,7 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontSize: "14px",
     fontWeight: 600,
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
   },
   [`& .${classes.control}`]: {
     display: "flex",
@@ -75,10 +74,10 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.status}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`& .${classes.langSelect}`]: {
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
     fontSize: "14px",
     minWidth: "80px",
   },

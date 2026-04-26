@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material";
 import {
   Box,
   Button,
@@ -39,12 +39,7 @@ type PageState =
   | { kind: "submitting"; pendingToken: string; suggested: string }
   | { kind: "error"; message: string };
 
-type Availability =
-  | "unknown"
-  | "checking"
-  | "available"
-  | "taken"
-  | "invalid";
+type Availability = "unknown" | "checking" | "available" | "taken" | "invalid";
 
 const PREFIX = "GoogleHandoffPage";
 
@@ -95,9 +90,7 @@ function deriveUsername(pendingToken: string): string {
       pendingToken
     );
     const prefix = claims.email?.split("@")[0] ?? "";
-    return prefix
-      .replace(/[^A-Za-z0-9_-]/g, "")
-      .slice(0, USERNAME_MAX_LENGTH);
+    return prefix.replace(/[^A-Za-z0-9_-]/g, "").slice(0, USERNAME_MAX_LENGTH);
   } catch {
     return "";
   }
@@ -192,9 +185,7 @@ export default function GoogleHandoffPage() {
     };
   }, [username, state.kind]);
 
-  const onSubmitUsername = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const onSubmitUsername = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (state.kind !== "needsUsername") return;
     if (availability !== "available") return;
@@ -256,8 +247,7 @@ export default function GoogleHandoffPage() {
           >
             {availability === "available" &&
               t("login.google.pickUsername.available")}
-            {availability === "taken" &&
-              t("login.google.pickUsername.taken")}
+            {availability === "taken" && t("login.google.pickUsername.taken")}
             {availability === "invalid" &&
               t("login.google.pickUsername.invalid")}
             {availability === "checking" &&

@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { List, ListItemButton, ListItemText, Box } from "@mui/material";
 
 interface SideNavbarTab {
@@ -28,11 +28,11 @@ const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     width: "260px",
     minHeight: "calc(100vh - 60px)",
-    backgroundColor: theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.admin.border}`,
     display: "flex",
     flexDirection: "column",
     paddingTop: "16px",
+    backgroundColor: (theme.vars || theme).palette.background.paper,
   },
   [`& .${classes.title}`]: {
     color: theme.palette.kerian.main,
@@ -47,20 +47,12 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.listItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
-    color: theme.palette.admin.textLight,
-    "&:hover": {
-      backgroundColor: theme.palette.admin.surface,
-      color: theme.palette.text.primary,
-    },
   },
   [`& .${classes.activeItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
     backgroundColor: theme.palette.kerian.bg,
     color: theme.palette.kerian.main,
-    "&:hover": {
-      backgroundColor: theme.palette.kerian.bg,
-    },
   },
 }));
 

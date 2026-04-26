@@ -2,6 +2,9 @@
 import { extendTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
+  interface Theme {
+    vars?: Theme;
+  }
   interface Palette {
     kerian: {
       main: string;
@@ -94,8 +97,8 @@ const theme = extendTheme({
       palette: {
         mode: "light",
         background: {
-          default: "#f7f4ee",
-          paper: "#fffcf5",
+          default: "#ece8de",
+          paper: "#f3f0e6",
         },
         text: {
           primary: "#1a1a1a",
@@ -114,7 +117,7 @@ const theme = extendTheme({
           main: "#02745e",
           hover: "#015e4c",
           bg: "rgba(2, 116, 94, 0.10)",
-          navbar: "#e8eef1",
+          navbar: "#d6d0c4",
           shadow: "rgba(31, 36, 33, 0.08)",
           shadowHover: "0 4px 8px rgba(0, 0, 0, 0.12)",
           dangerBg: "rgba(198, 40, 40, 0.08)",

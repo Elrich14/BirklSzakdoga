@@ -1,7 +1,7 @@
 "use client";
 
 import { Box } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -18,18 +18,16 @@ const classes = {
   content: `${PREFIX}-content`,
 };
 
-const Root = styled(Box)(({ theme }) => ({
+const Root = styled(Box)(() => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "row",
     minHeight: "calc(100vh - 60px)",
-    backgroundColor: theme.palette.background.default,
   },
   [`& .${classes.content}`]: {
     flex: 1,
     overflow: "auto",
     padding: "24px",
-    color: theme.palette.text.primary,
   },
 }));
 

@@ -10,7 +10,7 @@ import {
   SelectChangeEvent,
   Badge,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getUserRole } from "../../utils/auth";
@@ -49,17 +49,17 @@ const Root = styled("div")(({ theme }) => ({
       display: "flex",
       flexDirection: "row",
       gap: "10px",
-      backgroundColor: theme.palette.kerian.navbar,
+      backgroundColor: (theme.vars || theme).palette.kerian.navbar,
     },
     "& .MuiButton-root": {
-      color: theme.palette.text.primary,
+      color: (theme.vars || theme).palette.text.primary,
       textTransform: "none",
     },
     "& .MuiButton-root:hover": {
-      boxShadow: theme.palette.kerian.shadowHover,
+      boxShadow: (theme.vars || theme).palette.kerian.shadowHover,
     },
     "& .MuiButton-root.active": {
-      color: theme.palette.kerian.main,
+      color: (theme.vars || theme).palette.kerian.main,
       fontWeight: "bold",
       fontStyle: "italic",
     },
@@ -89,9 +89,9 @@ const Root = styled("div")(({ theme }) => ({
     height: "40px",
     padding: "8px",
     cursor: "pointer",
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
     "&:hover": {
-      color: theme.palette.kerian.main,
+      color: (theme.vars || theme).palette.kerian.main,
     },
   },
   [`& .${classes.cartBoxActive}`]: {
@@ -102,22 +102,22 @@ const Root = styled("div")(({ theme }) => ({
     height: "40px",
     padding: "8px",
     cursor: "pointer",
-    color: theme.palette.kerian.main,
+    color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.langSelect}`]: {
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
     fontSize: "14px",
     minWidth: "50px",
     "& .MuiSelect-select": {
       padding: "4px 24px 4px 8px",
     },
     "& .MuiSelect-icon": {
-      color: theme.palette.text.primary,
+      color: (theme.vars || theme).palette.text.primary,
     },
     "&:hover": {
-      color: theme.palette.kerian.main,
+      color: (theme.vars || theme).palette.kerian.main,
       "& .MuiSelect-icon": {
-        color: theme.palette.kerian.main,
+        color: (theme.vars || theme).palette.kerian.main,
       },
     },
   },

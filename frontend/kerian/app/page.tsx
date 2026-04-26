@@ -35,7 +35,7 @@ const Root = styled("div")(({ theme }) => ({
   [`& .${classes.kerian}`]: {
     fontSize: "200px",
     fontWeight: "bold",
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
   },
   [`& .${classes.heroImage}`]: {
     ...theme.applyStyles("dark", {

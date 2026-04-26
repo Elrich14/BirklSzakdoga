@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material";
 import { Box, Button, Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -49,8 +49,7 @@ export default function GoogleSignInButton() {
   const { t } = useTranslation();
 
   const onClick = () => {
-    const backend =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    const backend = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
     window.location.href = `${backend}/auth/google`;
   };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { IconButton } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,9 +16,9 @@ const classes = {
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary || theme.palette.text.primary,
     "&:hover": {
-      color: theme.palette.kerian.main,
+      color: theme.vars?.palette.kerian.main || theme.palette.kerian.main,
     },
   },
 }));

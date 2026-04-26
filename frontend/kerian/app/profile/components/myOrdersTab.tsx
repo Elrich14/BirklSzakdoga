@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, Collapse, IconButton } from "@mui/material";
@@ -39,7 +39,7 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "24px",
-    color: theme.palette.kerian.main,
+    color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.empty}`]: {
     fontFamily: "monospace",
@@ -52,7 +52,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.orderCard}`]: {
     borderRadius: "12px",
     border: `1px solid ${theme.palette.admin.border}`,
-    backgroundColor: theme.palette.kerian.overlayHoverLight,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
     overflow: "hidden",
   },
   [`& .${classes.orderHeader}`]: {
@@ -61,9 +61,6 @@ const Root = styled(Box)(({ theme }) => ({
     justifyContent: "space-between",
     padding: "16px 20px",
     cursor: "pointer",
-    "&:hover": {
-      backgroundColor: theme.palette.kerian.overlayHoverLight,
-    },
   },
   [`& .${classes.orderInfo}`]: {
     display: "flex",
@@ -79,10 +76,10 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.orderMeta}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`& .${classes.expandButton}`]: {
-    color: theme.palette.admin.textLight,
+    color: (theme.vars || theme).palette.admin.textLight,
   },
   [`& .${classes.orderDetails}`]: {
     padding: "0 20px 20px",
@@ -96,7 +93,7 @@ const Root = styled(Box)(({ theme }) => ({
     gap: "8px",
     padding: "12px",
     borderRadius: "8px",
-    backgroundColor: theme.palette.kerian.overlayHoverLight,
+    backgroundColor: (theme.vars || theme).palette.kerian.overlayHoverLight,
     border: `1px solid ${theme.palette.admin.border}`,
   },
   [`& .${classes.itemRow}`]: {
@@ -109,12 +106,12 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.itemLabel}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
   },
   [`& .${classes.itemValue}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
 }));
 

@@ -8,7 +8,7 @@ import {
   useMemo,
   ReactNode,
 } from "react";
-import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import Alert, { AlertColor } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";

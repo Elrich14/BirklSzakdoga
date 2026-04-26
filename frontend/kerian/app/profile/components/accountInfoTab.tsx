@@ -1,8 +1,7 @@
 "use client";
 
 import { Box, Typography, Skeleton } from "@mui/material";
-import { styled } from "@mui/system";
-import { useColorScheme } from "@mui/material/styles";
+import { styled, useColorScheme } from "@mui/material/styles";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { getCurrentUser, CurrentUser } from "@/api";
@@ -30,10 +29,10 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "24px",
-    color: theme.palette.kerian.main,
+    color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.card}`]: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
     border: `1px solid ${theme.palette.admin.border}`,
     borderRadius: "12px",
     padding: "20px",
@@ -55,15 +54,13 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontSize: "14px",
     fontWeight: 600,
-    color: theme.palette.text.primary,
   },
   [`& .${classes.value}`]: {
     fontFamily: "monospace",
     fontSize: "14px",
-    color: theme.palette.text.secondary,
   },
   [`& .${classes.error}`]: {
-    color: theme.palette.error.main,
+    color: (theme.vars || theme).palette.error.main,
     fontFamily: "monospace",
   },
 }));
