@@ -47,7 +47,7 @@ const Root = styled("div")(({ theme }) => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
   [`& .MuiList-root`]: {
@@ -63,9 +63,9 @@ const Root = styled("div")(({ theme }) => ({
   [`& .${classes.listItem}`]: {
     width: "100%",
     maxWidth: "1300px",
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    borderBottom: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.vars?.palette.background.paper,
+    color: theme.vars?.palette.text.primary,
+    borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "4px",
     justifyContent: "space-between",
   },
@@ -75,15 +75,15 @@ const Root = styled("div")(({ theme }) => ({
     marginRight: "10px",
   },
   [`& .${classes.addToCartButton}`]: {
-    color: theme.palette.kerian.main,
-    border: `1px solid ${theme.palette.kerian.main}`,
+    color: theme.vars?.palette.kerian.main,
+    border: `1px solid ${theme.vars?.palette.kerian.main}`,
     marginLeft: "10px",
   },
   [`& .${classes.deleteIcon}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.emptyText}`]: {
-    color: theme.palette.text.secondary,
+    color: theme.vars?.palette.text.secondary,
     marginTop: "2rem",
   },
   [`& .${classes.description}`]: {
@@ -139,15 +139,11 @@ export default function Wishlist() {
 
   return (
     <Root className={classes.root}>
-      <Typography className={classes.title}>
-        {t("wishlist.title")}
-      </Typography>
+      <Typography className={classes.title}>{t("wishlist.title")}</Typography>
       {isAuthenticated && (
         <List>
           {wishlist.length === 0 ? (
-            <p className={classes.emptyText}>
-              {t("wishlist.empty")}
-            </p>
+            <p className={classes.emptyText}>{t("wishlist.empty")}</p>
           ) : (
             wishlist.map((item) => (
               <ListItem
@@ -191,9 +187,8 @@ export default function Wishlist() {
                         ? t("filter.genderOptions.Male")
                         : t("filter.genderOptions.Female")}
                       {" / "}
-                      {t(`card.colors.${item.color}`)}{" "}
-                      {item.quantity}x - {item.price.toLocaleString()}{" "}
-                      {t("card.currency")}
+                      {t(`card.colors.${item.color}`)} {item.quantity}x -{" "}
+                      {item.price.toLocaleString()} {t("card.currency")}
                     </Typography>
                   }
                   secondary={item.description}

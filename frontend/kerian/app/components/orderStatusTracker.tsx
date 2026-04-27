@@ -71,7 +71,7 @@ const Root = styled(Box)(({ theme }) => ({
     width: "2px",
     minHeight: "24px",
     marginLeft: "11px",
-    backgroundColor: theme.palette.admin.border,
+    backgroundColor: theme.vars?.palette.admin.border,
   },
   [`& .${classes.iconWrapper}`]: {
     display: "flex",
@@ -86,7 +86,7 @@ const Root = styled(Box)(({ theme }) => ({
     fontSize: "24px",
   },
   [`& .${classes.activeIcon}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     fontSize: "24px",
     animation: "pulse 1.5s ease-in-out infinite",
     "@keyframes pulse": {
@@ -95,11 +95,11 @@ const Root = styled(Box)(({ theme }) => ({
     },
   },
   [`& .${classes.pendingIcon}`]: {
-    color: theme.palette.admin.borderLight,
+    color: theme.vars?.palette.admin.borderLight,
     fontSize: "16px",
   },
   [`& .${classes.cancelledIcon}`]: {
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
     fontSize: "24px",
   },
   [`& .${classes.stepContent}`]: {
@@ -176,9 +176,9 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
   };
 
   const getConnectorColor = (stepIndex: number): string => {
-    if (isCancelled) return theme.palette.admin.border;
+    if (isCancelled) return theme.vars?.palette.admin.border;
     if (stepIndex < currentStepIndex) return colors.snackbar_success;
-    return theme.palette.admin.border;
+    return theme.vars?.palette.admin.border;
   };
 
   const getLabelOpacity = (state: "completed" | "active" | "pending") => {
@@ -232,7 +232,7 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
           <>
             <Box
               className={classes.connector}
-              style={{ backgroundColor: theme.palette.error.main }}
+              style={{ backgroundColor: theme.vars?.palette.error.main }}
             />
             <Box className={classes.step}>
               <Box className={classes.iconWrapper}>
@@ -241,7 +241,7 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
               <Box className={classes.stepContent}>
                 <Typography
                   className={classes.stepLabel}
-                  style={{ color: theme.palette.error.main }}
+                  style={{ color: theme.vars?.palette.error.main }}
                 >
                   {t("orderStatus.cancelled")}
                 </Typography>

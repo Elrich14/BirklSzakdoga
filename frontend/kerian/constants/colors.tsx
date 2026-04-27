@@ -6,7 +6,7 @@
  *   - googleBrand: follows Google brand guidelines, do not theme
  *
  * Other keys are kept as a transitional safety net but should not be
- * imported in new code. Use theme.palette.kerian.* and theme.palette.admin.*
+ * imported in new code. Use theme.vars?.palette.kerian.* and theme.vars?.palette.admin.*
  * via the styled callback's ({ theme }) => ({...}) form.
  */
 export const colors = {

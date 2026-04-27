@@ -28,14 +28,14 @@ const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     width: "260px",
     minHeight: "calc(100vh - 60px)",
-    borderRight: `1px solid ${theme.palette.admin.border}`,
+    borderRight: `1px solid ${theme.vars?.palette.admin.border}`,
     display: "flex",
     flexDirection: "column",
     paddingTop: "16px",
     backgroundColor: (theme.vars || theme).palette.background.paper,
   },
   [`& .${classes.title}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     fontSize: "20px",
     fontWeight: 700,
     padding: "8px 24px 16px",
@@ -51,8 +51,8 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.activeItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
-    backgroundColor: theme.palette.kerian.bg,
-    color: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.bg,
+    color: theme.vars?.palette.kerian.main,
   },
 }));
 

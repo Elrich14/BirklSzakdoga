@@ -32,7 +32,7 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     gap: "12px",
-    border: `1px solid ${theme.palette.admin.borderLight}`,
+    border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
     borderRadius: "8px",
     padding: "16px",
   },
@@ -62,7 +62,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.input}`]: {
     width: "80px",
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.setAllRow}`]: {
@@ -74,12 +74,12 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.setAllInput}`]: {
     width: "80px",
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.setAllButton}`]: {
-    color: theme.palette.kerian.main,
-    borderColor: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
+    borderColor: theme.vars?.palette.kerian.main,
   },
 }));
 

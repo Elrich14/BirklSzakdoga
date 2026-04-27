@@ -29,7 +29,7 @@ const Root = styled("div")(({ theme }) => ({
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
     fontSize: "18px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.7,
   },
   [`& .${classes.tilesRow}`]: {
@@ -70,7 +70,9 @@ export default function RecommendedProducts({
     const ids = recommendationsQuery.data?.recommendedProductIds;
     const products = productsQuery.data;
     if (!ids || ids.length === 0 || !products) return [];
-    const productMap = new Map(products.map((product) => [product.id, product]));
+    const productMap = new Map(
+      products.map((product) => [product.id, product])
+    );
     return ids
       .map((id) => productMap.get(id))
       .filter((product): product is NonNullable<typeof product> =>

@@ -47,10 +47,10 @@ const Root = styled(Box)(({ theme }) => ({
     alignItems: "center",
   },
   [`& .${classes.table}`]: {
-    backgroundColor: theme.palette.admin.surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     "& .MuiTableCell-root": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
   },
   [`& .${classes.productImage}`]: {
@@ -60,20 +60,20 @@ const Root = styled(Box)(({ theme }) => ({
     borderRadius: "6px",
   },
   [`& .${classes.addButton}`]: {
-    backgroundColor: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.editButton}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.deleteButton}`]: {
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
   },
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.dialogPaper}`]: {
-    backgroundColor: theme.palette.admin.surface,
-    color: theme.palette.text.primary,
+    backgroundColor: theme.vars?.palette.admin.surface,
+    color: theme.vars?.palette.text.primary,
   },
 }));
 
@@ -115,9 +115,7 @@ export default function ProductManagement() {
   };
 
   if (isFormOpen) {
-    return (
-      <ProductForm product={editingProduct} onClose={onFormClose} />
-    );
+    return <ProductForm product={editingProduct} onClose={onFormClose} />;
   }
 
   return (
@@ -208,7 +206,9 @@ export default function ProductManagement() {
             {t("admin.products.cancel")}
           </Button>
           <Button
-            onClick={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
+            onClick={() =>
+              deleteTarget && deleteMutation.mutate(deleteTarget.id)
+            }
             className={classes.deleteButton}
           >
             {t("admin.products.delete")}

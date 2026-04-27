@@ -22,7 +22,7 @@ const Root = styled("div")(({ theme }) => ({
   },
   [`& .${classes.divider}`]: {
     margin: "16px 0",
-    color: theme.palette.text.secondary,
+    color: theme.vars?.palette.text.secondary,
     fontSize: "13px",
   },
   [`&& .${classes.button}`]: {

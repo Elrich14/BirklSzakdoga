@@ -16,9 +16,9 @@ const classes = {
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    color: theme.vars?.palette.text.primary || theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary || theme.vars?.palette.text.primary,
     "&:hover": {
-      color: theme.vars?.palette.kerian.main || theme.palette.kerian.main,
+      color: theme.vars?.palette.kerian.main || theme.vars?.palette.kerian.main,
     },
   },
 }));

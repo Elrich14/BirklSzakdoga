@@ -8,10 +8,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useTranslation } from "react-i18next";
-import {
-  AVAILABLE_COLORS,
-  PRODUCT_COLORS,
-} from "@/constants/filterConstants";
+import { AVAILABLE_COLORS, PRODUCT_COLORS } from "@/constants/filterConstants";
 
 const PREFIX = "FilterByColor";
 
@@ -45,7 +42,7 @@ const Root = styled(Box)(({ theme }) => ({
     width: "16px",
     height: "16px",
     borderRadius: "3px",
-    border: `1px solid ${theme.palette.text.secondary}`,
+    border: `1px solid ${theme.vars?.palette.text.secondary}`,
     backgroundColor: "var(--swatch-color)",
   },
 }));
@@ -65,7 +62,9 @@ export default function FilterByColor({
 
   const onColorCheckboxChange = (color: string) => {
     if (selectedColors.includes(color)) {
-      onColorChange(selectedColors.filter((existingColor) => existingColor !== color));
+      onColorChange(
+        selectedColors.filter((existingColor) => existingColor !== color)
+      );
     } else {
       onColorChange([...selectedColors, color]);
     }
@@ -102,7 +101,11 @@ export default function FilterByColor({
               <Box className={classes.colorBox}>
                 <Box
                   className={classes.colorSwatch}
-                  style={{ "--swatch-color": getColorHex(color) } as React.CSSProperties}
+                  style={
+                    {
+                      "--swatch-color": getColorHex(color),
+                    } as React.CSSProperties
+                  }
                 />
                 {t(getColorKey(color)) || color}
               </Box>

@@ -54,7 +54,7 @@ const Root = styled("div")(({ theme }) => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
 }));

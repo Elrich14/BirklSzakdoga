@@ -108,7 +108,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.readMoreLink}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     textDecoration: "underline",
     cursor: "pointer",
     marginTop: "4px",
@@ -153,7 +153,7 @@ const Root = styled(Box)(({ theme }) => ({
     backgroundColor: "var(--circle-color)",
   },
   [`& .${classes.colorButtonCircleSelected}`]: {
-    outline: `3px solid ${theme.palette.kerian.main}`,
+    outline: `3px solid ${theme.vars?.palette.kerian.main}`,
   },
   [`& .${classes.colorButtonGroup}`]: {
     marginLeft: "auto",
@@ -163,12 +163,12 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.stockInfo}`]: {
     fontSize: "13px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     fontWeight: "bold",
   },
   [`& .${classes.outOfStockText}`]: {
     fontSize: "13px",
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
     fontWeight: "bold",
   },
   [`& .${classes.footer}`]: {
@@ -332,9 +332,7 @@ const ProductPurchasePanel = ({
             >
               <Box
                 className={`${classes.colorButtonCircle} ${color === colorOption ? classes.colorButtonCircleSelected : ""}`}
-                style={
-                  { "--circle-color": colorOption } as React.CSSProperties
-                }
+                style={{ "--circle-color": colorOption } as React.CSSProperties}
               />
             </ToggleButton>
           ))}

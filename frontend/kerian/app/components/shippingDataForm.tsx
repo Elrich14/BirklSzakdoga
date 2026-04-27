@@ -54,7 +54,7 @@ const Root = styled(Box)(({ theme }) => ({
     padding: "20px",
     borderRadius: "4px",
     marginTop: "50px",
-    boxShadow: theme.palette.kerian.shadowHover,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     maxWidth: "600px",
     marginLeft: "auto",
     marginRight: "auto",

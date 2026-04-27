@@ -47,11 +47,11 @@ const Root = styled(Box)(({ theme }) => ({
     opacity: 0.6,
     textAlign: "center",
     padding: "48px 0",
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
   },
   [`& .${classes.orderCard}`]: {
     borderRadius: "12px",
-    border: `1px solid ${theme.palette.admin.border}`,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     backgroundColor: (theme.vars || theme).palette.background.paper,
     overflow: "hidden",
   },
@@ -71,7 +71,7 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "16px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.orderMeta}`]: {
     fontFamily: "monospace",
@@ -94,7 +94,7 @@ const Root = styled(Box)(({ theme }) => ({
     padding: "12px",
     borderRadius: "8px",
     backgroundColor: (theme.vars || theme).palette.kerian.overlayHoverLight,
-    border: `1px solid ${theme.palette.admin.border}`,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
   },
   [`& .${classes.itemRow}`]: {
     display: "flex",

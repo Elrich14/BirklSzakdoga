@@ -19,7 +19,7 @@ const Root = styled(Box)(({ theme }) => ({
     gap: "32px",
   },
   [`& .${classes.section}`]: {
-    backgroundColor: theme.palette.admin.surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     padding: "24px",
   },

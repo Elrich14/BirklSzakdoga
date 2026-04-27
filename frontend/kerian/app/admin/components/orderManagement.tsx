@@ -72,10 +72,10 @@ const Root = styled(Box)(({ theme }) => ({
     alignItems: "center",
   },
   [`& .${classes.table}`]: {
-    backgroundColor: theme.palette.admin.surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     "& .MuiTableCell-root": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
   },
   [`& .${classes.statusSelect}`]: {
@@ -85,23 +85,23 @@ const Root = styled(Box)(({ theme }) => ({
       fontSize: "14px",
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.borderLight,
+      borderColor: theme.vars?.palette.admin.borderLight,
     },
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.kerian.main,
+      borderColor: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.itemsTable}`]: {
-    backgroundColor: theme.palette.admin.input,
+    backgroundColor: theme.vars?.palette.admin.input,
     borderRadius: "8px",
     marginBottom: "8px",
     "& .MuiTableCell-root": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
       fontSize: "13px",
-      color: theme.palette.admin.textLight,
+      color: theme.vars?.palette.admin.textLight,
     },
   },
   [`& .${classes.expandCell}`]: {
@@ -111,7 +111,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.noOrders}`]: {
     textAlign: "center",
     padding: "48px",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.loadingMore}`]: {
     display: "flex",
@@ -122,22 +122,22 @@ const Root = styled(Box)(({ theme }) => ({
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.confirmDialogPaper}`]: {
-    backgroundColor: theme.palette.admin.surface,
-    color: theme.palette.text.primary,
+    backgroundColor: theme.vars?.palette.admin.surface,
+    color: theme.vars?.palette.text.primary,
   },
   [`& .${classes.confirmActions}`]: {
     padding: "8px 24px 16px",
   },
   [`& .${classes.confirmButton}`]: {
-    backgroundColor: theme.palette.kerian.main,
-    color: theme.palette.text.primary,
+    backgroundColor: theme.vars?.palette.kerian.main,
+    color: theme.vars?.palette.text.primary,
     "&:hover": {
-      backgroundColor: theme.palette.kerian.main,
+      backgroundColor: theme.vars?.palette.kerian.main,
       opacity: 0.85,
     },
   },
   [`& .${classes.cancelButton}`]: {
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
   },
 }));
 
@@ -374,7 +374,7 @@ const OrderRow = ({
               <Typography
                 variant="subtitle2"
                 gutterBottom
-                color={theme.palette.admin.textLight}
+                color={theme.vars?.palette.admin.textLight}
               >
                 {t("admin.orderList.items")}
               </Typography>

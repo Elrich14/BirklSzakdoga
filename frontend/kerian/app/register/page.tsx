@@ -46,18 +46,18 @@ const Root = styled("div")(({ theme }) => ({
       fontFamily: "serif",
     },
     "& .MuiButtonBase-root.MuiButton-root": {
-      backgroundColor: theme.palette.kerian.main,
+      backgroundColor: theme.vars?.palette.kerian.main,
     },
     "& .MuiButtonBase-root.MuiButton-root:hover": {
-      backgroundColor: theme.palette.kerian.hover,
-      boxShadow: theme.palette.kerian.shadowHover,
+      backgroundColor: theme.vars?.palette.kerian.hover,
+      boxShadow: theme.vars?.palette.kerian.shadowHover,
     },
 
     "& .MuiInputBase-root.Mui-focused": {
-      "--mui-palette-primary-main": theme.palette.kerian.main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
     "& .MuiFormLabel-root.Mui-focused": {
-      "--mui-palette-primary-main": theme.palette.kerian.main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.box}`]: {
@@ -68,7 +68,7 @@ const Root = styled("div")(({ theme }) => ({
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
-    boxShadow: theme.palette.kerian.shadowHover,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {

@@ -33,8 +33,8 @@ const Root = styled(Box)(({ theme }) => ({
     minWidth: 0,
     transition: "background-color 0.2s ease, box-shadow 0.2s ease",
     "&:hover": {
-      backgroundColor: theme.palette.kerian.overlayHoverLight,
-      boxShadow: theme.palette.kerian.shadowHover,
+      backgroundColor: theme.vars?.palette.kerian.overlayHoverLight,
+      boxShadow: theme.vars?.palette.kerian.shadowHover,
     },
   },
   [`& .${classes.image}`]: {
@@ -63,8 +63,8 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "12px",
-    backgroundColor: theme.palette.kerian.main,
-    color: theme.palette.text.primary,
+    backgroundColor: theme.vars?.palette.kerian.main,
+    color: "#ffffff",
     padding: "2px 8px",
     borderRadius: "12px",
     width: "fit-content",

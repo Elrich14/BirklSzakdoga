@@ -28,11 +28,11 @@ const Root = styled(Box)(({ theme }) => ({
     gap: "2px",
   },
   [`& .${classes.star}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.starButton}`]: {
     padding: "2px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
 }));
 
@@ -74,11 +74,7 @@ const StarRating = ({
       );
     } else if (isFilled) {
       stars.push(
-        <StarIcon
-          key={position}
-          className={classes.star}
-          fontSize={size}
-        />
+        <StarIcon key={position} className={classes.star} fontSize={size} />
       );
     } else {
       stars.push(

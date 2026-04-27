@@ -62,22 +62,29 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.thumbnailActive}`]: {
     opacity: 1,
-    borderColor: theme.palette.kerian.main,
+    borderColor: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.wishlistButton}`]: {
     position: "absolute",
     top: "8px",
     right: "8px",
-    color: theme.palette.kerian.main,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    color: theme.vars?.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.navbar,
     borderRadius: "50%",
     padding: "6px",
     cursor: "pointer",
     transition: "0.2s",
     "&:hover": {
-      color: theme.palette.kerian.main,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      color: theme.vars?.palette.kerian.main,
+      backgroundColor: "#bfb7a4",
     },
+    ...theme.applyStyles("dark", {
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      "&:hover": {
+        color: theme.vars?.palette.kerian.main,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+      },
+    }),
   },
 }));
 

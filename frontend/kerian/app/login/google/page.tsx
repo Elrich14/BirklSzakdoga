@@ -64,23 +64,23 @@ const Root = styled("div")(({ theme }) => ({
     minWidth: "400px",
     maxWidth: "400px",
     padding: "30px",
-    boxShadow: theme.palette.kerian.shadowHover,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",
-    backgroundColor: theme.palette.kerian.main,
-    "&:hover": { backgroundColor: theme.palette.kerian.hover },
+    backgroundColor: theme.vars?.palette.kerian.main,
+    "&:hover": { backgroundColor: theme.vars?.palette.kerian.hover },
   },
   [`& .${classes.availabilityOk}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.availabilityBad}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
   },
 }));
 

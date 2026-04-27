@@ -31,7 +31,7 @@ const Root = styled(Box)(({ theme }) => ({
     },
   },
   [`& .${classes.card}`]: {
-    backgroundColor: theme.palette.admin.surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     padding: "24px",
     display: "flex",
@@ -45,8 +45,8 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: theme.palette.kerian.bg,
-    color: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.bg,
+    color: theme.vars?.palette.kerian.main,
     flexShrink: 0,
   },
 }));
@@ -59,13 +59,13 @@ const LoadingWrapper = styled(Box)(({ theme }) => ({
     paddingBottom: "32px",
   },
   [`& .${classes.spinner}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
 }));
 
 const CardLabel = styled(Typography)(({ theme }) => ({
   [`&.${classes.cardLabel}`]: {
-    color: theme.palette.admin.textSecondary,
+    color: theme.vars?.palette.admin.textSecondary,
   },
 }));
 

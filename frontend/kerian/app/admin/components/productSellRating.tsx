@@ -67,7 +67,7 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.noData}`]: {
     textAlign: "center",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
     padding: "40px 0",
   },
 }));
@@ -146,37 +146,59 @@ export default function ProductSellRating() {
         </Typography>
       ) : (
         <Box className={classes.chartWrapper}>
-        <ResponsiveContainer width="50%" height={350}>
-          <BarChart data={chartData} barSize={53} barGap={45} barCategoryGap="80%" margin={{ left: 40, right: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.admin.border} />
-            <XAxis dataKey="label" stroke={theme.palette.admin.textMuted} padding={{ left: 40, right: 40 }} />
-            <YAxis yAxisId="left" stroke={theme.palette.admin.textMuted} width={40} />
-            <YAxis yAxisId="right" orientation="right" stroke={theme.palette.admin.textMuted} width={40} />
-            <Tooltip
-              cursor={false}
-              contentStyle={{
-                backgroundColor: theme.palette.admin.input,
-                border: `1px solid ${theme.palette.admin.borderLight}`,
-                borderRadius: "8px",
-              }}
-            />
-            <Legend />
-            <Bar
-              yAxisId="left"
-              dataKey="quantity"
-              name={t("admin.productStats.quantity")}
-              fill={theme.palette.kerian.main}
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              yAxisId="right"
-              dataKey="revenue"
-              name={t("admin.productStats.revenue")}
-              fill={theme.palette.admin.accentPurple}
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer width="50%" height={350}>
+            <BarChart
+              data={chartData}
+              barSize={53}
+              barGap={45}
+              barCategoryGap="80%"
+              margin={{ left: 40, right: 40 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={theme.vars?.palette.admin.border}
+              />
+              <XAxis
+                dataKey="label"
+                stroke={theme.vars?.palette.admin.textMuted}
+                padding={{ left: 40, right: 40 }}
+              />
+              <YAxis
+                yAxisId="left"
+                stroke={theme.vars?.palette.admin.textMuted}
+                width={40}
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                stroke={theme.vars?.palette.admin.textMuted}
+                width={40}
+              />
+              <Tooltip
+                cursor={false}
+                contentStyle={{
+                  backgroundColor: theme.vars?.palette.admin.input,
+                  border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
+                  borderRadius: "8px",
+                }}
+              />
+              <Legend />
+              <Bar
+                yAxisId="left"
+                dataKey="quantity"
+                name={t("admin.productStats.quantity")}
+                fill={theme.vars?.palette.kerian.main}
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                yAxisId="right"
+                dataKey="revenue"
+                name={t("admin.productStats.revenue")}
+                fill={theme.vars?.palette.admin.accentPurple}
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </Box>
       )}
     </Root>

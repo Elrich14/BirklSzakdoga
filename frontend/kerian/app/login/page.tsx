@@ -61,18 +61,18 @@ const Root = styled("div")(({ theme }) => ({
     fontSize: "50px",
     fontFamily: "serif",
     "& .MuiButtonBase-root.MuiButton-root": {
-      backgroundColor: theme.palette.kerian.main,
+      backgroundColor: theme.vars?.palette.kerian.main,
     },
     "& .MuiButtonBase-root.MuiButton-root:hover": {
-      backgroundColor: theme.palette.kerian.hover,
-      boxShadow: theme.palette.kerian.shadowHover,
+      backgroundColor: theme.vars?.palette.kerian.hover,
+      boxShadow: theme.vars?.palette.kerian.shadowHover,
     },
 
     "& .MuiInputBase-root.Mui-focused": {
-      "--mui-palette-primary-main": theme.palette.kerian.main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
     "& .MuiFormLabel-root.Mui-focused": {
-      "--mui-palette-primary-main": theme.palette.kerian.main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.box}`]: {
@@ -83,7 +83,7 @@ const Root = styled("div")(({ theme }) => ({
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
-    boxShadow: theme.palette.kerian.shadowHover,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {
@@ -110,11 +110,11 @@ const Root = styled("div")(({ theme }) => ({
     display: "block",
     marginTop: "12px",
     cursor: "pointer",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.errorText}`]: {
     fontSize: "14px",
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
     marginTop: "8px",
   },
   [`& .${classes.twoFactorTitle}`]: {
@@ -414,7 +414,9 @@ export default function Login() {
           variant="h4"
           component="h1"
           gutterBottom
-          className={loginState.step === "twoFactor" ? classes.twoFactorTitle : undefined}
+          className={
+            loginState.step === "twoFactor" ? classes.twoFactorTitle : undefined
+          }
         >
           {loginState.step === "credentials"
             ? t("login.title")

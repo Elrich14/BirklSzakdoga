@@ -42,7 +42,7 @@ const Root = styled(Box)(({ theme }) => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "15px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.count}`]: {
     fontFamily: "monospace",
@@ -52,7 +52,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.viewLink}`]: {
     fontFamily: "monospace",
     fontSize: "13px",
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
     textDecoration: "underline",
   },
 }));

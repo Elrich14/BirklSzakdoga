@@ -25,7 +25,11 @@ import {
   createProduct,
   updateProduct,
 } from "@/api";
-import { AVAILABLE_COLORS, AVAILABLE_SIZES, AVAILABLE_GENDERS } from "@/constants/filterConstants";
+import {
+  AVAILABLE_COLORS,
+  AVAILABLE_SIZES,
+  AVAILABLE_GENDERS,
+} from "@/constants/filterConstants";
 import VariantStockEditor from "./variantStockEditor";
 import { API_BASE } from "@/constants/constants";
 
@@ -75,7 +79,7 @@ const classes = {
 
 const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    backgroundColor: theme.palette.admin.surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     padding: "32px",
     maxWidth: "700px",
@@ -93,7 +97,7 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.field}`]: {
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.sectionLabel}`]: {
@@ -108,9 +112,9 @@ const Root = styled(Box)(({ theme }) => ({
     fontSize: "14px",
   },
   [`& .${classes.checkbox}`]: {
-    color: theme.palette.admin.checkboxInactive,
+    color: theme.vars?.palette.admin.checkboxInactive,
     "&.Mui-checked": {
-      color: theme.palette.kerian.main,
+      color: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.imageSection}`]: {
@@ -123,7 +127,7 @@ const Root = styled(Box)(({ theme }) => ({
     height: "120px",
     objectFit: "cover",
     borderRadius: "8px",
-    border: `1px solid ${theme.palette.admin.borderLight}`,
+    border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
   },
   [`& .${classes.imageGrid}`]: {
     display: "flex",
@@ -137,11 +141,11 @@ const Root = styled(Box)(({ theme }) => ({
     position: "absolute",
     top: "-8px",
     right: "-8px",
-    backgroundColor: theme.palette.admin.overlay,
-    color: theme.palette.text.primary,
+    backgroundColor: theme.vars?.palette.admin.overlay,
+    color: theme.vars?.palette.text.primary,
     padding: "2px",
     "&:hover": {
-      backgroundColor: theme.palette.admin.overlayHover,
+      backgroundColor: theme.vars?.palette.admin.overlayHover,
     },
   },
   [`& .${classes.hiddenInput}`]: {
@@ -149,8 +153,8 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.uploadButton}`]: {
     width: "fit-content",
-    borderColor: theme.palette.kerian.main,
-    color: theme.palette.kerian.main,
+    borderColor: theme.vars?.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.actions}`]: {
     display: "flex",
@@ -158,11 +162,11 @@ const Root = styled(Box)(({ theme }) => ({
     marginTop: "8px",
   },
   [`& .${classes.saveButton}`]: {
-    backgroundColor: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.cancelButton}`]: {
-    borderColor: theme.palette.admin.checkboxInactive,
-    color: theme.palette.admin.textLight,
+    borderColor: theme.vars?.palette.admin.checkboxInactive,
+    color: theme.vars?.palette.admin.textLight,
   },
 }));
 
@@ -230,8 +234,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (formData: FormData) =>
-      updateProduct(product!.id, formData),
+    mutationFn: (formData: FormData) => updateProduct(product!.id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminProducts"] });
       setFeedback({
@@ -339,7 +342,14 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => (
+        {({
+          values,
+          errors,
+          touched,
+          setFieldValue,
+          handleChange,
+          handleBlur,
+        }) => (
           <Form className={classes.form}>
             <TextField
               name="name"

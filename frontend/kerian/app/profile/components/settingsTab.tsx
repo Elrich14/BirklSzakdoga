@@ -41,7 +41,7 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.card}`]: {
     backgroundColor: (theme.vars || theme).palette.background.paper,
-    border: `1px solid ${theme.palette.admin.border}`,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "12px",
     padding: "20px",
     display: "flex",
@@ -54,7 +54,7 @@ const Root = styled(Box)(({ theme }) => ({
     alignItems: "center",
     justifyContent: "space-between",
     padding: "12px 0",
-    borderBottom: `1px solid ${theme.palette.admin.border}`,
+    borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
     "&:last-of-type": {
       borderBottom: "none",
     },

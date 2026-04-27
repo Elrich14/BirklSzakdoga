@@ -83,17 +83,17 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.header}`]: {
     fontSize: "20px",
     fontWeight: 600,
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
     margin: 0,
   },
   [`& .${classes.subtitle}`]: {
     fontSize: "13px",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
     marginTop: "-8px",
   },
   [`& .${classes.card}`]: {
-    backgroundColor: theme.palette.admin.surface,
-    border: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.vars?.palette.admin.surface,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "12px",
     padding: "20px",
     display: "flex",
@@ -107,7 +107,7 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.statusLabel}`]: {
     fontSize: "14px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
   },
   [`& .${classes.statusPill}`]: {
     display: "inline-flex",
@@ -120,12 +120,12 @@ const Root = styled(Box)(({ theme }) => ({
     letterSpacing: "0.3px",
   },
   [`& .${classes.statusPillOn}`]: {
-    backgroundColor: theme.palette.kerian.bg,
-    color: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.bg,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.statusPillOff}`]: {
-    backgroundColor: theme.palette.kerian.overlayMuted,
-    color: theme.palette.admin.textMuted,
+    backgroundColor: theme.vars?.palette.kerian.overlayMuted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.statusDot}`]: {
     width: "8px",
@@ -139,7 +139,7 @@ const Root = styled(Box)(({ theme }) => ({
     flexWrap: "wrap",
   },
   [`& .${classes.primaryButton}`]: {
-    backgroundColor: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.main,
     color: "#ffffff",
     textTransform: "none",
     fontSize: "13px",
@@ -147,36 +147,36 @@ const Root = styled(Box)(({ theme }) => ({
     padding: "8px 18px",
     boxShadow: "none",
     "&:hover": {
-      backgroundColor: theme.palette.kerian.hover,
+      backgroundColor: theme.vars?.palette.kerian.hover,
       boxShadow: "none",
     },
     "&.Mui-disabled": {
-      backgroundColor: theme.palette.admin.border,
-      color: theme.palette.admin.textMuted,
+      backgroundColor: theme.vars?.palette.admin.border,
+      color: theme.vars?.palette.admin.textMuted,
     },
   },
   [`& .${classes.secondaryButton}`]: {
-    borderColor: theme.palette.admin.borderLight,
-    color: theme.palette.admin.textLight,
+    borderColor: theme.vars?.palette.admin.borderLight,
+    color: theme.vars?.palette.admin.textLight,
     textTransform: "none",
     fontSize: "13px",
     fontWeight: 500,
     padding: "8px 18px",
     "&:hover": {
-      borderColor: theme.palette.kerian.main,
-      backgroundColor: theme.palette.kerian.bg,
+      borderColor: theme.vars?.palette.kerian.main,
+      backgroundColor: theme.vars?.palette.kerian.bg,
     },
   },
   [`& .${classes.dangerButton}`]: {
-    borderColor: theme.palette.kerian.dangerBorder,
-    color: theme.palette.error.main,
+    borderColor: theme.vars?.palette.kerian.dangerBorder,
+    color: theme.vars?.palette.error.main,
     textTransform: "none",
     fontSize: "13px",
     fontWeight: 500,
     padding: "8px 18px",
     "&:hover": {
-      borderColor: theme.palette.error.main,
-      backgroundColor: theme.palette.kerian.dangerBg,
+      borderColor: theme.vars?.palette.error.main,
+      backgroundColor: theme.vars?.palette.kerian.dangerBg,
     },
   },
   [`& .${classes.sectionLabel}`]: {
@@ -184,11 +184,11 @@ const Root = styled(Box)(({ theme }) => ({
     fontWeight: 600,
     textTransform: "uppercase",
     letterSpacing: "0.6px",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.sectionBody}`]: {
     fontSize: "13px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
     lineHeight: 1.6,
   },
   [`& .${classes.qrWrap}`]: {
@@ -205,16 +205,16 @@ const Root = styled(Box)(({ theme }) => ({
     letterSpacing: "1.5px",
     wordBreak: "break-all",
     padding: "10px 12px",
-    backgroundColor: theme.palette.admin.input,
-    border: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.vars?.palette.admin.input,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "6px",
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
     textAlign: "center",
   },
   [`& .${classes.codeInput}`]: {
     maxWidth: "240px",
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
     "& input": {
       fontFamily: MONO_STACK,
@@ -222,16 +222,16 @@ const Root = styled(Box)(({ theme }) => ({
       letterSpacing: "8px",
       textAlign: "center",
       padding: "12px",
-      color: theme.palette.text.primary,
+      color: theme.vars?.palette.text.primary,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.borderLight,
+      borderColor: theme.vars?.palette.admin.borderLight,
     },
     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.kerian.main,
+      borderColor: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.codeGrid}`]: {
@@ -239,8 +239,8 @@ const Root = styled(Box)(({ theme }) => ({
     gridTemplateColumns: "repeat(2, 1fr)",
     gap: "6px",
     padding: "12px",
-    backgroundColor: theme.palette.admin.input,
-    border: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.vars?.palette.admin.input,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "8px",
   },
   [`& .${classes.recoveryCode}`]: {
@@ -250,33 +250,33 @@ const Root = styled(Box)(({ theme }) => ({
     padding: "8px 6px",
     textAlign: "center",
     letterSpacing: "2px",
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
     borderRadius: "4px",
     transition: "background-color 0.15s ease",
     "&:hover": {
-      backgroundColor: theme.palette.kerian.overlayHoverLight,
+      backgroundColor: theme.vars?.palette.kerian.overlayHoverLight,
     },
   },
   [`& .${classes.warningBanner}`]: {
     padding: "10px 14px",
-    backgroundColor: theme.palette.kerian.dangerBg,
-    border: `1px solid ${theme.palette.kerian.dangerBorder}`,
+    backgroundColor: theme.vars?.palette.kerian.dangerBg,
+    border: `1px solid ${theme.vars?.palette.kerian.dangerBorder}`,
     borderRadius: "8px",
     fontSize: "12px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
     lineHeight: 1.6,
   },
   [`& .${classes.lowCodesBanner}`]: {
     padding: "10px 14px",
-    backgroundColor: theme.palette.kerian.warningBg,
-    border: `1px solid ${theme.palette.kerian.warningBorder}`,
+    backgroundColor: theme.vars?.palette.kerian.warningBg,
+    border: `1px solid ${theme.vars?.palette.kerian.warningBorder}`,
     borderRadius: "8px",
     fontSize: "12px",
-    color: theme.palette.warning.main,
+    color: theme.vars?.palette.warning.main,
     lineHeight: 1.6,
   },
   [`& .${classes.errorText}`]: {
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
     fontSize: "12px",
     marginTop: "4px",
   },
@@ -285,12 +285,12 @@ const Root = styled(Box)(({ theme }) => ({
     alignItems: "center",
     gap: "8px",
     fontSize: "13px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
     cursor: "pointer",
     userSelect: "none",
   },
   [`& .${classes.checkbox}`]: {
-    accentColor: theme.palette.kerian.main,
+    accentColor: theme.vars?.palette.kerian.main,
     cursor: "pointer",
     width: "16px",
     height: "16px",
@@ -303,7 +303,7 @@ const Root = styled(Box)(({ theme }) => ({
     right: "8px",
     top: "55%",
     transform: "translateY(-50%)",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.dialogBody}`]: {
     display: "flex",
@@ -313,24 +313,24 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.dialogField}`]: {
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.borderLight,
+      borderColor: theme.vars?.palette.admin.borderLight,
     },
     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.kerian.main,
+      borderColor: theme.vars?.palette.kerian.main,
     },
     "& .MuiInputLabel-root.Mui-focused": {
-      color: theme.palette.kerian.main,
+      color: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.dialogHint}`]: {
     fontSize: "13px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
     lineHeight: 1.6,
   },
   [`& .${classes.manualKeySpacer}`]: {
@@ -340,16 +340,16 @@ const Root = styled(Box)(({ theme }) => ({
     marginTop: "8px",
   },
   [`& .${classes.loadingSpinner}`]: {
-    color: theme.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.dialogPaper}`]: {
-    backgroundColor: theme.palette.admin.surface,
-    border: `1px solid ${theme.palette.admin.border}`,
+    backgroundColor: theme.vars?.palette.admin.surface,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "12px",
-    color: theme.palette.text.primary,
+    color: theme.vars?.palette.text.primary,
   },
   [`& .${classes.dialogTitle}`]: {
     fontSize: "16px",
@@ -363,7 +363,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
   [`& .${classes.dialogHint}`]: {
     fontSize: "13px",
-    color: theme.palette.admin.textLight,
+    color: theme.vars?.palette.admin.textLight,
     lineHeight: 1.6,
   },
   [`& .${classes.dialogActions}`]: {
@@ -371,23 +371,23 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
   [`& .${classes.dialogField}`]: {
     "& .MuiOutlinedInput-root": {
-      backgroundColor: theme.palette.admin.input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.border,
+      borderColor: theme.vars?.palette.admin.border,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.admin.borderLight,
+      borderColor: theme.vars?.palette.admin.borderLight,
     },
     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: theme.palette.kerian.main,
+      borderColor: theme.vars?.palette.kerian.main,
     },
     "& .MuiInputLabel-root.Mui-focused": {
-      color: theme.palette.kerian.main,
+      color: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.errorText}`]: {
-    color: theme.palette.error.main,
+    color: theme.vars?.palette.error.main,
     fontSize: "12px",
     marginTop: "4px",
   },
@@ -399,10 +399,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     right: "8px",
     top: "55%",
     transform: "translateY(-50%)",
-    color: theme.palette.admin.textMuted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.primaryButton}`]: {
-    backgroundColor: theme.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.main,
     color: "#ffffff",
     textTransform: "none",
     fontSize: "13px",
@@ -410,36 +410,36 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     padding: "8px 18px",
     boxShadow: "none",
     "&:hover": {
-      backgroundColor: theme.palette.kerian.hover,
+      backgroundColor: theme.vars?.palette.kerian.hover,
       boxShadow: "none",
     },
     "&.Mui-disabled": {
-      backgroundColor: theme.palette.admin.border,
-      color: theme.palette.admin.textMuted,
+      backgroundColor: theme.vars?.palette.admin.border,
+      color: theme.vars?.palette.admin.textMuted,
     },
   },
   [`& .${classes.secondaryButton}`]: {
-    borderColor: theme.palette.admin.borderLight,
-    color: theme.palette.admin.textLight,
+    borderColor: theme.vars?.palette.admin.borderLight,
+    color: theme.vars?.palette.admin.textLight,
     textTransform: "none",
     fontSize: "13px",
     fontWeight: 500,
     padding: "8px 18px",
     "&:hover": {
-      borderColor: theme.palette.kerian.main,
-      backgroundColor: theme.palette.kerian.bg,
+      borderColor: theme.vars?.palette.kerian.main,
+      backgroundColor: theme.vars?.palette.kerian.bg,
     },
   },
   [`& .${classes.dangerButton}`]: {
-    borderColor: theme.palette.kerian.dangerBorder,
-    color: theme.palette.error.main,
+    borderColor: theme.vars?.palette.kerian.dangerBorder,
+    color: theme.vars?.palette.error.main,
     textTransform: "none",
     fontSize: "13px",
     fontWeight: 500,
     padding: "8px 18px",
     "&:hover": {
-      borderColor: theme.palette.error.main,
-      backgroundColor: theme.palette.kerian.dangerBg,
+      borderColor: theme.vars?.palette.error.main,
+      backgroundColor: theme.vars?.palette.kerian.dangerBg,
     },
   },
 }));
