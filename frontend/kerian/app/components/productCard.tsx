@@ -9,7 +9,6 @@ import {
   Divider,
   Tooltip,
 } from "@mui/material";
-import { boxShadows, colors } from "@/constants/colors";
 import { useEffect, useState } from "react";
 import ProductPopup from "./productPopup";
 import ReviewsPopup from "./reviews/reviewsPopup";
@@ -52,7 +51,7 @@ const classes = {
   divider: `${PREFIX}-divider`,
 };
 
-const Root = styled(Card)(() => ({
+const Root = styled(Card)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -62,7 +61,7 @@ const Root = styled(Card)(() => ({
     transition: "transform 0.2s ease",
     overflow: "hidden",
     "&:hover": {
-      boxShadow: boxShadows.kerian_main_button_hover_shadow,
+      boxShadow: theme.vars?.palette.kerian.shadowHover,
       transform: "scale(1.03)",
       zIndex: 0,
     },
@@ -105,7 +104,7 @@ const Root = styled(Card)(() => ({
     fontFamily: "monospace",
     fontWeight: "bold",
     fontSize: "14px",
-    backgroundColor: colors.kerian_main,
+    backgroundColor: theme.vars?.palette.kerian.main,
     color: "#fff",
     padding: "4px 12px",
     borderRadius: "20px",
@@ -130,31 +129,45 @@ const Root = styled(Card)(() => ({
     position: "absolute",
     top: "8px",
     right: "8px",
-    color: colors.kerian_main,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    color: theme.vars?.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.navbar,
     borderRadius: "50%",
     padding: "6px",
     cursor: "pointer",
     transition: "0.2s",
     "&:hover": {
-      color: colors.kerian_main,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      color: theme.vars?.palette.kerian.main,
+      backgroundColor: "#bfb7a4",
     },
+    ...theme.applyStyles("dark", {
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      "&:hover": {
+        color: theme.vars?.palette.kerian.main,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+      },
+    }),
   },
   [`& .${classes.reviewsButton}`]: {
     position: "absolute",
     bottom: "8px",
     right: "8px",
-    color: colors.kerian_main,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    color: theme.vars?.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.navbar,
     borderRadius: "50%",
     padding: "6px",
     cursor: "pointer",
     transition: "0.2s",
     "&:hover": {
-      color: colors.kerian_main,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      color: theme.vars?.palette.kerian.main,
+      backgroundColor: "#bfb7a4",
     },
+    ...theme.applyStyles("dark", {
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      "&:hover": {
+        color: theme.vars?.palette.kerian.main,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+      },
+    }),
   },
   [`& .${classes.loginToBuyText}`]: {
     fontStyle: "italic",

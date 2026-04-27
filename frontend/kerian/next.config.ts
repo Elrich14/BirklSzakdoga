@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
       "i.etsystatic.com"
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/my-orders",
+        destination: "/profile?tab=orders",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

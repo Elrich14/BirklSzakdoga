@@ -39,6 +39,29 @@ export interface RegisterRequest {
   password: string;
 }
 
+export interface CurrentUser {
+  id: string;
+  username: string;
+  email: string;
+  authProvider: "local" | "google";
+  createdAt: string;
+}
+
+export async function getCurrentUser(): Promise<CurrentUser> {
+  const token = localStorage.getItem("token");
+  const response = await fetch(`${API_BASE}/auth/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch current user");
+  }
+
+  return response.json();
+}
+
 // ==================== PRODUCT TYPES ====================
 
 export interface StockVariant {

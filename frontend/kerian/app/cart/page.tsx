@@ -15,7 +15,6 @@ import QuantityInput from "../components/quantity";
 import ProductPopup from "../components/productPopup";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
 import { resolveImageUrl } from "../utils/image";
 import { useQueries } from "@tanstack/react-query";
@@ -39,7 +38,7 @@ const classes = {
   cartTitle: `${PREFIX}-cartTitle`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     maxWidth: "800px",
     margin: "0 auto",
@@ -77,7 +76,7 @@ const Root = styled("div")(() => ({
     minWidth: 0,
   },
   [`& .${classes.stockInfo}`]: {
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.75,
     fontSize: "12px",
   },
@@ -103,7 +102,7 @@ const Root = styled("div")(() => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
 }));

@@ -1,6 +1,7 @@
 "use client";
 
 import { styled } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -26,7 +27,6 @@ import {
   Legend,
 } from "recharts";
 import { fetchAdminProducts, fetchProductStats } from "@/api";
-import { colors } from "@/constants/colors";
 import { STATS_RANGES, StatsRange } from "@/constants/constants";
 
 const PREFIX = "ProductSellRating";
@@ -39,7 +39,7 @@ const classes = {
   noData: `${PREFIX}-noData`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -67,13 +67,14 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.noData}`]: {
     textAlign: "center",
-    color: colors.admin_text_muted,
+    color: theme.vars?.palette.admin.textMuted,
     padding: "40px 0",
   },
 }));
 
 export default function ProductSellRating() {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [selectedProductId, setSelectedProductId] = useState<number | "">("");
   const [range, setRange] = useState<StatsRange>("month");
 
@@ -145,37 +146,59 @@ export default function ProductSellRating() {
         </Typography>
       ) : (
         <Box className={classes.chartWrapper}>
-        <ResponsiveContainer width="50%" height={350}>
-          <BarChart data={chartData} barSize={53} barGap={45} barCategoryGap="80%" margin={{ left: 40, right: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke={colors.admin_border} />
-            <XAxis dataKey="label" stroke={colors.admin_text_muted} padding={{ left: 40, right: 40 }} />
-            <YAxis yAxisId="left" stroke={colors.admin_text_muted} width={40} />
-            <YAxis yAxisId="right" orientation="right" stroke={colors.admin_text_muted} width={40} />
-            <Tooltip
-              cursor={false}
-              contentStyle={{
-                backgroundColor: colors.admin_input,
-                border: `1px solid ${colors.admin_border_light}`,
-                borderRadius: "8px",
-              }}
-            />
-            <Legend />
-            <Bar
-              yAxisId="left"
-              dataKey="quantity"
-              name={t("admin.productStats.quantity")}
-              fill={colors.kerian_main}
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              yAxisId="right"
-              dataKey="revenue"
-              name={t("admin.productStats.revenue")}
-              fill={colors.admin_accent_purple}
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+          <ResponsiveContainer width="50%" height={350}>
+            <BarChart
+              data={chartData}
+              barSize={53}
+              barGap={45}
+              barCategoryGap="80%"
+              margin={{ left: 40, right: 40 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke={theme.vars?.palette.admin.border}
+              />
+              <XAxis
+                dataKey="label"
+                stroke={theme.vars?.palette.admin.textMuted}
+                padding={{ left: 40, right: 40 }}
+              />
+              <YAxis
+                yAxisId="left"
+                stroke={theme.vars?.palette.admin.textMuted}
+                width={40}
+              />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                stroke={theme.vars?.palette.admin.textMuted}
+                width={40}
+              />
+              <Tooltip
+                cursor={false}
+                contentStyle={{
+                  backgroundColor: theme.vars?.palette.admin.input,
+                  border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
+                  borderRadius: "8px",
+                }}
+              />
+              <Legend />
+              <Bar
+                yAxisId="left"
+                dataKey="quantity"
+                name={t("admin.productStats.quantity")}
+                fill={theme.vars?.palette.kerian.main}
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                yAxisId="right"
+                dataKey="revenue"
+                name={t("admin.productStats.revenue")}
+                fill={theme.vars?.palette.admin.accentPurple}
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </Box>
       )}
     </Root>

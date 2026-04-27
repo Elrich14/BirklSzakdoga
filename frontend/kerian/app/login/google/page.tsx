@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material";
 import {
   Box,
   Button,
@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import { boxShadows, colors } from "../../../constants/colors";
 import {
   USERNAME_AVAILABILITY_DEBOUNCE_MS,
   USERNAME_MIN_LENGTH,
@@ -40,12 +39,7 @@ type PageState =
   | { kind: "submitting"; pendingToken: string; suggested: string }
   | { kind: "error"; message: string };
 
-type Availability =
-  | "unknown"
-  | "checking"
-  | "available"
-  | "taken"
-  | "invalid";
+type Availability = "unknown" | "checking" | "available" | "taken" | "invalid";
 
 const PREFIX = "GoogleHandoffPage";
 
@@ -57,7 +51,7 @@ const classes = {
   availabilityBad: `${PREFIX}-availabilityBad`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -70,23 +64,23 @@ const Root = styled("div")(() => ({
     minWidth: "400px",
     maxWidth: "400px",
     padding: "30px",
-    boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",
-    backgroundColor: colors.kerian_main,
-    "&:hover": { backgroundColor: colors.kerian_main_button_hover },
+    backgroundColor: theme.vars?.palette.kerian.main,
+    "&:hover": { backgroundColor: theme.vars?.palette.kerian.hover },
   },
   [`& .${classes.availabilityOk}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.availabilityBad}`]: {
     fontSize: "13px",
     marginTop: "4px",
-    color: colors.danger,
+    color: theme.vars?.palette.error.main,
   },
 }));
 
@@ -96,9 +90,7 @@ function deriveUsername(pendingToken: string): string {
       pendingToken
     );
     const prefix = claims.email?.split("@")[0] ?? "";
-    return prefix
-      .replace(/[^A-Za-z0-9_-]/g, "")
-      .slice(0, USERNAME_MAX_LENGTH);
+    return prefix.replace(/[^A-Za-z0-9_-]/g, "").slice(0, USERNAME_MAX_LENGTH);
   } catch {
     return "";
   }
@@ -193,9 +185,7 @@ export default function GoogleHandoffPage() {
     };
   }, [username, state.kind]);
 
-  const onSubmitUsername = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const onSubmitUsername = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (state.kind !== "needsUsername") return;
     if (availability !== "available") return;
@@ -257,8 +247,7 @@ export default function GoogleHandoffPage() {
           >
             {availability === "available" &&
               t("login.google.pickUsername.available")}
-            {availability === "taken" &&
-              t("login.google.pickUsername.taken")}
+            {availability === "taken" && t("login.google.pickUsername.taken")}
             {availability === "invalid" &&
               t("login.google.pickUsername.invalid")}
             {availability === "checking" &&

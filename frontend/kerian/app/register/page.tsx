@@ -1,6 +1,6 @@
 "use client";
 
-import { boxShadows, colors } from "@/constants/colors";
+import { colors } from "@/constants/colors";
 import {
   Box,
   Button,
@@ -31,7 +31,7 @@ const classes = {
   toggleButton: `${PREFIX}-toggleButton`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -46,18 +46,18 @@ const Root = styled("div")(() => ({
       fontFamily: "serif",
     },
     "& .MuiButtonBase-root.MuiButton-root": {
-      backgroundColor: colors.kerian_main,
+      backgroundColor: theme.vars?.palette.kerian.main,
     },
     "& .MuiButtonBase-root.MuiButton-root:hover": {
-      backgroundColor: colors.kerian_main_button_hover,
-      boxShadow: boxShadows.kerian_main_button_hover_shadow,
+      backgroundColor: theme.vars?.palette.kerian.hover,
+      boxShadow: theme.vars?.palette.kerian.shadowHover,
     },
 
     "& .MuiInputBase-root.Mui-focused": {
-      "--mui-palette-primary-main": colors.kerian_main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
     "& .MuiFormLabel-root.Mui-focused": {
-      "--mui-palette-primary-main": colors.kerian_main,
+      "--mui-palette-primary-main": theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.box}`]: {
@@ -68,7 +68,7 @@ const Root = styled("div")(() => ({
     alignContent: "center",
     justifyContent: "center",
     padding: "30px",
-    boxShadow: boxShadows.kerian_main_button_hover_shadow,
+    boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
   },
   [`& .${classes.submitButton}`]: {

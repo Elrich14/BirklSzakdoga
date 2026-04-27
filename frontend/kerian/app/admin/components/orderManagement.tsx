@@ -1,6 +1,7 @@
 "use client";
 
 import { styled } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
@@ -36,7 +37,6 @@ import {
   AdminOrdersPage,
 } from "@/api";
 import { ORDER_STATUSES, OrderStatus } from "@/constants/constants";
-import { colors } from "@/constants/colors";
 import { useSnackbar } from "../../providers/snackbarProvider";
 
 interface PendingStatusChange {
@@ -60,7 +60,7 @@ const classes = {
   loadingMore: `${PREFIX}-loadingMore`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -72,10 +72,10 @@ const Root = styled(Box)(() => ({
     alignItems: "center",
   },
   [`& .${classes.table}`]: {
-    backgroundColor: colors.admin_surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     "& .MuiTableCell-root": {
-      borderColor: colors.admin_border,
+      borderColor: theme.vars?.palette.admin.border,
     },
   },
   [`& .${classes.statusSelect}`]: {
@@ -85,23 +85,23 @@ const Root = styled(Box)(() => ({
       fontSize: "14px",
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: colors.admin_border,
+      borderColor: theme.vars?.palette.admin.border,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: colors.admin_border_light,
+      borderColor: theme.vars?.palette.admin.borderLight,
     },
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: colors.kerian_main,
+      borderColor: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.itemsTable}`]: {
-    backgroundColor: colors.admin_input,
+    backgroundColor: theme.vars?.palette.admin.input,
     borderRadius: "8px",
     marginBottom: "8px",
     "& .MuiTableCell-root": {
-      borderColor: colors.admin_border,
+      borderColor: theme.vars?.palette.admin.border,
       fontSize: "13px",
-      color: colors.admin_text_light,
+      color: theme.vars?.palette.admin.textLight,
     },
   },
   [`& .${classes.expandCell}`]: {
@@ -111,7 +111,7 @@ const Root = styled(Box)(() => ({
   [`& .${classes.noOrders}`]: {
     textAlign: "center",
     padding: "48px",
-    color: colors.admin_text_muted,
+    color: theme.vars?.palette.admin.textMuted,
   },
   [`& .${classes.loadingMore}`]: {
     display: "flex",
@@ -120,24 +120,24 @@ const Root = styled(Box)(() => ({
   },
 }));
 
-const StyledDialog = styled(Dialog)(() => ({
+const StyledDialog = styled(Dialog)(({ theme }) => ({
   [`& .${classes.confirmDialogPaper}`]: {
-    backgroundColor: colors.admin_surface,
-    color: colors.white,
+    backgroundColor: theme.vars?.palette.admin.surface,
+    color: theme.vars?.palette.text.primary,
   },
   [`& .${classes.confirmActions}`]: {
     padding: "8px 24px 16px",
   },
   [`& .${classes.confirmButton}`]: {
-    backgroundColor: colors.kerian_main,
-    color: colors.white,
+    backgroundColor: theme.vars?.palette.kerian.main,
+    color: theme.vars?.palette.text.primary,
     "&:hover": {
-      backgroundColor: colors.kerian_main,
+      backgroundColor: theme.vars?.palette.kerian.main,
       opacity: 0.85,
     },
   },
   [`& .${classes.cancelButton}`]: {
-    color: colors.admin_text_light,
+    color: theme.vars?.palette.admin.textLight,
   },
 }));
 
@@ -319,7 +319,6 @@ const OrderManagement = () => {
   );
 };
 
-// Extracted row component to keep the main table clean
 interface OrderRowProps {
   order: AdminOrder;
   isExpanded: boolean;
@@ -336,6 +335,7 @@ const OrderRow = ({
   formatDate,
 }: OrderRowProps) => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   return (
     <>
@@ -374,7 +374,7 @@ const OrderRow = ({
               <Typography
                 variant="subtitle2"
                 gutterBottom
-                color={colors.admin_text_light}
+                color={theme.vars?.palette.admin.textLight}
               >
                 {t("admin.orderList.items")}
               </Typography>

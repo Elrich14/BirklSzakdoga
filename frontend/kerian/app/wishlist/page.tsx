@@ -16,7 +16,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getWishlist, removeFromWishlistById, WishlistItem } from "@/api";
 import { getUserRole } from "../utils/auth";
-import { colors } from "@/constants/colors";
 import { PRODUCT_GENDERS } from "@/constants/filterConstants";
 import { useCartStore } from "../components/store/cartStore";
 import { useTranslation } from "react-i18next";
@@ -37,7 +36,7 @@ const classes = {
   description: `${PREFIX}-description`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     minHeight: "100vh",
   },
@@ -48,7 +47,7 @@ const Root = styled("div")(() => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
   [`& .MuiList-root`]: {
@@ -64,9 +63,9 @@ const Root = styled("div")(() => ({
   [`& .${classes.listItem}`]: {
     width: "100%",
     maxWidth: "1300px",
-    backgroundColor: "#121212",
-    color: "#fff",
-    borderBottom: "1px solid #333",
+    backgroundColor: theme.vars?.palette.background.paper,
+    color: theme.vars?.palette.text.primary,
+    borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "4px",
     justifyContent: "space-between",
   },
@@ -76,15 +75,15 @@ const Root = styled("div")(() => ({
     marginRight: "10px",
   },
   [`& .${classes.addToCartButton}`]: {
-    color: colors.kerian_main,
-    border: `1px solid ${colors.kerian_main}`,
+    color: theme.vars?.palette.kerian.main,
+    border: `1px solid ${theme.vars?.palette.kerian.main}`,
     marginLeft: "10px",
   },
   [`& .${classes.deleteIcon}`]: {
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.emptyText}`]: {
-    color: "#ccc",
+    color: theme.vars?.palette.text.secondary,
     marginTop: "2rem",
   },
   [`& .${classes.description}`]: {
@@ -140,15 +139,11 @@ export default function Wishlist() {
 
   return (
     <Root className={classes.root}>
-      <Typography className={classes.title}>
-        {t("wishlist.title")}
-      </Typography>
+      <Typography className={classes.title}>{t("wishlist.title")}</Typography>
       {isAuthenticated && (
         <List>
           {wishlist.length === 0 ? (
-            <p className={classes.emptyText}>
-              {t("wishlist.empty")}
-            </p>
+            <p className={classes.emptyText}>{t("wishlist.empty")}</p>
           ) : (
             wishlist.map((item) => (
               <ListItem
@@ -192,9 +187,8 @@ export default function Wishlist() {
                         ? t("filter.genderOptions.Male")
                         : t("filter.genderOptions.Female")}
                       {" / "}
-                      {t(`card.colors.${item.color}`)}{" "}
-                      {item.quantity}x - {item.price.toLocaleString()}{" "}
-                      {t("card.currency")}
+                      {t(`card.colors.${item.color}`)} {item.quantity}x -{" "}
+                      {item.price.toLocaleString()} {t("card.currency")}
                     </Typography>
                   }
                   secondary={item.description}

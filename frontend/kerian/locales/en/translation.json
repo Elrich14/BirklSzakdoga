@@ -25,7 +25,38 @@
     "logout": "Logout",
     "welcome": "Welcome",
     "admin": "Admin",
-    "myOrders": "My Orders"
+    "myOrders": "My Orders",
+    "profile": "Profile"
+  },
+  "themeToggle": {
+    "aria": "Toggle theme",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "profile": {
+    "title": "My Profile",
+    "tabs": {
+      "account": "Account info",
+      "orders": "My Orders",
+      "settings": "Settings"
+    },
+    "account": {
+      "username": "Username",
+      "email": "Email",
+      "signInMethod": "Sign-in method",
+      "googleSignIn": "Google",
+      "passwordSignIn": "Email & password",
+      "currentTheme": "Current theme",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "loadError": "Could not load account info"
+    },
+    "settings": {
+      "theme": "Theme",
+      "language": "Language",
+      "themeLight": "Light mode",
+      "themeDark": "Dark mode"
+    }
   },
   "login": {
     "title": "Login",

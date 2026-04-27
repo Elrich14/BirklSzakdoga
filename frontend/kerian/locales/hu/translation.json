@@ -25,7 +25,38 @@
     "logout": "Kijelentkezés",
     "welcome": "Üdvözöljük",
     "admin": "Admin",
-    "myOrders": "Rendeléseim"
+    "myOrders": "Rendeléseim",
+    "profile": "Profil"
+  },
+  "themeToggle": {
+    "aria": "Téma váltása",
+    "switchToLight": "Váltás világos módra",
+    "switchToDark": "Váltás sötét módra"
+  },
+  "profile": {
+    "title": "Profilom",
+    "tabs": {
+      "account": "Fiókadatok",
+      "orders": "Rendeléseim",
+      "settings": "Beállítások"
+    },
+    "account": {
+      "username": "Felhasználónév",
+      "email": "E-mail",
+      "signInMethod": "Bejelentkezési mód",
+      "googleSignIn": "Google",
+      "passwordSignIn": "E-mail és jelszó",
+      "currentTheme": "Jelenlegi téma",
+      "themeLight": "Világos",
+      "themeDark": "Sötét",
+      "loadError": "Nem sikerült betölteni a fiókadatokat"
+    },
+    "settings": {
+      "theme": "Téma",
+      "language": "Nyelv",
+      "themeLight": "Világos mód",
+      "themeDark": "Sötét mód"
+    }
   },
   "login": {
     "title": "Bejelentkezés",

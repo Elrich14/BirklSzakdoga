@@ -4,7 +4,6 @@ import { styled } from "@mui/system";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { colors } from "@/constants/colors";
 
 interface VariantStockEditorProps {
   genders: string[];
@@ -28,12 +27,12 @@ const classes = {
   setAllButton: `${PREFIX}-setAllButton`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
     gap: "12px",
-    border: `1px solid ${colors.admin_border_light}`,
+    border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
     borderRadius: "8px",
     padding: "16px",
   },
@@ -63,7 +62,7 @@ const Root = styled(Box)(() => ({
   [`& .${classes.input}`]: {
     width: "80px",
     "& .MuiOutlinedInput-root": {
-      backgroundColor: colors.admin_input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.setAllRow}`]: {
@@ -75,12 +74,12 @@ const Root = styled(Box)(() => ({
   [`& .${classes.setAllInput}`]: {
     width: "80px",
     "& .MuiOutlinedInput-root": {
-      backgroundColor: colors.admin_input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.setAllButton}`]: {
-    color: colors.kerian_main,
-    borderColor: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
+    borderColor: theme.vars?.palette.kerian.main,
   },
 }));
 

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import theme from "@/theme";
+import ThemeProvider from "./providers/themeProvider";
 import Navbar from "./components/navbar/navbar";
 import { Providers } from "./providers";
 import InactivityHelper from "./components/inactivityHelper";
@@ -34,9 +34,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <InitColorSchemeScript attribute="class" />
+        <InitColorSchemeScript attribute="class" defaultMode="system" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider>
             <Providers>
               <CssBaseline />
               <Navbar />

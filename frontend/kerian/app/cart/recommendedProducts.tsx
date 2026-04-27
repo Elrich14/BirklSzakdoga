@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fetchAllProducts, fetchRecommendations } from "@/api";
-import { colors } from "@/constants/colors";
 import RecommendedProductTile from "./recommendedProductTile";
 
 interface RecommendedProductsProps {
@@ -20,7 +19,7 @@ const classes = {
   tilesRow: `${PREFIX}-tilesRow`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     marginTop: "24px",
     display: "flex",
@@ -30,7 +29,7 @@ const Root = styled("div")(() => ({
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
     fontSize: "18px",
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.7,
   },
   [`& .${classes.tilesRow}`]: {
@@ -71,7 +70,9 @@ export default function RecommendedProducts({
     const ids = recommendationsQuery.data?.recommendedProductIds;
     const products = productsQuery.data;
     if (!ids || ids.length === 0 || !products) return [];
-    const productMap = new Map(products.map((product) => [product.id, product]));
+    const productMap = new Map(
+      products.map((product) => [product.id, product])
+    );
     return ids
       .map((id) => productMap.get(id))
       .filter((product): product is NonNullable<typeof product> =>

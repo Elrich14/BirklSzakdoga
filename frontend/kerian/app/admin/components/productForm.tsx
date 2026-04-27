@@ -25,8 +25,11 @@ import {
   createProduct,
   updateProduct,
 } from "@/api";
-import { colors } from "@/constants/colors";
-import { AVAILABLE_COLORS, AVAILABLE_SIZES, AVAILABLE_GENDERS } from "@/constants/filterConstants";
+import {
+  AVAILABLE_COLORS,
+  AVAILABLE_SIZES,
+  AVAILABLE_GENDERS,
+} from "@/constants/filterConstants";
 import VariantStockEditor from "./variantStockEditor";
 import { API_BASE } from "@/constants/constants";
 
@@ -74,9 +77,9 @@ const classes = {
   cancelButton: `${PREFIX}-cancelButton`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
-    backgroundColor: colors.admin_surface,
+    backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
     padding: "32px",
     maxWidth: "700px",
@@ -94,7 +97,7 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.field}`]: {
     "& .MuiOutlinedInput-root": {
-      backgroundColor: colors.admin_input,
+      backgroundColor: theme.vars?.palette.admin.input,
     },
   },
   [`& .${classes.sectionLabel}`]: {
@@ -109,9 +112,9 @@ const Root = styled(Box)(() => ({
     fontSize: "14px",
   },
   [`& .${classes.checkbox}`]: {
-    color: colors.admin_checkbox_inactive,
+    color: theme.vars?.palette.admin.checkboxInactive,
     "&.Mui-checked": {
-      color: colors.kerian_main,
+      color: theme.vars?.palette.kerian.main,
     },
   },
   [`& .${classes.imageSection}`]: {
@@ -124,7 +127,7 @@ const Root = styled(Box)(() => ({
     height: "120px",
     objectFit: "cover",
     borderRadius: "8px",
-    border: `1px solid ${colors.admin_border_light}`,
+    border: `1px solid ${theme.vars?.palette.admin.borderLight}`,
   },
   [`& .${classes.imageGrid}`]: {
     display: "flex",
@@ -138,11 +141,11 @@ const Root = styled(Box)(() => ({
     position: "absolute",
     top: "-8px",
     right: "-8px",
-    backgroundColor: colors.admin_overlay,
-    color: colors.white,
+    backgroundColor: theme.vars?.palette.admin.overlay,
+    color: theme.vars?.palette.text.primary,
     padding: "2px",
     "&:hover": {
-      backgroundColor: colors.admin_overlay_hover,
+      backgroundColor: theme.vars?.palette.admin.overlayHover,
     },
   },
   [`& .${classes.hiddenInput}`]: {
@@ -150,8 +153,8 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.uploadButton}`]: {
     width: "fit-content",
-    borderColor: colors.kerian_main,
-    color: colors.kerian_main,
+    borderColor: theme.vars?.palette.kerian.main,
+    color: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.actions}`]: {
     display: "flex",
@@ -159,11 +162,11 @@ const Root = styled(Box)(() => ({
     marginTop: "8px",
   },
   [`& .${classes.saveButton}`]: {
-    backgroundColor: colors.kerian_main,
+    backgroundColor: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.cancelButton}`]: {
-    borderColor: colors.admin_checkbox_inactive,
-    color: colors.admin_text_light,
+    borderColor: theme.vars?.palette.admin.checkboxInactive,
+    color: theme.vars?.palette.admin.textLight,
   },
 }));
 
@@ -231,8 +234,7 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (formData: FormData) =>
-      updateProduct(product!.id, formData),
+    mutationFn: (formData: FormData) => updateProduct(product!.id, formData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminProducts"] });
       setFeedback({
@@ -340,7 +342,14 @@ export default function ProductForm({ product, onClose }: ProductFormProps) {
         validationSchema={validationSchema}
         onSubmit={onSubmit}
       >
-        {({ values, errors, touched, setFieldValue, handleChange, handleBlur }) => (
+        {({
+          values,
+          errors,
+          touched,
+          setFieldValue,
+          handleChange,
+          handleBlur,
+        }) => (
           <Form className={classes.form}>
             <TextField
               name="name"

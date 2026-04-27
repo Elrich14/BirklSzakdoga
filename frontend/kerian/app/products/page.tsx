@@ -4,7 +4,6 @@ import { Typography, styled, Box } from "@mui/material";
 import ProductCardSkeleton from "../components/productCardSkeleton";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
-import { colors } from "@/constants/colors";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import ProductFilter, {
@@ -23,7 +22,7 @@ const classes = {
   productsAndFilterTitle: `${PREFIX}-productsAndFilterTitle`,
 };
 
-const Root = styled("div")(() => ({
+const Root = styled("div")(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     width: "100%",
@@ -55,7 +54,7 @@ const Root = styled("div")(() => ({
     marginTop: "30px",
     fontFamily: "monospace",
     fontSize: "30px",
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
 }));

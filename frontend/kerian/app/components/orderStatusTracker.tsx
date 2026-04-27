@@ -1,6 +1,7 @@
 "use client";
 
 import { styled } from "@mui/system";
+import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography } from "@mui/material";
@@ -39,7 +40,7 @@ const classes = {
   loadingBox: `${PREFIX}-loadingBox`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
@@ -70,7 +71,7 @@ const Root = styled(Box)(() => ({
     width: "2px",
     minHeight: "24px",
     marginLeft: "11px",
-    backgroundColor: colors.admin_border,
+    backgroundColor: theme.vars?.palette.admin.border,
   },
   [`& .${classes.iconWrapper}`]: {
     display: "flex",
@@ -85,7 +86,7 @@ const Root = styled(Box)(() => ({
     fontSize: "24px",
   },
   [`& .${classes.activeIcon}`]: {
-    color: colors.kerian_main,
+    color: theme.vars?.palette.kerian.main,
     fontSize: "24px",
     animation: "pulse 1.5s ease-in-out infinite",
     "@keyframes pulse": {
@@ -94,11 +95,11 @@ const Root = styled(Box)(() => ({
     },
   },
   [`& .${classes.pendingIcon}`]: {
-    color: colors.admin_border_light,
+    color: theme.vars?.palette.admin.borderLight,
     fontSize: "16px",
   },
   [`& .${classes.cancelledIcon}`]: {
-    color: colors.danger,
+    color: theme.vars?.palette.error.main,
     fontSize: "24px",
   },
   [`& .${classes.stepContent}`]: {
@@ -126,6 +127,7 @@ const Root = styled(Box)(() => ({
 
 const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const { data } = useQuery({
     queryKey: ["orderStatus", orderId],
@@ -174,9 +176,9 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
   };
 
   const getConnectorColor = (stepIndex: number): string => {
-    if (isCancelled) return colors.admin_border;
+    if (isCancelled) return theme.vars?.palette.admin.border;
     if (stepIndex < currentStepIndex) return colors.snackbar_success;
-    return colors.admin_border;
+    return theme.vars?.palette.admin.border;
   };
 
   const getLabelOpacity = (state: "completed" | "active" | "pending") => {
@@ -230,7 +232,7 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
           <>
             <Box
               className={classes.connector}
-              style={{ backgroundColor: colors.danger }}
+              style={{ backgroundColor: theme.vars?.palette.error.main }}
             />
             <Box className={classes.step}>
               <Box className={classes.iconWrapper}>
@@ -239,7 +241,7 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
               <Box className={classes.stepContent}>
                 <Typography
                   className={classes.stepLabel}
-                  style={{ color: colors.danger }}
+                  style={{ color: theme.vars?.palette.error.main }}
                 >
                   {t("orderStatus.cancelled")}
                 </Typography>

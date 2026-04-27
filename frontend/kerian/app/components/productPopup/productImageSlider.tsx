@@ -7,7 +7,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { colors as themeColors } from "@/constants/colors";
 import { resolveImageUrl } from "../../utils/image";
 
 interface ProductImageSliderProps {
@@ -32,7 +31,7 @@ const classes = {
   wishlistButton: `${PREFIX}-wishlistButton`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     position: "relative",
     flexShrink: 0,
@@ -63,22 +62,29 @@ const Root = styled(Box)(() => ({
   },
   [`& .${classes.thumbnailActive}`]: {
     opacity: 1,
-    borderColor: themeColors.kerian_main,
+    borderColor: theme.vars?.palette.kerian.main,
   },
   [`& .${classes.wishlistButton}`]: {
     position: "absolute",
     top: "8px",
     right: "8px",
-    color: themeColors.kerian_main,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    color: theme.vars?.palette.kerian.main,
+    backgroundColor: theme.vars?.palette.kerian.navbar,
     borderRadius: "50%",
     padding: "6px",
     cursor: "pointer",
     transition: "0.2s",
     "&:hover": {
-      color: themeColors.kerian_main,
-      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      color: theme.vars?.palette.kerian.main,
+      backgroundColor: "#bfb7a4",
     },
+    ...theme.applyStyles("dark", {
+      backgroundColor: "rgba(0, 0, 0, 0.4)",
+      "&:hover": {
+        color: theme.vars?.palette.kerian.main,
+        backgroundColor: "rgba(0, 0, 0, 0.6)",
+      },
+    }),
   },
 }));
 
