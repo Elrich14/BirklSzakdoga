@@ -31,13 +31,22 @@ const Root = styled("div")(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     gap: "20px",
+    padding: "0 16px",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      gap: "12px",
+    },
   },
   [`& .${classes.kerian}`]: {
-    fontSize: "200px",
+    fontSize: "clamp(60px, 18vw, 200px)",
     fontWeight: "bold",
     color: theme.vars?.palette.text.primary,
+    margin: 0,
   },
   [`& .${classes.heroImage}`]: {
+    width: "100%",
+    height: "auto",
+    maxWidth: "400px",
     ...theme.applyStyles("dark", {
       filter: "invert(1)",
     }),

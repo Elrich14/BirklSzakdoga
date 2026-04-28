@@ -1,6 +1,13 @@
 "use client";
 import ProductCard from "../components/productCard";
-import { Typography, styled, Box } from "@mui/material";
+import {
+  Button,
+  Drawer,
+  IconButton,
+  Typography,
+  styled,
+  Box,
+} from "@mui/material";
 import ProductCardSkeleton from "../components/productCardSkeleton";
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { fetchAllProducts, getWishlist, WishlistItem } from "@/api";
@@ -11,6 +18,8 @@ import ProductFilter, {
 } from "../components/filtering/ProductFilter";
 import { AVAILABLE_SIZES } from "@/constants/filterConstants";
 import { getUserRole } from "../utils/auth";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PREFIX = "ProductsPage";
 
@@ -20,6 +29,10 @@ const classes = {
   content: `${PREFIX}-content`,
   productGrid: `${PREFIX}-productGrid`,
   productsAndFilterTitle: `${PREFIX}-productsAndFilterTitle`,
+  filtersButton: `${PREFIX}-filtersButton`,
+  filterDrawerHeader: `${PREFIX}-filterDrawerHeader`,
+  filterDrawerCloseButton: `${PREFIX}-filterDrawerCloseButton`,
+  filterDrawerBody: `${PREFIX}-filterDrawerBody`,
 };
 
 const Root = styled("div")(({ theme }) => ({
@@ -37,11 +50,15 @@ const Root = styled("div")(({ theme }) => ({
     padding: "0 16px",
     borderRight: "1px solid #e0e0e0",
     boxSizing: "border-box",
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
   },
   [`& .${classes.content}`]: {
     flex: 1,
     padding: "0 24px",
     boxSizing: "border-box",
+    minWidth: 0,
   },
   [`& .${classes.productGrid}`]: {
     display: "grid",
@@ -56,6 +73,48 @@ const Root = styled("div")(({ theme }) => ({
     fontSize: "30px",
     color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
+  },
+  [`& .${classes.filtersButton}`]: {
+    display: "none",
+    marginTop: "16px",
+    color: theme.vars?.palette.kerian.main,
+    borderColor: theme.vars?.palette.kerian.main,
+    fontFamily: "monospace",
+    textTransform: "none",
+    [theme.breakpoints.down("md")]: {
+      display: "inline-flex",
+    },
+  },
+}));
+
+const FilterDrawer = styled(Drawer)(({ theme }) => ({
+  "& .MuiDrawer-paper": {
+    width: "min(320px, 90vw)",
+    height: "100vh",
+    maxHeight: "100dvh",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    boxSizing: "border-box",
+  },
+  [`& .${classes.filterDrawerHeader}`]: {
+    display: "flex",
+    justifyContent: "flex-end",
+    padding: "4px",
+    flexShrink: 0,
+  },
+  [`& .${classes.filterDrawerCloseButton}`]: {
+    color: theme.vars?.palette.text.primary,
+    padding: "6px",
+    "&:hover": {
+      color: theme.vars?.palette.kerian.main,
+    },
+  },
+  [`& .${classes.filterDrawerBody}`]: {
+    padding: "0 16px 16px",
+    overflowY: "auto",
+    flexGrow: 1,
+    minHeight: 0,
   },
 }));
 
@@ -74,6 +133,7 @@ export interface Product {
 export default function ProductsPage() {
   const { t } = useTranslation();
   const userRole = getUserRole();
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     sizes: AVAILABLE_SIZES,
     gender: [],
@@ -182,6 +242,15 @@ export default function ProductsPage() {
       </Box>
 
       <Box className={classes.content}>
+        <Button
+          variant="outlined"
+          startIcon={<FilterListIcon />}
+          className={classes.filtersButton}
+          onClick={() => setIsFilterDrawerOpen(true)}
+        >
+          {t("products.filters")}
+        </Button>
+
         <Typography className={classes.productsAndFilterTitle} gutterBottom>
           {t("products.products")}
         </Typography>
@@ -207,6 +276,28 @@ export default function ProductsPage() {
               })}
         </Box>
       </Box>
+
+      <FilterDrawer
+        anchor="right"
+        open={isFilterDrawerOpen}
+        onClose={() => setIsFilterDrawerOpen(false)}
+      >
+        <Box className={classes.filterDrawerHeader}>
+          <IconButton
+            className={classes.filterDrawerCloseButton}
+            onClick={() => setIsFilterDrawerOpen(false)}
+            aria-label={t("products.closeFilters")}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <Box className={classes.filterDrawerBody}>
+          <ProductFilter
+            maxPrice={highestPrice}
+            onFiltersChange={onFiltersChange}
+          />
+        </Box>
+      </FilterDrawer>
     </Root>
   );
 }

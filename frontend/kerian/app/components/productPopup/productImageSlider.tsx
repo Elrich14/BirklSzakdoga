@@ -36,10 +36,21 @@ const Root = styled(Box)(({ theme }) => ({
     position: "relative",
     flexShrink: 0,
     paddingTop: "4px",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
   },
   [`& .${classes.mainImage}`]: {
     borderRadius: "4px",
     objectFit: "cover",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      maxWidth: "450px",
+      height: "auto",
+    },
   },
   [`& .${classes.thumbnailRow}`]: {
     display: "flex",

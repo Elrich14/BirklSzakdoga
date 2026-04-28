@@ -58,8 +58,9 @@ const Root = styled("div")(({ theme }) => ({
     alignItems: "center",
     justifyContent: "center",
     marginTop: "100px",
-    fontSize: "50px",
+    fontSize: "clamp(32px, 7vw, 50px)",
     fontFamily: "serif",
+    padding: "0 16px",
     "& .MuiButtonBase-root.MuiButton-root": {
       backgroundColor: theme.vars?.palette.kerian.main,
     },
@@ -76,7 +77,7 @@ const Root = styled("div")(({ theme }) => ({
     },
   },
   [`& .${classes.box}`]: {
-    minWidth: "400px",
+    width: "100%",
     maxWidth: "400px",
     display: "flex",
     flexDirection: "column",
@@ -85,6 +86,10 @@ const Root = styled("div")(({ theme }) => ({
     padding: "30px",
     boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
+    boxSizing: "border-box",
+    [theme.breakpoints.down("sm")]: {
+      padding: "20px",
+    },
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",

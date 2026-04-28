@@ -60,7 +60,7 @@ const classes = {
   container: `${PREFIX}-container`,
 };
 
-const Root = styled(Dialog)(() => ({
+const Root = styled(Dialog)(({ theme }) => ({
   [`&.${classes.root}`]: {
     maxWidth: "1000px",
     margin: "auto",
@@ -68,11 +68,22 @@ const Root = styled(Dialog)(() => ({
   [`& .MuiDialog-paper`]: {
     height: "720px",
     maxHeight: "calc(100vh - 60px)",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      maxWidth: "100%",
+      height: "100vh",
+      maxHeight: "100dvh",
+      margin: 0,
+      borderRadius: 0,
+    },
   },
   [`& .MuiDialogContent-root`]: {
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
+    [theme.breakpoints.down("md")]: {
+      overflowY: "auto",
+    },
   },
   [`& .${classes.dialogTitle}`]: {
     display: "flex",
@@ -85,6 +96,10 @@ const Root = styled(Dialog)(() => ({
     justifyContent: "flex-start",
     flex: 1,
     minHeight: 0,
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+      flex: "0 0 auto",
+    },
   },
 }));
 

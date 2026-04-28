@@ -55,7 +55,8 @@ const Root = styled(Card)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "column",
-    width: "340px",
+    width: "100%",
+    maxWidth: "340px",
     height: "100%",
     borderRadius: "6px",
     transition: "transform 0.2s ease",
