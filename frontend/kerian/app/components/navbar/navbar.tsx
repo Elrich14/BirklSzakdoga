@@ -9,6 +9,7 @@ import {
   MenuItem,
   SelectChangeEvent,
   Badge,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -18,8 +19,10 @@ import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../providers/languageProvider";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MenuIcon from "@mui/icons-material/Menu";
 import { useCartStore } from "../store/cartStore";
 import ThemeToggle from "../themeToggle";
+import MobileNavDrawer from "./mobileNavDrawer";
 
 const PREFIX = "Navbar";
 
@@ -31,8 +34,9 @@ const classes = {
   cartBox: `${PREFIX}-cartBox`,
   cartBoxActive: `${PREFIX}-cartBoxActive`,
   langSelect: `${PREFIX}-langSelect`,
+  burgerButton: `${PREFIX}-burgerButton`,
 };
-type Route = {
+export type Route = {
   path: string;
   name?: string;
   icon?: React.ReactNode;
@@ -74,12 +78,31 @@ const Root = styled("div")(({ theme }) => ({
   [`& .${classes.leftBox}`]: {
     display: "flex",
     gap: "10px",
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
   },
   [`& .${classes.rightBox}`]: {
     marginLeft: "auto",
     display: "flex",
     gap: "10px",
     alignItems: "center",
+    [theme.breakpoints.down("md")]: {
+      "& > :not([data-keep-mobile])": {
+        display: "none",
+      },
+    },
+  },
+  [`& .${classes.burgerButton}`]: {
+    display: "none",
+    color: (theme.vars || theme).palette.text.primary,
+    marginRight: "8px",
+    "&:hover": {
+      color: (theme.vars || theme).palette.kerian.main,
+    },
+    [theme.breakpoints.down("md")]: {
+      display: "inline-flex",
+    },
   },
   [`& .${classes.cartBox}`]: {
     display: "flex",
@@ -126,6 +149,7 @@ const Root = styled("div")(({ theme }) => ({
 export default function Navbar() {
   const cartItems = useCartStore((state) => state.items);
   const [role, setRole] = useState<"guest" | "user" | "admin">("guest");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
     const updateRole = () => {
@@ -216,12 +240,21 @@ export default function Navbar() {
 
   const pathname = usePathname();
 
+  useEffect(() => {
+    setIsDrawerOpen(false);
+  }, [pathname]);
+
   const renderRoutes = (routeArray: Route[]) =>
     routeArray.map((route, index) => {
       const isActive = pathname === route.path;
+      const isIconRoute = !!route.icon;
 
       return (
-        <Link href={route.path} key={index}>
+        <Link
+          href={route.path}
+          key={index}
+          data-keep-mobile={isIconRoute || undefined}
+        >
           {route.icon ? (
             <Box className={isActive ? classes.cartBoxActive : classes.cartBox}>
               {route.icon}
@@ -237,6 +270,13 @@ export default function Navbar() {
     <Root className={classes.root}>
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar className={classes.toolbar}>
+          <IconButton
+            className={classes.burgerButton}
+            onClick={() => setIsDrawerOpen(true)}
+            aria-label={t("navbar.menu")}
+          >
+            <MenuIcon />
+          </IconButton>
           <Box className={classes.leftBox}>{renderRoutes(leftRoutes)}</Box>
           <Box className={classes.rightBox}>
             {renderRoutes(rightRoutes)}
@@ -255,6 +295,13 @@ export default function Navbar() {
           </Box>
         </Toolbar>
       </AppBar>
+      <MobileNavDrawer
+        open={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        leftRoutes={leftRoutes}
+        rightRoutes={rightRoutes}
+        pathname={pathname}
+      />
     </Root>
   );
 }
