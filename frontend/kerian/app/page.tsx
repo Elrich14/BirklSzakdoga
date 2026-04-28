@@ -29,11 +29,11 @@ const Root = styled("div")(({ theme }) => ({
   },
   [`& .${classes.container}`]: {
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     gap: "20px",
     padding: "0 16px",
     [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
       gap: "12px",
     },
   },
