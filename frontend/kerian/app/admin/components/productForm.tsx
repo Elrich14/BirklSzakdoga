@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

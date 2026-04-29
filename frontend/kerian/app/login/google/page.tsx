@@ -59,13 +59,18 @@ const Root = styled("div")(({ theme }) => ({
     justifyContent: "center",
     marginTop: "100px",
     fontFamily: "serif",
+    padding: "0 16px",
   },
   [`& .${classes.box}`]: {
-    minWidth: "400px",
+    width: "100%",
     maxWidth: "400px",
     padding: "30px",
     boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
+    boxSizing: "border-box",
+    [theme.breakpoints.down("sm")]: {
+      padding: "20px",
+    },
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",

@@ -18,16 +18,23 @@ const classes = {
   content: `${PREFIX}-content`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     flexDirection: "row",
     minHeight: "calc(100vh - 60px)",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+    },
   },
   [`& .${classes.content}`]: {
     flex: 1,
     overflow: "auto",
     padding: "24px",
+    minWidth: 0,
+    [theme.breakpoints.down("md")]: {
+      padding: "16px",
+    },
   },
 }));
 

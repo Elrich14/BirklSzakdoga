@@ -26,7 +26,9 @@
     "welcome": "Welcome",
     "admin": "Admin",
     "myOrders": "My Orders",
-    "profile": "Profile"
+    "profile": "Profile",
+    "menu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "themeToggle": {
     "aria": "Toggle theme",
@@ -196,7 +198,9 @@
     "cancelledDescription": "This order has been cancelled."
   },
   "products": {
-    "products": "Our Products"
+    "products": "Our Products",
+    "filters": "Filters",
+    "closeFilters": "Close filters"
   },
   "wishlist": {
     "title": "My Wishlist",

@@ -37,6 +37,9 @@ const Root = styled("div")(({ theme }) => ({
     flexDirection: "row",
     gap: "12px",
     flexWrap: "wrap",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
 }));
 

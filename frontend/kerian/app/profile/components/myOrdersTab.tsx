@@ -38,7 +38,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
     fontWeight: "bold",
-    fontSize: "24px",
+    fontSize: "clamp(18px, 4.5vw, 24px)",
     color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.empty}`]: {

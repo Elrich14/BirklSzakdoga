@@ -38,9 +38,10 @@ const Root = styled("div")(({ theme }) => ({
     alignItems: "center",
     justifyContent: "center",
     marginTop: "100px",
+    padding: "0 16px",
 
     "& .MuiTypography-root": {
-      fontSize: "50px",
+      fontSize: "clamp(32px, 7vw, 50px)",
       display: "flex",
       justifyContent: "center",
       fontFamily: "serif",
@@ -61,7 +62,7 @@ const Root = styled("div")(({ theme }) => ({
     },
   },
   [`& .${classes.box}`]: {
-    minWidth: "400px",
+    width: "100%",
     maxWidth: "400px",
     display: "flex",
     flexDirection: "column",
@@ -70,6 +71,10 @@ const Root = styled("div")(({ theme }) => ({
     padding: "30px",
     boxShadow: theme.vars?.palette.kerian.shadowHover,
     borderRadius: "4px",
+    boxSizing: "border-box",
+    [theme.breakpoints.down("sm")]: {
+      padding: "20px",
+    },
   },
   [`& .${classes.submitButton}`]: {
     marginTop: "16px",

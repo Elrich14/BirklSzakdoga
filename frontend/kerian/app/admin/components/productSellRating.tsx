@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useState, useMemo } from "react";
@@ -15,6 +15,7 @@ import {
   FormControl,
   InputLabel,
   SelectChangeEvent,
+  useMediaQuery,
 } from "@mui/material";
 import {
   BarChart,
@@ -75,6 +76,10 @@ const Root = styled(Box)(({ theme }) => ({
 export default function ProductSellRating() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const chartMargin = isMobile ? 8 : 40;
+  const axisWidth = isMobile ? 30 : 40;
+  const chartHeight = isMobile ? 280 : 350;
   const [selectedProductId, setSelectedProductId] = useState<number | "">("");
   const [range, setRange] = useState<StatsRange>("month");
 
@@ -146,13 +151,13 @@ export default function ProductSellRating() {
         </Typography>
       ) : (
         <Box className={classes.chartWrapper}>
-          <ResponsiveContainer width="50%" height={350}>
+          <ResponsiveContainer width="100%" height={chartHeight}>
             <BarChart
               data={chartData}
-              barSize={53}
-              barGap={45}
-              barCategoryGap="80%"
-              margin={{ left: 40, right: 40 }}
+              barSize={isMobile ? 24 : 53}
+              barGap={isMobile ? 8 : 45}
+              barCategoryGap={isMobile ? "30%" : "80%"}
+              margin={{ left: chartMargin, right: chartMargin }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -161,18 +166,18 @@ export default function ProductSellRating() {
               <XAxis
                 dataKey="label"
                 stroke={theme.vars?.palette.admin.textMuted}
-                padding={{ left: 40, right: 40 }}
+                padding={{ left: chartMargin, right: chartMargin }}
               />
               <YAxis
                 yAxisId="left"
                 stroke={theme.vars?.palette.admin.textMuted}
-                width={40}
+                width={axisWidth}
               />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 stroke={theme.vars?.palette.admin.textMuted}
-                width={40}
+                width={axisWidth}
               />
               <Tooltip
                 cursor={false}

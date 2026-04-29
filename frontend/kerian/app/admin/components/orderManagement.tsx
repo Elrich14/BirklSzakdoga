@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
@@ -27,6 +27,7 @@ import {
   DialogActions,
   Button,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -58,6 +59,15 @@ const classes = {
   confirmButton: `${PREFIX}-confirmButton`,
   cancelButton: `${PREFIX}-cancelButton`,
   loadingMore: `${PREFIX}-loadingMore`,
+  cardList: `${PREFIX}-cardList`,
+  card: `${PREFIX}-card`,
+  cardHeader: `${PREFIX}-cardHeader`,
+  cardOrderId: `${PREFIX}-cardOrderId`,
+  cardLine: `${PREFIX}-cardLine`,
+  cardItemList: `${PREFIX}-cardItemList`,
+  cardItem: `${PREFIX}-cardItem`,
+  cardItemName: `${PREFIX}-cardItemName`,
+  cardItemMeta: `${PREFIX}-cardItemMeta`,
 };
 
 const Root = styled(Box)(({ theme }) => ({
@@ -70,10 +80,14 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    gap: "12px",
   },
   [`& .${classes.table}`]: {
     backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
+    overflowX: "auto",
+    maxWidth: "100%",
     "& .MuiTableCell-root": {
       borderColor: theme.vars?.palette.admin.border,
     },
@@ -98,6 +112,8 @@ const Root = styled(Box)(({ theme }) => ({
     backgroundColor: theme.vars?.palette.admin.input,
     borderRadius: "8px",
     marginBottom: "8px",
+    overflowX: "auto",
+    maxWidth: "100%",
     "& .MuiTableCell-root": {
       borderColor: theme.vars?.palette.admin.border,
       fontSize: "13px",
@@ -117,6 +133,56 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     padding: "16px",
+  },
+  [`& .${classes.cardList}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  [`& .${classes.card}`]: {
+    backgroundColor: theme.vars?.palette.admin.surface,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
+    borderRadius: "12px",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
+  [`& .${classes.cardHeader}`]: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  [`& .${classes.cardOrderId}`]: {
+    fontWeight: 600,
+    fontSize: "15px",
+    color: theme.vars?.palette.kerian.main,
+  },
+  [`& .${classes.cardLine}`]: {
+    fontSize: "13px",
+    color: theme.vars?.palette.admin.textLight,
+    overflowWrap: "anywhere",
+  },
+  [`& .${classes.cardItemList}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+    paddingTop: "8px",
+    borderTop: `1px solid ${theme.vars?.palette.admin.border}`,
+  },
+  [`& .${classes.cardItem}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "2px",
+  },
+  [`& .${classes.cardItemName}`]: {
+    fontSize: "13px",
+    fontWeight: 600,
+    color: theme.vars?.palette.text.primary,
+  },
+  [`& .${classes.cardItemMeta}`]: {
+    fontSize: "12px",
+    color: theme.vars?.palette.admin.textLight,
   },
 }));
 
@@ -145,6 +211,8 @@ const OrderManagement = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [pendingChange, setPendingChange] =
     useState<PendingStatusChange | null>(null);
@@ -249,6 +317,19 @@ const OrderManagement = () => {
         <Typography className={classes.noOrders}>
           {t("admin.orderList.noOrders")}
         </Typography>
+      ) : isMobile ? (
+        <Box className={classes.cardList}>
+          {orders.map((order: AdminOrder) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              isExpanded={expandedOrderId === order.id}
+              onToggleExpand={onToggleExpand}
+              onStatusChange={onStatusChange}
+              formatDate={formatDate}
+            />
+          ))}
+        </Box>
       ) : (
         <TableContainer className={classes.table}>
           <Table>
@@ -411,6 +492,72 @@ const OrderRow = ({
         </TableCell>
       </TableRow>
     </>
+  );
+};
+
+const OrderCard = ({
+  order,
+  isExpanded,
+  onToggleExpand,
+  onStatusChange,
+  formatDate,
+}: OrderRowProps) => {
+  const { t } = useTranslation();
+
+  return (
+    <Box className={classes.card}>
+      <Box className={classes.cardHeader}>
+        <Typography className={classes.cardOrderId}>#{order.id}</Typography>
+        <IconButton size="small" onClick={() => onToggleExpand(order.id)}>
+          {isExpanded ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+        </IconButton>
+      </Box>
+      <Typography className={classes.cardLine}>{order.customerName}</Typography>
+      <Typography className={classes.cardLine}>
+        {order.customerEmail}
+      </Typography>
+      <Typography className={classes.cardLine}>
+        {order.totalPrice} Ft · {formatDate(order.createdAt)}
+      </Typography>
+      <Select
+        value={order.status}
+        onChange={(event) =>
+          onStatusChange(order.id, event.target.value as OrderStatus)
+        }
+        size="small"
+        className={classes.statusSelect}
+        fullWidth
+      >
+        {ORDER_STATUSES.map((status) => (
+          <MenuItem key={status} value={status}>
+            {t(`admin.orderList.statuses.${status}`)}
+          </MenuItem>
+        ))}
+      </Select>
+      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+        <Box className={classes.cardItemList}>
+          <Typography className={classes.cardLine}>
+            {t("admin.orderList.items")}
+          </Typography>
+          {order.items.map((item) => (
+            <Box key={item.id} className={classes.cardItem}>
+              <Typography className={classes.cardItemName}>
+                {item.productName}
+              </Typography>
+              <Typography className={classes.cardItemMeta}>
+                {[item.gender, item.size, item.color]
+                  .filter(Boolean)
+                  .join(" / ") || "-"}
+              </Typography>
+              <Typography className={classes.cardItemMeta}>
+                {item.quantity} × {item.productPrice} Ft ={" "}
+                {item.productPrice * item.quantity} Ft
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Collapse>
+    </Box>
   );
 };
 

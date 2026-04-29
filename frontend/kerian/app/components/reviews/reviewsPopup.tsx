@@ -13,8 +13,9 @@ import {
   CircularProgress,
   Divider,
   Alert,
+  useMediaQuery,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled, useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useState } from "react";
@@ -71,13 +72,15 @@ const classes = {
 
 const Root = styled(Dialog)(({ theme }) => ({
   [`& .MuiDialog-paper`]: {
-    minWidth: "500px",
     maxWidth: "650px",
     width: "100%",
     maxHeight: "calc(100vh - 60px)",
     display: "flex",
     flexDirection: "column",
     backgroundColor: theme.vars?.palette.background.paper,
+    [theme.breakpoints.up("md")]: {
+      minWidth: "500px",
+    },
   },
   [`& .${classes.dialogTitle}`]: {
     display: "flex",
@@ -103,7 +106,7 @@ const Root = styled(Dialog)(({ theme }) => ({
   },
   [`& .${classes.averageNumber}`]: {
     fontFamily: "monospace",
-    fontSize: "32px",
+    fontSize: "clamp(24px, 6vw, 32px)",
     fontWeight: "bold",
     color: theme.vars?.palette.kerian.main,
   },
@@ -247,6 +250,8 @@ const ReviewsPopup = ({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const userRole = getUserRole();
   const currentUserId = getCurrentUserId();
@@ -351,7 +356,12 @@ const ReviewsPopup = ({
   };
 
   return (
-    <Root open={open} onClose={onClose} className={classes.root}>
+    <Root
+      open={open}
+      onClose={onClose}
+      className={classes.root}
+      fullScreen={isMobile}
+    >
       <DialogTitle className={classes.dialogTitle}>
         <span>{t("reviews.title", { product: productName })}</span>
         <IconButton

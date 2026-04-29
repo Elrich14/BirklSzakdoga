@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Tooltip } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useEffect, useState } from "react";
@@ -36,10 +36,21 @@ const Root = styled(Box)(({ theme }) => ({
     position: "relative",
     flexShrink: 0,
     paddingTop: "4px",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
   },
   [`& .${classes.mainImage}`]: {
     borderRadius: "4px",
     objectFit: "cover",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      maxWidth: "450px",
+      height: "auto",
+    },
   },
   [`& .${classes.thumbnailRow}`]: {
     display: "flex",

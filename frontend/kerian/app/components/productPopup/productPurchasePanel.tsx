@@ -20,7 +20,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -86,6 +86,10 @@ const Root = styled(Box)(({ theme }) => ({
     flexDirection: "column",
     flex: 1,
     margin: "0px 0px 10px 20px",
+    [theme.breakpoints.down("md")]: {
+      margin: "16px 0 10px 0",
+      width: "100%",
+    },
   },
   [`& .${classes.descriptionBox}`]: {
     marginBottom: "15px",
@@ -131,6 +135,10 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.sizeSelect}`]: {
     width: "200px",
     marginLeft: "auto",
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      marginLeft: 0,
+    },
   },
   [`& .${classes.colorButton}`]: {
     border: "none",

@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,7 +17,9 @@ import {
   Dialog,
   DialogTitle,
   DialogActions,
+  useMediaQuery,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Image from "next/image";
 import { fetchAdminProducts, deleteProduct, AdminProduct } from "@/api";
 import ProductForm from "./productForm";
@@ -33,6 +35,13 @@ const classes = {
   editButton: `${PREFIX}-editButton`,
   deleteButton: `${PREFIX}-deleteButton`,
   dialogPaper: `${PREFIX}-dialogPaper`,
+  cardList: `${PREFIX}-cardList`,
+  card: `${PREFIX}-card`,
+  cardTop: `${PREFIX}-cardTop`,
+  cardBody: `${PREFIX}-cardBody`,
+  cardName: `${PREFIX}-cardName`,
+  cardMeta: `${PREFIX}-cardMeta`,
+  cardActions: `${PREFIX}-cardActions`,
 };
 
 const Root = styled(Box)(({ theme }) => ({
@@ -45,10 +54,14 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    gap: "12px",
   },
   [`& .${classes.table}`]: {
     backgroundColor: theme.vars?.palette.admin.surface,
     borderRadius: "12px",
+    overflowX: "auto",
+    maxWidth: "100%",
     "& .MuiTableCell-root": {
       borderColor: theme.vars?.palette.admin.border,
     },
@@ -68,6 +81,49 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.deleteButton}`]: {
     color: theme.vars?.palette.error.main,
   },
+  [`& .${classes.cardList}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  [`& .${classes.card}`]: {
+    backgroundColor: theme.vars?.palette.admin.surface,
+    border: `1px solid ${theme.vars?.palette.admin.border}`,
+    borderRadius: "12px",
+    padding: "16px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  [`& .${classes.cardTop}`]: {
+    display: "flex",
+    gap: "12px",
+    alignItems: "flex-start",
+  },
+  [`& .${classes.cardBody}`]: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "4px",
+    minWidth: 0,
+    flex: 1,
+  },
+  [`& .${classes.cardName}`]: {
+    fontWeight: 600,
+    fontSize: "15px",
+    color: theme.vars?.palette.text.primary,
+    overflowWrap: "anywhere",
+  },
+  [`& .${classes.cardMeta}`]: {
+    fontSize: "13px",
+    color: theme.vars?.palette.admin.textLight,
+  },
+  [`& .${classes.cardActions}`]: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "8px",
+    borderTop: `1px solid ${theme.vars?.palette.admin.border}`,
+    paddingTop: "12px",
+  },
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -80,6 +136,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 export default function ProductManagement() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(
     null
   );
@@ -131,22 +189,18 @@ export default function ProductManagement() {
         </Button>
       </Box>
 
-      <TableContainer className={classes.table}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t("admin.products.image")}</TableCell>
-              <TableCell>{t("admin.products.name")}</TableCell>
-              <TableCell>{t("admin.products.price")}</TableCell>
-              <TableCell>{t("admin.products.category")}</TableCell>
-              <TableCell>{t("admin.products.stock")}</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
+      {isMobile ? (
+        <Box className={classes.cardList}>
+          {products.map((product) => {
+            const totalStock = product.variants
+              ? product.variants.reduce(
+                  (stockSum, variant) => stockSum + variant.stock,
+                  0
+                )
+              : 0;
+            return (
+              <Box key={product.id} className={classes.card}>
+                <Box className={classes.cardTop}>
                   {product.imageUrls?.[0] && (
                     <Image
                       src={
@@ -155,25 +209,25 @@ export default function ProductManagement() {
                           : product.imageUrls[0]
                       }
                       alt={product.name}
-                      width={50}
-                      height={50}
+                      width={64}
+                      height={64}
                       className={classes.productImage}
                       unoptimized
                     />
                   )}
-                </TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.price} Ft</TableCell>
-                <TableCell>{product.category || "-"}</TableCell>
-                <TableCell>
-                  {product.variants
-                    ? product.variants.reduce(
-                        (totalStock, variant) => totalStock + variant.stock,
-                        0
-                      )
-                    : 0}
-                </TableCell>
-                <TableCell>
+                  <Box className={classes.cardBody}>
+                    <Typography className={classes.cardName}>
+                      {product.name}
+                    </Typography>
+                    <Typography className={classes.cardMeta}>
+                      {product.price} Ft · {product.category || "-"}
+                    </Typography>
+                    <Typography className={classes.cardMeta}>
+                      {t("admin.products.stock")}: {totalStock}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box className={classes.cardActions}>
                   <Button
                     size="small"
                     onClick={() => onEdit(product)}
@@ -188,12 +242,76 @@ export default function ProductManagement() {
                   >
                     {t("admin.products.delete")}
                   </Button>
-                </TableCell>
+                </Box>
+              </Box>
+            );
+          })}
+        </Box>
+      ) : (
+        <TableContainer className={classes.table}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>{t("admin.products.image")}</TableCell>
+                <TableCell>{t("admin.products.name")}</TableCell>
+                <TableCell>{t("admin.products.price")}</TableCell>
+                <TableCell>{t("admin.products.category")}</TableCell>
+                <TableCell>{t("admin.products.stock")}</TableCell>
+                <TableCell />
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {products.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    {product.imageUrls?.[0] && (
+                      <Image
+                        src={
+                          product.imageUrls[0].startsWith("/uploads")
+                            ? `${API_BASE}${product.imageUrls[0]}`
+                            : product.imageUrls[0]
+                        }
+                        alt={product.name}
+                        width={50}
+                        height={50}
+                        className={classes.productImage}
+                        unoptimized
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.price} Ft</TableCell>
+                  <TableCell>{product.category || "-"}</TableCell>
+                  <TableCell>
+                    {product.variants
+                      ? product.variants.reduce(
+                          (totalStock, variant) => totalStock + variant.stock,
+                          0
+                        )
+                      : 0}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      size="small"
+                      onClick={() => onEdit(product)}
+                      className={classes.editButton}
+                    >
+                      {t("admin.products.edit")}
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={() => setDeleteTarget(product)}
+                      className={classes.deleteButton}
+                    >
+                      {t("admin.products.delete")}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
       <StyledDialog
         open={!!deleteTarget}

@@ -46,9 +46,12 @@ const Root = styled("div")(({ theme }) => ({
     marginLeft: "300px",
     marginTop: "30px",
     fontFamily: "monospace",
-    fontSize: "30px",
+    fontSize: "clamp(22px, 5vw, 30px)",
     color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
+    [theme.breakpoints.down("md")]: {
+      marginLeft: "16px",
+    },
   },
   [`& .MuiList-root`]: {
     display: "flex",
@@ -59,6 +62,12 @@ const Root = styled("div")(({ theme }) => ({
     maxWidth: "1300px",
     margin: "auto",
     gap: "30px",
+    padding: "0 16px",
+    boxSizing: "border-box",
+    [theme.breakpoints.down("sm")]: {
+      gap: "16px",
+      padding: "0 8px",
+    },
   },
   [`& .${classes.listItem}`]: {
     width: "100%",
@@ -68,6 +77,24 @@ const Root = styled("div")(({ theme }) => ({
     borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
     borderRadius: "4px",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: "8px",
+      paddingRight: "16px",
+      "& .MuiListItemText-root": {
+        minWidth: 0,
+        width: "100%",
+      },
+      "& .MuiListItemSecondaryAction-root": {
+        position: "static",
+        transform: "none",
+        width: "100%",
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center",
+      },
+    },
   },
   [`& .${classes.avatar}`]: {
     width: "56px",
@@ -91,6 +118,9 @@ const Root = styled("div")(({ theme }) => ({
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
     maxWidth: "1000px",
+    [theme.breakpoints.down("sm")]: {
+      maxWidth: "100%",
+    },
   },
 }));
 

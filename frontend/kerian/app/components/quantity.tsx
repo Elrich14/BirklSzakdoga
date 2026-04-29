@@ -3,7 +3,7 @@
 import { Box, IconButton, TextField } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 
 interface QuantityProps {
   value: number;
