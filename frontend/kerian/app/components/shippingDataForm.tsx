@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { sendOrder } from "@/api";
 import { OrderStatus, phoneRegExp } from "@/constants/constants";
 import OrderStatusTracker from "./orderStatusTracker";
@@ -58,6 +58,12 @@ const Root = styled(Box)(({ theme }) => ({
     maxWidth: "600px",
     marginLeft: "auto",
     marginRight: "auto",
+    [theme.breakpoints.down("sm")]: {
+      padding: "16px",
+      marginTop: "24px",
+      marginLeft: "8px",
+      marginRight: "8px",
+    },
   },
   [`& .${classes.title}`]: {
     marginBottom: "16px",

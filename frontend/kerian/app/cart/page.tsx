@@ -31,6 +31,7 @@ const classes = {
   itemInfo: `${PREFIX}-itemInfo`,
   avatar: `${PREFIX}-avatar`,
   itemText: `${PREFIX}-itemText`,
+  itemActions: `${PREFIX}-itemActions`,
   stockInfo: `${PREFIX}-stockInfo`,
   divider: `${PREFIX}-divider`,
   totalBox: `${PREFIX}-totalBox`,
@@ -47,6 +48,9 @@ const Root = styled("div")(({ theme }) => ({
     flexDirection: "column",
     gap: "20px",
     fontFamily: "monospace",
+    [theme.breakpoints.down("sm")]: {
+      padding: "16px",
+    },
   },
   [`& .${classes.itemBox}`]: {
     display: "flex",
@@ -57,6 +61,20 @@ const Root = styled("div")(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: "12px",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: "8px",
+    },
+  },
+  [`& .${classes.itemActions}`]: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "flex-end",
+    },
   },
   [`& .${classes.itemInfo}`]: {
     display: "flex",
@@ -101,7 +119,7 @@ const Root = styled("div")(({ theme }) => ({
     justifyContent: "left",
     marginTop: "30px",
     fontFamily: "monospace",
-    fontSize: "30px",
+    fontSize: "clamp(22px, 5vw, 30px)",
     color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },
@@ -201,32 +219,34 @@ export default function CartPage() {
                     </Box>
                   </Box>
 
-                  <QuantityInput
-                    value={item.productQuantity}
-                    onChange={(newQuantity) =>
-                      updateQuantity(
-                        item.productId,
-                        item.gender,
-                        item.size,
-                        item.color,
-                        newQuantity
-                      )
-                    }
-                    max={maxQty}
-                  />
+                  <Box className={classes.itemActions}>
+                    <QuantityInput
+                      value={item.productQuantity}
+                      onChange={(newQuantity) =>
+                        updateQuantity(
+                          item.productId,
+                          item.gender,
+                          item.size,
+                          item.color,
+                          newQuantity
+                        )
+                      }
+                      max={maxQty}
+                    />
 
-                  <IconButton
-                    onClick={() =>
-                      removeItem(
-                        item.productId,
-                        item.gender,
-                        item.size,
-                        item.color
-                      )
-                    }
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                    <IconButton
+                      onClick={() =>
+                        removeItem(
+                          item.productId,
+                          item.gender,
+                          item.size,
+                          item.color
+                        )
+                      }
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </Box>
               );
             })}

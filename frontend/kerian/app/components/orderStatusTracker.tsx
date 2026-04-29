@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
@@ -49,6 +49,9 @@ const Root = styled(Box)(({ theme }) => ({
     maxWidth: "500px",
     marginLeft: "auto",
     marginRight: "auto",
+    [theme.breakpoints.down("sm")]: {
+      padding: "16px",
+    },
   },
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
@@ -176,9 +179,9 @@ const OrderStatusTracker = ({ orderId, initialStatus }: Props) => {
   };
 
   const getConnectorColor = (stepIndex: number): string => {
-    if (isCancelled) return theme.vars?.palette.admin.border;
+    if (isCancelled) return (theme.vars || theme).palette.admin.border;
     if (stepIndex < currentStepIndex) return colors.snackbar_success;
-    return theme.vars?.palette.admin.border;
+    return (theme.vars || theme).palette.admin.border;
   };
 
   const getLabelOpacity = (state: "completed" | "active" | "pending") => {

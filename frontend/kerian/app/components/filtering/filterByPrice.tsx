@@ -1,6 +1,6 @@
 "use client";
 import { Box, TextField, Typography, Slider } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 

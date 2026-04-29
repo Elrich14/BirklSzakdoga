@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -18,15 +18,22 @@ const classes = {
   content: `${PREFIX}-content`,
 };
 
-const Root = styled(Box)(() => ({
+const Root = styled(Box)(({ theme }) => ({
   [`&.${classes.root}`]: {
     display: "flex",
     minHeight: "calc(100vh - 60px)",
+    [theme.breakpoints.down("md")]: {
+      flexDirection: "column",
+    },
   },
   [`& .${classes.content}`]: {
     flex: 1,
     padding: "32px",
     overflow: "auto",
+    minWidth: 0,
+    [theme.breakpoints.down("md")]: {
+      padding: "16px",
+    },
   },
 }));
 

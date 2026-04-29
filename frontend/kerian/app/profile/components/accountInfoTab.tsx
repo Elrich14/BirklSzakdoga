@@ -28,7 +28,7 @@ const Root = styled(Box)(({ theme }) => ({
   [`& .${classes.title}`]: {
     fontFamily: "monospace",
     fontWeight: "bold",
-    fontSize: "24px",
+    fontSize: "clamp(18px, 4.5vw, 24px)",
     color: (theme.vars || theme).palette.kerian.main,
   },
   [`& .${classes.card}`]: {
@@ -44,10 +44,16 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: "12px",
     padding: "8px 0",
     borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
     "&:last-of-type": {
       borderBottom: "none",
+    },
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: "4px",
     },
   },
   [`& .${classes.label}`]: {

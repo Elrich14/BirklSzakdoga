@@ -106,7 +106,7 @@ const Root = styled(Dialog)(({ theme }) => ({
   },
   [`& .${classes.averageNumber}`]: {
     fontFamily: "monospace",
-    fontSize: "32px",
+    fontSize: "clamp(24px, 6vw, 32px)",
     fontWeight: "bold",
     color: theme.vars?.palette.kerian.main,
   },

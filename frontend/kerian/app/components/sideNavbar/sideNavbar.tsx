@@ -33,6 +33,13 @@ const Root = styled(Box)(({ theme }) => ({
     flexDirection: "column",
     paddingTop: "16px",
     backgroundColor: (theme.vars || theme).palette.background.paper,
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+      minHeight: "auto",
+      borderRight: "none",
+      borderBottom: `1px solid ${theme.vars?.palette.admin.border}`,
+      paddingTop: "8px",
+    },
   },
   [`& .${classes.title}`]: {
     color: theme.vars?.palette.kerian.main,
@@ -40,19 +47,40 @@ const Root = styled(Box)(({ theme }) => ({
     fontWeight: 700,
     padding: "8px 24px 16px",
     letterSpacing: "0.5px",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "16px",
+      padding: "4px 16px 8px",
+    },
   },
   [`& .${classes.list}`]: {
     padding: "0 8px",
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      padding: "0 8px 8px",
+      gap: "4px",
+    },
   },
   [`& .${classes.listItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
+    [theme.breakpoints.down("md")]: {
+      marginBottom: 0,
+      flexShrink: 0,
+      whiteSpace: "nowrap",
+    },
   },
   [`& .${classes.activeItem}`]: {
     borderRadius: "8px",
     marginBottom: "4px",
     backgroundColor: theme.vars?.palette.kerian.bg,
     color: theme.vars?.palette.kerian.main,
+    [theme.breakpoints.down("md")]: {
+      marginBottom: 0,
+      flexShrink: 0,
+      whiteSpace: "nowrap",
+    },
   },
 }));
 

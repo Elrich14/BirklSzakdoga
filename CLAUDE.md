@@ -47,6 +47,25 @@
 
 ---
 
+## Git operations — NEVER do these
+
+The user does **all** git/GitHub operations manually. This is non-negotiable, even if the user seems to ask for it (e.g. "ship this" or "make a PR"). Confirm what they want done locally and stop at uncommitted changes.
+
+- **NEVER** run `git commit` (or `git commit --amend`) for any reason
+- **NEVER** run `git push` (or any variant: `--force`, `--force-with-lease`, `-u`, etc.)
+- **NEVER** create pull requests via `gh pr create` or any other means
+- **NEVER** add `Co-Authored-By: Claude` (or any other Claude attribution) to commit messages — the user does not want Claude attributed in their git history or GitHub UI
+- **NEVER** run rebase, cherry-pick, reset --hard, or other history-rewriting commands without explicit, scoped permission for that single operation
+
+What you **may** do:
+- Read-only git commands (`git status`, `git log`, `git diff`, `git branch`, `gh pr view`, `gh issue list`)
+- `git add`/`git rm` only when the user is staging for a commit they will run themselves and explicitly asks
+- Suggest a commit message or PR title/body for the user to use, but never execute
+
+If the user asks to commit/push/PR, remind them of this rule and offer to draft the message/body for them to run manually.
+
+---
+
 ## Clean Coding Rules
 
 ### Naming Conventions

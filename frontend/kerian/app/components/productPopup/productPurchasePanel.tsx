@@ -20,7 +20,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";

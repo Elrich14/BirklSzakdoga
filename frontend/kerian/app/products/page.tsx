@@ -70,7 +70,7 @@ const Root = styled("div")(({ theme }) => ({
     justifyContent: "left",
     marginTop: "30px",
     fontFamily: "monospace",
-    fontSize: "30px",
+    fontSize: "clamp(22px, 5vw, 30px)",
     color: theme.vars?.palette.kerian.main,
     opacity: 0.6,
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Box, Typography, CircularProgress } from "@mui/material";
@@ -26,8 +26,11 @@ const Root = styled(Box)(({ theme }) => ({
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gap: "16px",
-    "@media (max-width: 900px)": {
+    [theme.breakpoints.down("md")]: {
       gridTemplateColumns: "repeat(2, 1fr)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      gridTemplateColumns: "1fr",
     },
   },
   [`& .${classes.card}`]: {
@@ -37,6 +40,12 @@ const Root = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
     gap: "16px",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      maxWidth: "360px",
+      marginInline: "auto",
+      justifyContent: "center",
+    },
   },
   [`& .${classes.iconWrapper}`]: {
     width: "48px",

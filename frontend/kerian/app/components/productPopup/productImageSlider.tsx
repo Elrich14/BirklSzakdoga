@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Tooltip } from "@mui/material";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useEffect, useState } from "react";
