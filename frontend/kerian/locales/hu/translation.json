@@ -235,6 +235,22 @@
     "sameAsShipping": "A szállítási címtől eltérő számlázási cím",
     "note": "Megjegyzés (opcionális)"
   },
+  "payment": {
+    "title": "Fizetés",
+    "currencyLabel": "Fizetési pénznem",
+    "currency": {
+      "huf": "Magyar forint (HUF)",
+      "eur": "Euró (EUR)"
+    },
+    "totalLabel": "Végösszeg",
+    "payNow": "Tovább a fizetéshez",
+    "processing": "Fizetés feldolgozása…",
+    "success": "Sikeres fizetés",
+    "failed": "Sikertelen fizetés",
+    "expired": "A fizetési munkamenet lejárt",
+    "backToCart": "Vissza a kosárhoz",
+    "missingSession": "Hiányzó fizetési munkamenet azonosító."
+  },
   "feedback": {
     "success": "Siker",
     "error": "Hiba",
