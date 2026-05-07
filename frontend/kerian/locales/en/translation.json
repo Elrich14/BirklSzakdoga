@@ -228,6 +228,22 @@
     "sameAsShipping": "Billing address different from shipping address",
     "note": "Order Note (optional)"
   },
+  "payment": {
+    "title": "Payment",
+    "currencyLabel": "Pay in",
+    "currency": {
+      "huf": "Hungarian Forint (HUF)",
+      "eur": "Euro (EUR)"
+    },
+    "totalLabel": "Total",
+    "payNow": "Continue to payment",
+    "processing": "Processing payment…",
+    "success": "Payment successful",
+    "failed": "Payment failed",
+    "expired": "Payment session expired",
+    "backToCart": "Back to cart",
+    "missingSession": "Missing payment session reference."
+  },
   "feedback": {
     "success": "Success",
     "error": "Error",

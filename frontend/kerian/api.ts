@@ -88,13 +88,18 @@ export interface WishlistItem {
 
 // ==================== ORDER TYPES ====================
 
-export interface OrderRequest {
+export type Currency = "HUF" | "EUR";
+
+export type PaymentStatus = "pending" | "paid" | "failed" | "expired";
+
+export interface CheckoutSessionRequest {
   name: string;
   email: string;
   shippingAddress: string;
   billingAddress?: string;
   note?: string;
   language?: string;
+  currency: Currency;
   cartItems: {
     productId: number;
     productName: string;
@@ -106,9 +111,38 @@ export interface OrderRequest {
   }[];
 }
 
-export interface SendOrderResponse {
+export interface CheckoutSessionResponse {
+  clientSecret: string;
   orderId: number;
+}
+
+export interface OrderItemResponse {
+  id: number;
+  orderId: number;
+  productId: number | null;
+  productName: string;
+  productPrice: number;
+  quantity: number;
+  gender: string | null;
+  size: string | null;
+  color: string | null;
+}
+
+export interface OrderWithItems {
+  id: number;
+  customerName: string;
+  customerEmail: string;
+  shippingAddress: string;
+  billingAddress: string | null;
+  note: string | null;
+  totalPrice: number;
   status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  currency: Currency;
+  stripeSessionId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  items: OrderItemResponse[];
 }
 
 export interface OrderStatusResponse {
@@ -473,10 +507,10 @@ export async function addToWishlist(item: {
 
 
 
-// SEND ORDER
-export async function sendOrder(
-  data: OrderRequest
-): Promise<SendOrderResponse> {
+// CREATE STRIPE CHECKOUT SESSION
+export async function createCheckoutSession(
+  data: CheckoutSessionRequest
+): Promise<CheckoutSessionResponse> {
   const token = localStorage.getItem("token");
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -485,7 +519,7 @@ export async function sendOrder(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}/api/orderEmail`, {
+  const response = await fetch(`${API_BASE}/api/orders/checkout-session`, {
     method: "POST",
     headers,
     body: JSON.stringify(data),
@@ -506,7 +540,23 @@ export async function sendOrder(
         })
       );
     }
-    throw new Error(err.message || "Order submission failed");
+    throw new Error(err.error || err.message || "Checkout session failed");
+  }
+
+  return response.json();
+}
+
+// FETCH ORDER BY STRIPE SESSION ID (used by /order/return page)
+export async function getOrderBySession(
+  sessionId: string
+): Promise<OrderWithItems> {
+  const response = await fetch(
+    `${API_BASE}/api/orders/by-session/${encodeURIComponent(sessionId)}`
+  );
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to fetch order");
   }
 
   return response.json();

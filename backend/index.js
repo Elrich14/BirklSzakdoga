@@ -11,12 +11,15 @@ const oauthRoutes = require("./oauth/routes");
 const productRoutes = require("./productRoutes");
 const wishlistRoutes = require("./wishlistRoutes");
 const orderRoutes = require("./orderRoutes");
+const stripeWebhook = require("./stripeWebhook");
 const reviewRoutes = require("./reviewRoutes");
 const adminRoutes = require("./adminRoutes");
 const recommendationsRoutes = require("./recommendationsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use("/api/orders/webhook", stripeWebhook);
 
 app.use(bodyParser.json());
 app.use(cors());
