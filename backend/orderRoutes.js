@@ -1,6 +1,5 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize");
 const Stripe = require("stripe");
 const { sequelize } = require("./dataBase");
 const { Order, OrderItem, Product, ProductVariant } = require("./models");
@@ -219,12 +218,7 @@ router.get("/orders/by-session/:sessionId", async (req, res) => {
 router.get("/orders/my", authenticateToken, async (req, res) => {
   try {
     const orders = await Order.findAll({
-      where: {
-        [Op.or]: [
-          { userId: req.user.id },
-          { customerEmail: req.user.email },
-        ],
-      },
+      where: { userId: req.user.id },
       order: [["createdAt", "DESC"]],
       include: [{ model: OrderItem, as: "items" }],
     });
