@@ -8,6 +8,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Hide the page scrollbar visually while keeping the page scrollable. */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 /* Browser autofill — match the theme's input surface and text color */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

@@ -6,14 +6,19 @@ import {
   Box,
   Button,
   Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   FormControl,
   FormControlLabel,
   FormLabel,
+  IconButton,
   Radio,
   RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { useMemo, useState } from "react";
 import { styled } from "@mui/system";
 import { loadStripe } from "@stripe/stripe-js";
@@ -43,6 +48,10 @@ const classes = {
   currencyGroup: `${PREFIX}-currencyGroup`,
   totalLine: `${PREFIX}-totalLine`,
   checkoutContainer: `${PREFIX}-checkoutContainer`,
+  paymentDialogPaper: `${PREFIX}-paymentDialogPaper`,
+  paymentDialogTitleRow: `${PREFIX}-paymentDialogTitleRow`,
+  paymentDialogContent: `${PREFIX}-paymentDialogContent`,
+  paymentDialogCloseButton: `${PREFIX}-paymentDialogCloseButton`,
 };
 
 interface StockError {
@@ -107,6 +116,29 @@ const Root = styled(Box)(({ theme }) => ({
   },
   [`& .${classes.checkoutContainer}`]: {
     marginTop: "16px",
+  },
+}));
+
+const PaymentDialog = styled(Dialog)(({ theme }) => ({
+  [`& .${classes.paymentDialogPaper}`]: {
+    backgroundColor: theme.vars?.palette.background.paper,
+    backgroundImage: "none",
+    borderRadius: "8px",
+    padding: "16px",
+    width: "min(640px, 95vw)",
+    maxWidth: "none",
+  },
+  [`& .${classes.paymentDialogTitleRow}`]: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingBottom: "8px",
+  },
+  [`& .${classes.paymentDialogContent}`]: {
+    padding: 0,
+  },
+  [`& .${classes.paymentDialogCloseButton}`]: {
+    color: theme.vars?.palette.text.primary,
   },
 }));
 
@@ -205,23 +237,7 @@ export default function ShippingDataForm() {
     }
   };
 
-  if (clientSecret && stripePromise) {
-    return (
-      <Root className={classes.root}>
-        <Typography className={classes.title} variant="h5">
-          {t("payment.title")}
-        </Typography>
-        <Box className={classes.checkoutContainer}>
-          <EmbeddedCheckoutProvider
-            stripe={stripePromise}
-            options={{ clientSecret }}
-          >
-            <EmbeddedCheckout />
-          </EmbeddedCheckoutProvider>
-        </Box>
-      </Root>
-    );
-  }
+  const onClosePaymentDialog = () => setClientSecret(null);
 
   return (
     <Root className={classes.root}>
@@ -375,6 +391,33 @@ export default function ShippingDataForm() {
           </Form>
         )}
       </Formik>
+
+      <PaymentDialog
+        open={Boolean(clientSecret) && Boolean(stripePromise)}
+        onClose={onClosePaymentDialog}
+        slotProps={{ paper: { className: classes.paymentDialogPaper } }}
+      >
+        <DialogTitle className={classes.paymentDialogTitleRow} component="div">
+          <Typography variant="h6">{t("payment.title")}</Typography>
+          <IconButton
+            aria-label="close"
+            onClick={onClosePaymentDialog}
+            className={classes.paymentDialogCloseButton}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent className={classes.paymentDialogContent}>
+          {clientSecret && stripePromise && (
+            <EmbeddedCheckoutProvider
+              stripe={stripePromise}
+              options={{ clientSecret }}
+            >
+              <EmbeddedCheckout />
+            </EmbeddedCheckoutProvider>
+          )}
+        </DialogContent>
+      </PaymentDialog>
     </Root>
   );
 }

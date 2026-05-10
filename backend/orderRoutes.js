@@ -5,6 +5,7 @@ const Stripe = require("stripe");
 const { sequelize } = require("./dataBase");
 const { Order, OrderItem, Product, ProductVariant } = require("./models");
 const authenticateToken = require("./authenticateToken");
+const { getEurToHufRate } = require("./fxService");
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -12,16 +13,15 @@ const router = express.Router();
 
 const SUPPORTED_CURRENCIES = ["HUF", "EUR"];
 
-function toStripeAmount(amountHuf, currency) {
+const toStripeAmount = (amountHuf, currency, eurToHufRate) => {
   if (currency === "HUF") {
-    return amountHuf;
+    return amountHuf * 100;
   }
   if (currency === "EUR") {
-    const rate = parseFloat(process.env.EUR_TO_HUF_RATE) || 400;
-    return Math.round((amountHuf / rate) * 100);
+    return Math.round((amountHuf / eurToHufRate) * 100);
   }
   throw new Error(`Unsupported currency: ${currency}`);
-}
+};
 
 router.post("/orders/checkout-session", async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -154,6 +154,8 @@ router.post("/orders/checkout-session", async (req, res) => {
       )
     );
 
+    const eurToHufRate = currency === "EUR" ? await getEurToHufRate() : null;
+
     const lineItems = enrichedItems.map((item) => ({
       price_data: {
         currency: currency.toLowerCase(),
@@ -161,7 +163,7 @@ router.post("/orders/checkout-session", async (req, res) => {
           name: item.productName,
           description: `${item.gender} / ${item.size} / ${item.color}`,
         },
-        unit_amount: toStripeAmount(item.productPriceHuf, currency),
+        unit_amount: toStripeAmount(item.productPriceHuf, currency, eurToHufRate),
       },
       quantity: item.quantity,
     }));
