@@ -24,7 +24,9 @@ Customer side:
 - card payment via Stripe Checkout
 - order status tracking
 - product reviews and 5-star ratings after delivered orders
-- AI-based product recommender (Claude Haiku 4.5) on the cart page
+- AI-based product recommender (Claude Haiku 4.5) on the cart page:
+  suggests items that match the cart in style, color and occasion, and
+  never recommends a product that is already in the cart
 - Hungarian/English language switch and dark/light theme toggle
 - auto-logout after 30 minutes of inactivity
 
@@ -103,7 +105,7 @@ work with a free Supabase account.
 ### With Docker Compose
 
 ```bash
-git clone https://github.com/<user>/BirklSzakdoga.git
+git clone https://github.com/Elrich14/BirklSzakdoga.git
 cd BirklSzakdoga
 
 cp backend/.env.example backend/.env
@@ -155,22 +157,6 @@ npm run dev
 Migrations run against Supabase if `DB_HOST` contains "supabase",
 otherwise against the local Postgres.
 
-### Seeding products
-
-The Sequelize migrations under `backend/seeders/` only create users and
-the variant scaffolding. To populate the catalog with demo products as
-well:
-
-```bash
-cd backend
-npm run seedProducts
-npm run seedUsers
-```
-
-`seedUsers.js` first calls `User.destroy({ where: {} })` and removes all
-existing users before inserting its own, so it is recommended only on a
-fresh or empty database.
-
 ## Environment variables
 
 The backend `.env` file reads the following variables.
@@ -200,7 +186,8 @@ Optional, only required for the corresponding feature:
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — for the payment flow
   (test mode). `EUR_TO_HUF_RATE` for currency conversion.
 - `ANTHROPIC_API_KEY` — for the Claude-based AI recommender. Without it
-  the recommender falls back to a random selection.
+  the recommender returns an empty list, so no suggestions appear on the
+  cart page.
 - `BACKEND_BASE_URL`, `FRONTEND_BASE_URL` — for the Google OAuth callback
   and redirect URLs.
 
@@ -211,35 +198,66 @@ is only needed for the payment flow.
 The full list with placeholder values is in `backend/.env.example` and
 `frontend/kerian/.env.example`.
 
-## Demo users and seed data
+## Demo users and admin login
 
-The migration `backend/seeders/20250125122426-demo-user.js` creates two
-users. `erik@gmail.com` with password `1234` is a regular user and
-demonstrates the customer flow. `admin@gmail.com` with password `admin`
-has the admin role, but is seeded without 2FA, so the admin login CANNOT
-complete with this account because the backend enforces TOTP for admins.
+After running `db:seed:all`, two demo users are available.
 
-### How to log in as an admin for review
+- `admin@gmail.com` with password `admin` — admin role, initially without
+  2FA. The reviewer can log in directly with this account and immediately
+  reach the `/admin` panel.
+- `erik@gmail.com` with password `1234` — regular customer role, for
+  demonstrating the registered customer flow.
 
-The only working 2FA-enabled admin account is the author's personal
-account (`elrich.020114@gmail.com`), which is demonstrated live during
-the defense. If the reviewer wants to obtain their own admin login, the
-flow is the following.
+### Trying the 2FA flow
 
-1. Sign up a new user on the frontend.
-2. Promote them to admin via SQL or the Supabase UI:
-   ```sql
-   UPDATE "Users" SET role = 'admin' WHERE email = 'reviewer@example.com';
-   ```
-3. Sign in as the new user on the frontend, then call
-   `POST /api/2fa/setup` with the valid JWT — the response contains the
-   QR code URL.
+The seeded admin is initially without 2FA, so the reviewer can log in
+straight away and turn on two-factor authentication from the "Security"
+tab on the `/admin` page. The flow:
+
+1. Sign in as `admin@gmail.com` / `admin` on the frontend.
+2. Navigate to the "Security" tab on the `/admin` page.
+3. Click "Enable 2FA" — the UI displays a QR code.
 4. Scan the QR code with an authenticator app (Google Authenticator,
-   Authy, etc.).
-5. Call `POST /api/2fa/enable` with the generated 6-digit code — 2FA is
-   now active.
-6. Sign out and back in — the admin login now requires the TOTP code,
-   and you have access to `/admin`.
+   Authy, Microsoft Authenticator, etc.).
+5. Enter the 6-digit code shown by the app — 2FA is now active and the
+   backend returns the recovery codes.
+6. Sign out and back in — the login now also requires the TOTP code,
+   and only the correct code grants access to `/admin` again.
+
+There is no email confirmation or external verification step in the
+flow — scanning the QR code and entering the 6-digit code is enough.
+
+The author's own actively-used admin account
+(`elrich.020114@gmail.com`) is protected by 2FA, so two-factor
+authentication is not just an optional demo feature but an actively
+used security layer in the system.
+
+### Email testing for the customer flow
+
+By design, an admin account is not used for shopping in the system —
+the `/admin` panel is for running the store, not for browsing.
+Demonstrating the customer and email flow therefore requires a
+customer-role user.
+
+The seeded `erik@gmail.com` is not a real address, so an order placed
+with it would send the confirmation into a stranger's mailbox (if it
+exists), not to the reviewer. Instead, **register a new customer on the
+frontend with your own real email address**, sign in with that account
+and place the test order — the order confirmation will arrive in the
+mailbox you registered with.
+
+The admin-side order notification fires for **every test order**
+regardless: it is sent to the address configured as `EMAIL_ADMIN` in
+`backend/.env` via Nodemailer, no matter which customer placed the
+order. So if you set `EMAIL_ADMIN` to your own Gmail address in `.env`,
+you will also receive an admin-side notification for every test order —
+even when the customer account is not you.
+
+Important distinction: the `admin@gmail.com` login user in the database
+and the `EMAIL_ADMIN` value in `.env` (SMTP sender and admin
+notification recipient) are **two completely separate things** — no
+code connects them. The former is for sign-in, the latter is for
+sending and receiving emails.
 
 The `/admin` page on the frontend will guide the user through this
 enrollment flow on first sign-in, so it is also possible from the UI.
@@ -271,26 +289,13 @@ product recommender, with prompt caching for cost optimization.
 Gmail SMTP is used for order confirmation emails through Nodemailer. A
 Gmail account with an App Password is required.
 
-## Branch under review
-
-The final state for review is the `main` branch. It contains the latest
-merged work (`Gh 52 stripe (#53)`), which includes every feature: Google
-OAuth, 2FA, Stripe Checkout, AI recommender, responsive navbar, light
-theme.
-
-The other branches are historical or in-progress. `Payment` is an earlier
-Stripe development branch, already merged into `main`.
-`GH-43_responsive_phase2_navbar` introduced the responsive navbar, merged.
-`GH-47_light_theme` introduced the light theme, merged.
-`GH-43_responsive_backup` is a backup branch, inactive.
-
 ## Known limitations
 
-The following limitations are knowingly accepted and discussed during the
-defense, including security hardening items deferred for future work:
+The following limitations are knowingly accepted in the current state of
+the project, including security hardening items deferred for future work:
 
 - No automated tests. Verification is manual, the test report lives in
-  the testing chapter of the thesis (in progress).
+  the testing chapter of the thesis.
 - The JWT is stored in `localStorage`, which is XSS-sensitive. Migration
   to `httpOnly` cookies is tracked in GitHub issue #50.
 - The OAuth handoff store is in-memory. It works only on a single backend
@@ -303,8 +308,7 @@ defense, including security hardening items deferred for future work:
   sessions. GitHub issue #54.
 - Stripe is in test mode only, no live keys are committed.
 - The AI recommender disables itself if `ANTHROPIC_API_KEY` is not
-  configured — the cart page falls back to a random selection from the
-  catalog.
+  configured — no suggestions appear on the cart page in that case.
 
 The full security roadmap is the "OAuth hardening roadmap" umbrella issue
 on GitHub.

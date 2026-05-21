@@ -16,7 +16,6 @@ npm install
 npx sequelize-cli db:migrate     # adatbázis-séma létrehozása
 npx sequelize-cli db:seed:all    # demo userek (admin@gmail.com / admin, erik@gmail.com / 1234)
 npm run startWatch               # nodemon, port 3000
-npm run seedProducts             # opcionális: ~10 demo termék betöltése
 ```
 
 Környezeti változók: másold le a [`.env.example`](.env.example) fájlt
@@ -34,10 +33,10 @@ kívánságlistáját `/api/wishlist` alatt. Az `orderRoutes.js` kezeli a
 rendelésfeladást, e-mailt és állapotot `/api` alatt, a `reviewRoutes.js`
 a termékvéleményeket `/api/reviews` alatt. A `recommendationsRoutes.js`
 a Claude-alapú AI ajánlót `/api/recommendations` alatt, a
-`twoFactorRoutes.js` a TOTP setup, enable, verify végpontokat `/api/2fa`
+`twoFactorRoutes.js` a TOTP setup, enable, verify végpontokat `/auth/2fa`
 alatt. Az `adminRoutes.js` az admin termék-, rendelés- és analitika
 kezelést `/api/admin` alatt, a `stripeWebhook.js` pedig a Stripe
-esemény-feldolgozást `/api/stripe/webhook` alatt.
+esemény-feldolgozást `/api/orders/webhook` alatt.
 
 A pontos végpont-listát az `index.js` mounting-blokkja és az egyes
 route-fájlok mutatják.

@@ -24,8 +24,9 @@ Vásárlói oldal:
 - online bankkártyás fizetés Stripe Checkout integráción keresztül
 - saját rendelések állapotának követése
 - termékvélemény és csillagozás kézbesített rendelés után
-- mesterséges intelligencia-alapú termékajánló (Claude Haiku 4.5)
-  a kosár tartalma alapján
+- mesterséges intelligencia-alapú termékajánló (Claude Haiku 4.5):
+  a kosár tartalmához stílusban, színben illő termékeket
+  javasol, és csak olyat ajánl, ami még nincs a kosárban
 - magyar/angol nyelv és sötét/világos téma váltás
 - automatikus kijelentkezés 30 perc inaktivitás után
 
@@ -102,7 +103,7 @@ ingyenes Supabase fiókkal kivitelezhető.
 ### Docker Compose-zal
 
 ```bash
-git clone https://github.com/<user>/BirklSzakdoga.git
+git clone https://github.com/Elrich14/BirklSzakdoga.git
 cd BirklSzakdoga
 
 cp backend/.env.example backend/.env
@@ -115,8 +116,8 @@ docker compose up --build
 A frontend ezután a http://localhost:3001, a backend a http://localhost:3000
 címen érhető el.
 
-A séma létrehozásához és a demo userek beültetéséhez egyszer futtasd a
-migrációkat és a seedeket a backend containerben:
+A séma létrehozásához és a demo felhasználók beültetéséhez egyszer
+futtasd a migrációkat és a seedeket a backend containerben:
 
 ```bash
 docker compose exec backend npx sequelize-cli db:migrate
@@ -136,7 +137,7 @@ A `docker-compose.yml`-ben futó `db` szervíz egy lokális Postgres, amit
 csak akkor érdemes használni, ha nem akarsz Supabase projektet
 létrehozni. Ebben az esetben a `backend/.env`-ben állítsd be a
 `DB_HOST=db`, `DB_USER=postgres`, `DB_PASSWORD=postgres`, `DB_NAME=kerian`
-értékeket. SSL ekkor automatikusan kikapcs.
+értékeket. SSL ekkor automatikusan kikapcsol.
 
 ### Kézi indítás fejlesztéshez
 
@@ -154,22 +155,6 @@ npm run dev
 
 A migrációk Supabase ellen futnak ha a `DB_HOST` "supabase" szöveget
 tartalmaz, lokális Postgres ellen ha nem.
-
-### Termékek seedelése
-
-A `backend/seeders/` Sequelize migrációk csak a felhasználókat és a
-variáns-szerkezetet hozzák létre. A katalógus demo termékekkel való
-feltöltéséhez:
-
-```bash
-cd backend
-npm run seedProducts
-npm run seedUsers
-```
-
-A `seedUsers.js` először `User.destroy({ where: {} })`-vel törli az összes
-meglévő usert, mielőtt feltölti a sajátjait, ezért csak első futtatáskor
-vagy üres adatbázison ajánlott.
 
 ## Környezeti változók
 
@@ -199,7 +184,7 @@ Opcionális, csak az adott funkcióhoz kötelező:
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — a fizetési flow-hoz
   (test módban). `EUR_TO_HUF_RATE` az árfolyam-konverzióhoz.
 - `ANTHROPIC_API_KEY` — a Claude-alapú AI ajánlóhoz. Hiányában az ajánló
-  random termékeket választ.
+  üres listát ad vissza, így a kosároldalon nem jelennek meg javaslatok.
 - `BACKEND_BASE_URL`, `FRONTEND_BASE_URL` — a Google OAuth callback és
   redirect URL-jeihez.
 
@@ -210,38 +195,67 @@ csak a fizetési flow-hoz kell.
 A teljes lista placeholder értékekkel a `backend/.env.example` és
 `frontend/kerian/.env.example` fájlokban található.
 
-## Demo felhasználók és seed adatok
+## Demo felhasználók és adminként belépés
 
-A `backend/seeders/20250125122426-demo-user.js` migráció két felhasználót
-hoz létre. Az `erik@gmail.com` jelszóval `1234`, sima vásárlói szerepkörrel
-a regisztrált felhasználói flow demonstrálásához. Az `admin@gmail.com`
-jelszóval `admin`, admin szerepkörrel — viszont 2FA nélkül van seedelve,
-ezért az admin login NEM tud befejeződni vele, mert a backend kötelező
-TOTP-t vár adminhoz.
+A `db:seed:all` lefuttatása után két demo user áll rendelkezésre.
 
-### Hogyan tudsz adminként belépni a bíráláshoz
+- `admin@gmail.com` jelszóval `admin` — admin szerepkörrel, kezdetben
+  2FA nélkül. Ezzel a profillal a bíráló közvetlenül be tud lépni, és
+  azonnal eljut az `/admin` panelra.
+- `erik@gmail.com` jelszóval `1234` — sima vásárlói szerepkör, a
+  regisztrált vevői flow demonstrálásához.
 
-A 2FA-val működő, élő admin profil kizárólag a szerző saját accountja
-(`elrich.020114@gmail.com`), ezt a védés során élőben demonstrálom. Ha a
-bíráló saját adminként szeretne belépni, a következő flow áll rendelkezésre.
+### A 2FA flow kipróbálása
 
-1. Regisztrálj a frontenden egy új felhasználót.
-2. Léptesd elő adminná SQL-ből vagy a Supabase felületén:
-   ```sql
-   UPDATE "Users" SET role = 'admin' WHERE email = 'sajat@email.hu';
-   ```
-3. Jelentkezz be az új userrel a frontenden, majd hívd meg a
-   `POST /api/2fa/setup` végpontot az érvényes JWT-vel — ez visszaadja a
-   QR-kód URL-t.
-4. Olvasd be a QR-kódot egy authenticator alkalmazással (Google
-   Authenticator, Authy stb.).
-5. Hívd meg a `POST /api/2fa/enable` végpontot a generált 6 jegyű kóddal —
-   ezzel a 2FA aktiválódik.
-6. Jelentkezz ki, majd újra be — most már az admin login a TOTP kódot
-   kéri, és bejutsz az `/admin` panelra.
+Mivel a seedelt admin kezdetben 2FA nélkül van, a bíráló közvetlenül
+belép, és az `/admin` panel "Security" tabján bekapcsolhatja a kétfaktoros
+hitelesítést. A flow:
 
-A frontenden az `/admin` oldal az első belépéskor erre az enrollment flow-ra
-vezet, így UI-ból is végigvihető.
+1. Bejelentkezés `admin@gmail.com` / `admin`-nal a frontenden.
+2. Az `/admin` oldalon a "Security" / Biztonság tabra navigálás.
+3. "2FA bekapcsolása" gomb → a UI mutat egy QR-kódot.
+4. A QR beolvasása egy authenticator alkalmazással (Google Authenticator,
+   Authy, Microsoft Authenticator stb.).
+5. Az app által mutatott 6 jegyű kód begépelése a UI-ba — ezzel a 2FA
+   aktiválódik, és a backend visszaadja a recovery code-okat.
+6. Kijelentkezés és újra belépés — most már a login a TOTP kódot is kéri,
+   és csak helyes kóddal jut be újra az `/admin` panelra.
+
+E-mail-megerősítés és külső verifikáció nincs a flow-ban — a QR-kód
+beolvasása és a 6 jegyű kód megadása elegendő.
+
+A szerző saját, ténylegesen használt admin accountja
+(`elrich.020114@gmail.com`) 2FA-val védett — ezért a 2FA nem csupán
+opcionális demo funkció, hanem aktívan használt biztonsági réteg a
+rendszerben.
+
+### E-mail tesztelés a vásárlói flow demonstrálásához
+
+Admin szerepkörrel a rendszer szándéka szerint nem lehet vásárolni —
+a `/admin` panel a bolt működtetésére szolgál, nem böngészésre.
+Tehát a vásárlói és e-mail flow demonstrálásához egy vásárlói
+szerepkörű user kell.
+
+A seedelt `erik@gmail.com` egy nem valós cím, így vele leadott rendelés
+visszaigazolója egy idegen postafiókba menne (ha létezik), nem a
+bírálóhoz. Ehelyett **regisztrálj a frontenden egy új vásárlót saját,
+valódi e-mail címmel** — azzal jelentkezz be és add le a teszt-rendelést.
+A rendelési visszaigazoló e-mail abba a postafiókba érkezik, amit a
+regisztrációnál megadtál.
+
+Az admin oldali rendelés-értesítő ettől függetlenül **minden
+teszt-rendelésnél** elindul: a `backend/.env`-ben beállított
+`EMAIL_ADMIN` címre megy Nodemailer-rel, függetlenül attól, melyik
+vásárlóval rendelt valaki. Ha tehát az `EMAIL_ADMIN`-ként a saját
+Gmail-fiókodat adod meg a `.env`-ben, minden teszt-rendelésnél kapsz
+egy értesítő e-mailt admin-szemszögből — még akkor is, ha a vásárló
+felhasználó nem te magad vagy.
+
+Fontos megkülönböztetés: az adatbázisban lévő `admin@gmail.com` (login
+fiók) és a `.env`-ben lévő `EMAIL_ADMIN` (SMTP-feladó és admin-értesítő
+címzett) **két teljesen különálló dolog** — semmilyen kód nem köti
+össze őket. Az előbbi a bejelentkezéshez, az utóbbi az e-mail küldéshez
+és fogadáshoz szolgál.
 
 ## Külső szolgáltatások
 
@@ -271,26 +285,13 @@ termékajánlóhoz, cache-elt prompttal költségoptimalizálva.
 A Gmail SMTP a rendelési visszaigazoló e-mailek küldésére szolgál
 Nodemailer-en keresztül. Saját Gmail-fiók App Password szükséges hozzá.
 
-## Bíráláshoz értékelendő ág
-
-A bíráló által értékelendő végleges állapot a `main` ág. Ezen szerepel az
-utolsó merge-elt változat (`Gh 52 stripe (#53)`), ami tartalmazza az összes
-funkciót: Google OAuth, 2FA, Stripe Checkout, AI ajánló, reszponzív navbar,
-világos téma.
-
-A többi ág történeti vagy fejlesztés alatti. A `Payment` egy korábbi
-Stripe-fejlesztési ág, már mergelve a `main`-be. A
-`GH-43_responsive_phase2_navbar` a reszponzív navbart hozta, mergelve. A
-`GH-47_light_theme` a világos témát, mergelve. A `GH-43_responsive_backup`
-egy backup ág, nem aktív.
-
 ## Ismert korlátok
 
-A védés során vállaltan demonstrálandó korlátok és a tudatosan elhalasztott
-biztonsági továbbfejlesztések:
+A jelenlegi állapotban vállaltan ismert korlátok és a tudatosan
+elhalasztott biztonsági továbbfejlesztések:
 
 - Nincsenek automatizált tesztek. A verifikáció manuális, a tesztelési
-  jegyzőkönyv a dolgozat tesztelési fejezetében található (in progress).
+  jegyzőkönyv a dolgozat tesztelési fejezetében található.
 - A JWT a `localStorage`-ban van tárolva, ami XSS-érzékeny. A `httpOnly`
   cookie-ra való migráció a GitHub issue #50-en van követve.
 - Az OAuth handoff store in-memory. Egyetlen backend példányon működik,
@@ -304,7 +305,7 @@ biztonsági továbbfejlesztések:
   vonhatja vissza az aktív session-jeit. GitHub issue #54.
 - A Stripe csak test módban működik, éles kulcsok nincsenek a repóban.
 - Az AI ajánló kikapcsol, ha az `ANTHROPIC_API_KEY` nincs beállítva — a
-  kosároldal ilyenkor a többi termékből választ véletlenszerűen.
+  kosároldalon ilyenkor nem jelennek meg javaslatok.
 
 A teljes biztonsági roadmap az "OAuth hardening roadmap" umbrella issue
 alatt található a GitHubon.
