@@ -1,0 +1,142 @@
+<mxfile host="app.diagrams.net" agent="Claude">
+  <diagram name="Pageflow" id="pageflow-main">
+    <mxGraphModel dx="1444" dy="795" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="userTitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="VÁSÁRLÓI PAGEFLOW (happy path)" vertex="1">
+          <mxGeometry height="30" width="400" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="u1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Főoldal" vertex="1">
+          <mxGeometry height="60" width="140" x="40" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="u2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Terméklista&#xa;(szűrés, keresés)" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="u3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Termék részletei&#xa;(variáns választás)" vertex="1">
+          <mxGeometry height="60" width="140" x="400" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="u4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Kosár" vertex="1">
+          <mxGeometry height="60" width="140" x="820" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uLogin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Bejelentkezés / regisztráció&#xa;(e-mail+jelszó vagy Google)" vertex="1">
+          <mxGeometry height="60" width="200" x="580" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="u5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Rendelési adatok&#xa;(cím, valuta)" vertex="1">
+          <mxGeometry height="60" width="140" x="40" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="u6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Stripe Checkout" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="u7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Sikeres fizetés&#xa;(e-mail visszaigazolás)" vertex="1">
+          <mxGeometry height="60" width="160" x="400" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="u8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Rendeléskövetés&#xa;(saját rendelések)" vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="ue1" edge="1" parent="1" source="u1" style="endArrow=classic;html=1;rounded=0;" target="u2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ue2" edge="1" parent="1" source="u2" style="endArrow=classic;html=1;rounded=0;" target="u3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ue3" edge="1" parent="1" source="u3" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uLogin">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ue4" edge="1" parent="1" source="uLogin" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="u4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="940" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ueWrap" edge="1" parent="1" source="u4" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;curved=1;" target="u5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="190" />
+              <mxPoint x="110" y="190" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ue5" edge="1" parent="1" source="u5" style="endArrow=classic;html=1;rounded=0;" target="u6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ue6" edge="1" parent="1" source="u6" style="endArrow=classic;html=1;rounded=0;" target="u7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ue7" edge="1" parent="1" source="u7" style="endArrow=classic;html=1;rounded=0;" target="u8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="adminTitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="ADMIN PAGEFLOW – rendeléskezelés (a leggyakoribb feladat lineáris útja)" vertex="1">
+          <mxGeometry height="30" width="700" x="40" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Admin login&#xa;(jelszó)" vertex="1">
+          <mxGeometry height="60" width="140" x="40" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="TOTP 2FA&#xa;(authenticator kód)" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Admin dashboard" vertex="1">
+          <mxGeometry height="60" width="160" x="400" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Rendelések listája" vertex="1">
+          <mxGeometry height="60" width="160" x="600" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="a5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Rendelés részletei" vertex="1">
+          <mxGeometry height="60" width="160" x="800" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="a6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Állapotléptetés&#xa;confirmed → shipped → delivered" vertex="1">
+          <mxGeometry height="60" width="240" x="1000" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="adminNote" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=2" value="Megjegyzés: a dashboardról hasonló lineáris úton érhetők el a termékkezelés és&amp;nbsp;&amp;nbsp;statisztika oldalak is (ez megtalálható a diagramok közt)." vertex="1">
+          <mxGeometry height="40" width="1200" x="40" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="ae1" edge="1" parent="1" source="a1" style="endArrow=classic;html=1;rounded=0;" target="a2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ae2" edge="1" parent="1" source="a2" style="endArrow=classic;html=1;rounded=0;" target="a3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ae3" edge="1" parent="1" source="a3" style="endArrow=classic;html=1;rounded=0;" target="a4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ae4" edge="1" parent="1" source="a4" style="endArrow=classic;html=1;rounded=0;" target="a5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ae5" edge="1" parent="1" source="a5" style="endArrow=classic;html=1;rounded=0;" target="a6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aiTitle" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1" value="AI AJÁNLÓ PAGEFLOW" vertex="1">
+          <mxGeometry height="30" width="400" x="40" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="ai1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Kosár megnyitása" vertex="1">
+          <mxGeometry height="60" width="140" x="40" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ai2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Claude ajánló&#xa;hívás" vertex="1">
+          <mxGeometry height="60" width="140" x="220" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ai3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Kosárban lévő&lt;div&gt;termékek kiszűrése&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="140" x="400" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ai4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="3 ajánlott termék&#xa;megjelenítése" vertex="1">
+          <mxGeometry height="60" width="140" x="580" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ai5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Ajánlott termék&#xa;megnyitása" vertex="1">
+          <mxGeometry height="60" width="140" x="760" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="aie1" edge="1" parent="1" source="ai1" style="endArrow=classic;html=1;rounded=0;" target="ai2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aie2" edge="1" parent="1" source="ai2" style="endArrow=classic;html=1;rounded=0;" target="ai3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aie3" edge="1" parent="1" source="ai3" style="endArrow=classic;html=1;rounded=0;" target="ai4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="aie4" edge="1" parent="1" source="ai4" style="endArrow=classic;html=1;rounded=0;" target="ai5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
