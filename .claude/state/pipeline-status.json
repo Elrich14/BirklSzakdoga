@@ -1,0 +1,42 @@
+{
+  "task": null,
+  "step": null,
+  "stepName": null,
+  "gate": null,
+  "fixLoopRound": 0,
+  "startedAt": null,
+  "updatedAt": "2026-11-23T12:50:52.459Z",
+  "agents": {
+    "orchestrator": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    },
+    "backend-engineer": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    },
+    "frontend-engineer": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    },
+    "test-engineer": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    },
+    "security-auditor": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    },
+    "ui-reviewer": {
+      "state": "idle",
+      "note": "",
+      "since": null
+    }
+  },
+  "log": []
+}

@@ -1,0 +1,34 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Kerian dashboard",
+      "detail": "Pipeline dashboard on http://localhost:3099 — starts with the project",
+      "type": "shell",
+      "command": "node .claude/dashboard/server.js",
+      "isBackground": true,
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Kerian dashboard (demo)",
+      "detail": "Scripted pipeline run on a loop — no real task needed",
+      "type": "shell",
+      "command": "node .claude/dashboard/server.js --demo --open",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

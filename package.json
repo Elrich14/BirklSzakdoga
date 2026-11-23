@@ -2,6 +2,8 @@
   "name": "kerian-monorepo",
   "private": true,
   "scripts": {
+    "dashboard": "node .claude/dashboard/server.js --open",
+    "dashboard:demo": "node .claude/dashboard/server.js --demo --open",
     "dev:backend": "cd backend && npm run startWatch",
     "dev:frontend": "cd frontend/kerian && npm run dev",
     "seed:products": "cd backend && npm run seedProducts",

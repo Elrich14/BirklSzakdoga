@@ -351,3 +351,85 @@ These gaps exist in the current implementation and are tracked for future work. 
 - **Admin promotion of password-less Google users** → a Google-only account (`authProvider: "google"`, `password: null`) could theoretically be promoted to admin and then be unable to complete the admin login flow (which requires password + TOTP). Promotion path should refuse Google-only users. Tracked in **#55**.
 
 Umbrella roadmap issue: search GitHub for "OAuth hardening roadmap".
+
+---
+
+## Agent pipeline — when to run it
+
+This project has a multi-agent delivery pipeline in `.claude/`. It is the
+default way changes get made here.
+
+**Invoke the `orchestrate-feature` skill first** when the request is:
+
+- a new feature or user-facing capability
+- a new or changed API endpoint
+- a schema or migration change
+- anything spanning backend **and** frontend
+- anything touching auth, payment, orders, admin or upload — regardless of size
+
+**Do the work directly, without the pipeline**, for:
+
+- a typo, a copy change, a single translation string
+- a one-file bug fix already covered by an existing test
+- a question, an explanation, a read-only investigation
+- formatting or a rename inside one file
+
+When in doubt, run it. If you skip it, say so in one line.
+
+### The pieces
+
+| File | Role |
+|---|---|
+| `.claude/skills/orchestrate-feature/` | The pipeline. Runs in the main session — it dispatches the agents, verifies their claims itself, and keeps the state and evidence ledger |
+| `.claude/skills/finalize-change/` | Final cleanup: dead code, duplication, i18n pairs, unused deps, full re-read of every touched file |
+| `.claude/skills/kerian-conventions/` | Naming + report format. **Every agent loads this** |
+| `.claude/skills/kerian-*-rules/` | Backend / frontend patterns |
+| `.claude/skills/kerian-security-baseline/` | Security rules and the tracked gaps #50–#55 |
+| `.claude/skills/kerian-db-migrations/` | Migration safety |
+| `.claude/skills/kerian-ui-design/` | The visual language |
+| `.claude/skills/kerian-testing/` | Adversarial test checklist + coverage |
+| `.claude/agents/` | `backend-engineer`, `frontend-engineer`, `test-engineer`, `security-auditor`, `ui-reviewer` |
+| `.claude/state/` | Per-task state and verification ledger (from the `TEMPLATE-*.md` files) |
+
+### Two gates
+
+The pipeline stops twice and waits for the user: at the **API contract** (step 1)
+and at the **final report** (step 9). Everything between runs on its own.
+
+### File ownership
+
+Tool permissions do not enforce paths. The orchestrator runs
+`git diff --name-only` after every agent and reverts out-of-scope files.
+
+| Agent | May change |
+|---|---|
+| `backend-engineer` | `backend/**` except `backend/test/**` |
+| `frontend-engineer` | `frontend/kerian/**` |
+| `test-engineer` | `backend/test/**` |
+| `security-auditor` | nothing |
+| `ui-reviewer` | nothing |
+
+### Live dashboard
+
+```bash
+npm run dashboard         # http://localhost:3099, bongeszot is nyit
+npm run dashboard:demo    # scripted run, no real task needed
+```
+
+VS Code: `Ctrl+Shift+P` → `Simple Browser: Show` → that URL.
+
+The orchestrator calls `.claude/dashboard/status.js` before dispatching an agent,
+after it returns, and on every step change. Keeping that truthful is part of the
+run — a stale dashboard reports work that is not happening. See
+`.claude/dashboard/README.md`.
+
+### Enforced git restrictions
+
+`.claude/settings.json` denies the destructive git and `gh` operations at tool
+level — `git commit`, `git push`, `git reset --hard`, `git rebase`,
+`git cherry-pick`, `git checkout .`, `git stash drop/clear/pop`,
+`git branch -D`, `gh pr create`, `gh pr merge`.
+
+This is enforcement, not a reminder: an agent that is told to commit still
+cannot. Read-only git stays available. The user runs every write operation
+themselves.
